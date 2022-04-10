@@ -35,7 +35,7 @@ public class XpTab implements TabCompleter {
 		} else if (args.length == 2) {
 			List<String> args2 = new ArrayList<String>();
 			if (args[0].equalsIgnoreCase("deposit") || args[0].equalsIgnoreCase("withdraw"))
-				args2.add("all");
+				args2.add("max");
 			if (args[0].equalsIgnoreCase("pay")) {
 				for (Player p : Bukkit.getOnlinePlayers()) {
 					args2.add(p.getName());

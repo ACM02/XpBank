@@ -13,9 +13,9 @@ import net.md_5.bungee.api.ChatColor;
 
 public class Xp implements CommandExecutor {
 
-	public static final String EXCEEDS_HOLD_LIMIT = ChatColor.RED + "Invalid amount. That exceeds the maximum xp that can be stored. (" + Main.MAX_LEVEL + " levels/" + Main.MAX_XP + " points)";
-	public static final String EXCEEDS_STORE_LIMIT_TARGET = ChatColor.RED + "Invalid amount. That exceeds the maximum xp that can be held by the target. (" + Main.MAX_LEVEL + " levels/" + Main.MAX_XP + " points)";
-	public static final String EXCEEDS_STORE_LIMIT = ChatColor.RED + "Invalid amount. That exceeds the maximum xp that can be stored. (" + Main.MAX_LEVEL + " levels/" + Main.MAX_XP + " points)";
+	public static String EXCEEDS_HOLD_LIMIT = ChatColor.RED + "Invalid amount. That exceeds the maximum xp that can be held. (" + Main.MAX_LEVEL_HELD + " levels/" + Main.MAX_XP_HELD + " points)";
+	public static String EXCEEDS_STORE_LIMIT_TARGET = ChatColor.RED + "Invalid amount. That exceeds the maximum xp that can be held by the target. (" + Main.MAX_LEVEL_HELD + " levels/" + Main.MAX_XP_HELD + " points)";
+	public static String EXCEEDS_STORE_LIMIT = ChatColor.RED + "Invalid amount. That exceeds the maximum xp that can be stored. (" + Main.MAX_LEVEL_STORED + " levels/" + Main.MAX_XP_STORED + " points)";
 	
 	
 	public Xp (Main plugin) {
@@ -57,7 +57,7 @@ public class Xp implements CommandExecutor {
 			switch(args[0]) {
 			case "deposit":
 				int amount = 1;
-				if (!args[1].equals("all")) {
+				if (!args[1].equals("max")) {
 					try {
 						amount = Integer.parseInt(args[1]);
 					} catch (NumberFormatException e) {
@@ -70,13 +70,22 @@ public class Xp implements CommandExecutor {
 					break;
 				}
 				int playerTotalXp = Utils.totalXp(sender);
-				if (args[1].equals("all")) amount = playerTotalXp;
-				if (amount > playerTotalXp) {
-					sender.sendMessage(ChatColor.RED + "You only have " + playerTotalXp + " xp");
+				if (args[1].equals("max")) {
+					if (Main.xps.get(sender.getUniqueId().toString()) >= Main.MAX_XP_STORED) {
+						sender.sendMessage(EXCEEDS_STORE_LIMIT);
+						break;
+					}
+					amount = playerTotalXp;
+					if (Main.xps.get(sender.getUniqueId().toString()) + amount >= Main.MAX_XP_STORED) {
+						amount = Main.MAX_XP_STORED - Main.xps.get(sender.getUniqueId().toString());
+					}
+				}
+				if ((long) Main.xps.get(sender.getUniqueId().toString()) + (long) amount > Main.MAX_XP_STORED) {
+					sender.sendMessage(EXCEEDS_STORE_LIMIT);
 					break;
 				}
-				if ((long) Main.xps.get(sender.getUniqueId().toString()) + (long) amount > Main.MAX_XP) {
-					sender.sendMessage(EXCEEDS_STORE_LIMIT);
+				if (amount > playerTotalXp) {
+					sender.sendMessage(ChatColor.RED + "You only have " + playerTotalXp + " xp");
 					break;
 				}
 				removeXp(amount, sender, playerTotalXp);
@@ -93,8 +102,16 @@ public class Xp implements CommandExecutor {
 				if (!Main.xps.containsKey(sender.getUniqueId().toString())) {
 					Main.xps.put(sender.getUniqueId().toString(), 0);
 				}
-				if (args[1].equalsIgnoreCase("all")) {
+				playerTotalXp = Utils.totalXp(sender);
+				if (args[1].equalsIgnoreCase("max")) {
+					if (playerTotalXp >= Main.MAX_XP_HELD) {
+						sender.sendMessage(EXCEEDS_HOLD_LIMIT);
+						break;
+					}
 					amount = Main.xps.get(sender.getUniqueId().toString());
+					if (playerTotalXp + amount >= Main.MAX_XP_HELD) {
+						amount = Main.MAX_XP_HELD - playerTotalXp;
+					}
 				} else {
 					try {
 						amount = Integer.parseInt(args[1]);
@@ -103,13 +120,12 @@ public class Xp implements CommandExecutor {
 						break;
 					}
 				}
-				if (amount > Main.xps.get(sender.getUniqueId().toString())) {
-					sender.sendMessage(ChatColor.RED + "You only have " + Main.xps.get(sender.getUniqueId().toString()) + " xp in the bank");
+				if ((long) playerTotalXp + (long) amount > Main.MAX_XP_HELD) {
+					sender.sendMessage(EXCEEDS_HOLD_LIMIT);
 					break;
 				}
-				playerTotalXp = Utils.totalXp(sender);
-				if ((long) playerTotalXp + (long) amount > Main.MAX_XP) {
-					sender.sendMessage(EXCEEDS_STORE_LIMIT);
+				if (amount > Main.xps.get(sender.getUniqueId().toString())) {
+					sender.sendMessage(ChatColor.RED + "You only have " + Main.xps.get(sender.getUniqueId().toString()) + " xp in the bank");
 					break;
 				}
 				addXp(amount, sender, playerTotalXp);
@@ -140,12 +156,12 @@ public class Xp implements CommandExecutor {
 				int playerTotalXp = Utils.totalXp(sender);
 				switch (args[2]) {
 				case "levels":
-					if (sender.getLevel() < amount) {
-						sender.sendMessage(ChatColor.RED + "You don't have that many levels");
+					if ((long) Main.xps.get(sender.getUniqueId().toString()) + (long) Utils.totalXp(amount) > Main.MAX_XP_STORED) {
+						sender.sendMessage(EXCEEDS_STORE_LIMIT);
 						break;
 					}
-					if ((long) Main.xps.get(sender.getUniqueId().toString()) + (long) Utils.totalXp(amount) > Main.MAX_XP) {
-						sender.sendMessage(EXCEEDS_STORE_LIMIT);
+					if (sender.getLevel() < amount) {
+						sender.sendMessage(ChatColor.RED + "You don't have that many levels");
 						break;
 					}
 					int xpToLose = Utils.totalXp(sender.getLevel()) - Utils.totalXp(sender.getLevel() - amount);
@@ -159,12 +175,12 @@ public class Xp implements CommandExecutor {
 					break;
 					
 				case "points":
-					if (amount > playerTotalXp) {
-						sender.sendMessage(ChatColor.RED + "You only have " + playerTotalXp + " xp");
+					if ((long) Main.xps.get(sender.getUniqueId().toString()) + (long) amount > Main.MAX_XP_STORED) {
+						sender.sendMessage(EXCEEDS_STORE_LIMIT);
 						break;
 					}
-					if ((long) Main.xps.get(sender.getUniqueId().toString()) + (long) amount > Main.MAX_XP) {
-						sender.sendMessage(EXCEEDS_STORE_LIMIT);
+					if (amount > playerTotalXp) {
+						sender.sendMessage(ChatColor.RED + "You only have " + playerTotalXp + " xp");
 						break;
 					}
 					removeXp(amount, sender, playerTotalXp);
@@ -195,12 +211,12 @@ public class Xp implements CommandExecutor {
 				switch(args[2]) {
 				case "levels":
 					int xpToAdd = Utils.totalXp(sender.getLevel() + amount) - Utils.totalXp(sender.getLevel());
-					if (xpToAdd > Main.xps.get(sender.getUniqueId().toString())) {
-						sender.sendMessage(ChatColor.RED + "You only have enough xp for " + Utils.getMaxLevel(sender, Main.xps.get(sender.getUniqueId().toString())) + " levels");
+					if ((long) playerTotalXp + (long) xpToAdd > Main.MAX_XP_HELD) {
+						sender.sendMessage(EXCEEDS_HOLD_LIMIT);
 						break;
 					}
-					if ((long) playerTotalXp + (long) xpToAdd > Main.MAX_XP) {
-						sender.sendMessage(EXCEEDS_HOLD_LIMIT);
+					if (xpToAdd > Main.xps.get(sender.getUniqueId().toString())) {
+						sender.sendMessage(ChatColor.RED + "You only have enough xp for " + Utils.getMaxLevel(sender, Main.xps.get(sender.getUniqueId().toString())) + " levels");
 						break;
 					}
 					addXp(xpToAdd, sender, playerTotalXp);
@@ -209,12 +225,12 @@ public class Xp implements CommandExecutor {
 					sender.sendMessage(ChatColor.GREEN + "Xp withdrawn. New balance: " + Main.xps.get(sender.getUniqueId().toString()));
 					break;
 				case "points":
-					if (amount > Main.xps.get(sender.getUniqueId().toString())) {
-						sender.sendMessage(ChatColor.RED + "You only have " + Main.xps.get(sender.getUniqueId().toString()) + " xp in the bank");
+					if ((long) playerTotalXp + (long) amount > Main.MAX_XP_HELD) {
+						sender.sendMessage(EXCEEDS_HOLD_LIMIT);
 						break;
 					}
-					if ((long) playerTotalXp + (long) amount > Main.MAX_XP) {
-						sender.sendMessage(EXCEEDS_HOLD_LIMIT);
+					if (amount > Main.xps.get(sender.getUniqueId().toString())) {
+						sender.sendMessage(ChatColor.RED + "You only have " + Main.xps.get(sender.getUniqueId().toString()) + " xp in the bank");
 						break;
 					}
 					addXp(amount, sender, playerTotalXp);
@@ -248,7 +264,7 @@ public class Xp implements CommandExecutor {
 				OfflinePlayer offline = Bukkit.getOfflinePlayer(args[1]);
 				if (offline != null) {
 					if (Main.xps.containsKey(offline.getUniqueId().toString())) {
-						if ((long) Main.xps.get(offline.getUniqueId().toString()) + (long) amount > Main.MAX_XP) {
+						if ((long) Main.xps.get(offline.getUniqueId().toString()) + (long) amount > Main.MAX_XP_STORED) {
 							sender.sendMessage(EXCEEDS_STORE_LIMIT_TARGET);
 							break;
 						}
