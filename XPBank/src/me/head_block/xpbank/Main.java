@@ -3,7 +3,6 @@ package me.head_block.xpbank;
 import java.io.File;
 import java.util.HashMap;
 
-import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -60,8 +59,6 @@ public class Main extends JavaPlugin {
 		} else {
 			MAX_LEVEL_HELD = Utils.level(MAX_XP_HELD);
 		}
-		Bukkit.getConsoleSender().sendMessage("Set max xp held to: " + MAX_XP_HELD);
-		Bukkit.getConsoleSender().sendMessage("Set max xp stored to: " + MAX_XP_STORED);
 		
 		new Xp(this);
 		new XpTab(this);
