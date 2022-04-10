@@ -35,6 +35,10 @@ public class Xp implements CommandExecutor {
 
 	@SuppressWarnings("deprecation")
 	private void asPlayer(Player sender, String[] args) {
+		if (!sender.hasPermission("xpbank.use")) {
+			sender.sendMessage(ChatColor.RED + "You do not have permission to use the xp bank");
+			return;
+		}
 		switch (args.length) {
 		case 0:
 			if (!Main.xps.containsKey(sender.getUniqueId().toString())) {
@@ -46,10 +50,28 @@ public class Xp implements CommandExecutor {
 		case 1: 
 			switch(args[0]) {
 			case "help":
-				//ToDo
+				String message = ChatColor.YELLOW + "------------/xpbank help------------\n"
+						+ "/xpbank - Tells you how much xp you have stored\n"
+						+ "/xpbank xpheld - Tells you how much xp you are holding\n"
+						+ "/xpbank xpstored - Tells you how much xp you have stored\n"
+						+ "/xpbank deposit <amount> - Deposits <amount> xp points\n"
+						+ "/xpbank deposit <amount> <levels/points> - Deposits <amount> points or levels\n"
+						+ "/xpbank deposit max - Deposits all xp up to the max (" + Main.MAX_XP_STORED +  " points)\n"
+						+ "/xpbank withdraw <amount> - Withdraws <amount> xp points\n"
+						+ "/xpbank withdraw <amount> <levels/points> - Withdraws <amount> points or levels\n"
+						+ "/xpbank withdraw max - Withdraws all xp up to the max (" + Main.MAX_XP_HELD + " points)\n"
+						+ "/xpbank pay <player> <amount> - Pays <player> the specified amount";
+				sender.sendMessage(message);
+				break;
+			case "xpheld":
+				sender.sendMessage(ChatColor.YELLOW + "You are holding " + Utils.totalXp(sender) + " xp");
+				break;
+			case "xpstored":
+				sender.sendMessage(ChatColor.YELLOW + "You have " + Main.xps.get(sender.getUniqueId().toString()) + " experience points in the bank. (Enough for level " + 
+						Utils.getMaxLevel(sender, Main.xps.get(sender.getUniqueId().toString())) + ")");
 				break;
 			default:
-				sender.sendMessage(ChatColor.RED + "Improper usage. Try /xpbank help");
+				sender.sendMessage(ChatColor.RED + "Improper usage. Try /xpbank help for help");
 				break;
 			}
 			break;
@@ -196,7 +218,6 @@ public class Xp implements CommandExecutor {
 					break;
 				}
 				break;
-				
 			case "withdraw": 
 				try {
 					amount = Integer.parseInt(args[1]);
@@ -298,9 +319,9 @@ public class Xp implements CommandExecutor {
 				sender.sendMessage(ChatColor.RED + "Improper usage. Try /xpbank <deposit/withdraw> <amount>");
 				break;
 			}
-			break;
+			//break;
 		default:
-			sender.sendMessage(ChatColor.RED + "Improper usage. Try /xpbank help");
+			sender.sendMessage(ChatColor.RED + "Improper usage. Try /xpbank help for help");
 			break;
 		}
 	}

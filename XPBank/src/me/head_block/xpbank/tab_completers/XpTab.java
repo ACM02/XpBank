@@ -19,12 +19,18 @@ public class XpTab implements TabCompleter {
 	
 	@Override
 	public List<String> onTabComplete(CommandSender sender, Command cmd, String label, String[] args) {
+		if (!sender.hasPermission("xpbank.use")) {
+			return null;
+		}
 		List<String> toReturn = new ArrayList<String>();
 		if (args.length == 1) {
 			List<String> args1 = new ArrayList<String>();
 			args1.add("deposit");
 			args1.add("withdraw");
 			args1.add("pay");
+			args1.add("help");
+			args1.add("xpheld");
+			args1.add("xpstored");
 			for (String a : args1) {
 				if (a.toLowerCase().startsWith(args[0].toLowerCase())) {
 					toReturn.add(a);
