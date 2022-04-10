@@ -31,6 +31,10 @@ public class Utils {
 		return total;
 	}
 	
+	public static int totalXp(Player p) {
+		return totalXp(p.getLevel(), xpPointsInBar(p.getExp(), p.getExpToLevel()));
+	}
+	
 	public static int totalXp(int level) {
 		int total = 0;
 		if (level < 16) {
@@ -52,9 +56,9 @@ public class Utils {
 		if (totalXp <= 352) {
 			level = (int) (Math.sqrt(totalXp + 9) - 3);
 		} else if (totalXp <= 1507) {
-			level = (int) (8.1 + Math.sqrt(0.4*(totalXp-199.975)));
+			level = (int) (8.1 + (float) Math.sqrt((float)0.4*((float)totalXp-195.975)));
 		} else if (totalXp >= 1508) {
-			level = (int) (18.0555555555555555 + Math.sqrt(0.222222222222222*(totalXp-752.98611111111111)));
+			level = (int) (18.0555555555555555 + Math.sqrt((2.0/9.0)*(totalXp-(54215.0/72.0))));
 		}
 		return level;
 	}
@@ -67,7 +71,7 @@ public class Utils {
 	
 	public static float xp(int totalXp, int level) {
 		int newTotal = totalXp - totalXp(level);
-		return ((float) newTotal / xpToLevelUp(level));
+		return ((float) newTotal / (float)xpToLevelUp(level));
 	}
 	
 	public static int xpToLevelUp(int level) {

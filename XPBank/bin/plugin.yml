@@ -1,7 +1,7 @@
 name: XpBank
 main: me.head_block.xpbank.Main
 description: Xp Banking System
-version: 1.0
+version: 1.2
 author: McCloud
 
 commands: 

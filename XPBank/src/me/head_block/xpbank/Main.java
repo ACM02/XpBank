@@ -3,6 +3,7 @@ package me.head_block.xpbank;
 import java.io.File;
 import java.util.HashMap;
 
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import me.head_block.xpbank.commands.Xp;
@@ -12,6 +13,8 @@ import me.head_block.xpbank.utils.Utils;
 public class Main extends JavaPlugin {
 
 	public static HashMap<String,Integer> xps = new HashMap<>();
+	public static int MAX_LEVEL;
+	public static int MAX_XP;
 	
 	@SuppressWarnings("unchecked")
 	@Override
@@ -29,8 +32,24 @@ public class Main extends JavaPlugin {
 		if (xps == null) {
 			xps = new HashMap<String, Integer>();
 		}
+		
+		FileConfiguration config = this.getConfig();
+		config.addDefault("maxXp", 2000000000);
+		config.options().copyDefaults(true);
+		saveConfig();
+		
+		MAX_XP = getConfig().getInt("maxXp");
+		if (MAX_XP >= 2000000000) {
+			MAX_LEVEL = Utils.level(2000000000);
+			MAX_XP = 2000000000;
+		} else if (MAX_XP < 1) {
+			MAX_LEVEL = Utils.level(2000000000);
+			MAX_XP = 2000000000;
+		} else {
+			MAX_LEVEL = Utils.level(MAX_XP);
+		}
 	}
-	
+
 	@Override
 	public void onDisable() {
 		Utils.save(xps, new File(getDataFolder(), "xps.dat"));
