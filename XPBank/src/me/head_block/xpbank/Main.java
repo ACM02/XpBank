@@ -7,6 +7,8 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import me.head_block.xpbank.commands.Xp;
+import me.head_block.xpbank.commands.XpBal;
+import me.head_block.xpbank.tab_completers.XpBalTab;
 import me.head_block.xpbank.tab_completers.XpTab;
 import me.head_block.xpbank.utils.Utils;
 
@@ -17,6 +19,7 @@ public class Main extends JavaPlugin {
 	public static int MAX_XP_STORED;
 	public static int MAX_LEVEL_HELD;
 	public static int MAX_XP_HELD;
+	public static boolean SEE_PLAYER_BALANCES;
 	
 	@SuppressWarnings("unchecked")
 	@Override
@@ -35,9 +38,11 @@ public class Main extends JavaPlugin {
 		FileConfiguration config = this.getConfig();
 		config.addDefault("maxXpStored", 2000000000);
 		config.addDefault("maxXpHeld", 2000000000);
+		config.addDefault("seePlayerBalances", true);
 		config.options().copyDefaults(true);
 		saveConfig();
 		
+		SEE_PLAYER_BALANCES = config.getBoolean("seePlayerBalances");
 		MAX_XP_STORED = getConfig().getInt("maxXpStored");
 		if (MAX_XP_STORED >= 2000000000) {
 			MAX_LEVEL_STORED = Utils.level(2000000000);
@@ -62,6 +67,8 @@ public class Main extends JavaPlugin {
 		
 		new Xp(this);
 		new XpTab(this);
+		new XpBal(this);
+		new XpBalTab(this);
 	}
 
 	@Override

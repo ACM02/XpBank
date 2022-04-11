@@ -91,6 +91,9 @@ public class Xp implements CommandExecutor {
 					sender.sendMessage(ChatColor.RED + "Invalid amount");
 					break;
 				}
+				if (!Main.xps.containsKey(sender.getUniqueId().toString())) {
+					Main.xps.put(sender.getUniqueId().toString(), 0);
+				}
 				int playerTotalXp = Utils.totalXp(sender);
 				if (args[1].equals("max")) {
 					if (Main.xps.get(sender.getUniqueId().toString()) >= Main.MAX_XP_STORED) {
@@ -111,9 +114,6 @@ public class Xp implements CommandExecutor {
 					break;
 				}
 				removeXp(amount, sender, playerTotalXp);
-				if (!Main.xps.containsKey(sender.getUniqueId().toString())) {
-					Main.xps.put(sender.getUniqueId().toString(), 0);
-				}
 				int oldBal = Main.xps.get(sender.getUniqueId().toString());
 				Main.xps.put(sender.getUniqueId().toString(), oldBal + amount);
 				sender.sendMessage(ChatColor.GREEN + "Xp deposited. New balance: " + Main.xps.get(sender.getUniqueId().toString()));
@@ -175,6 +175,9 @@ public class Xp implements CommandExecutor {
 					sender.sendMessage(ChatColor.RED + "Invalid amount");
 					break;
 				}
+				if (!Main.xps.containsKey(sender.getUniqueId().toString())) {
+					Main.xps.put(sender.getUniqueId().toString(), 0);
+				}
 				int playerTotalXp = Utils.totalXp(sender);
 				switch (args[2]) {
 				case "levels":
@@ -188,9 +191,6 @@ public class Xp implements CommandExecutor {
 					}
 					int xpToLose = Utils.totalXp(sender.getLevel()) - Utils.totalXp(sender.getLevel() - amount);
 					removeXp(xpToLose, sender, playerTotalXp);
-					if (!Main.xps.containsKey(sender.getUniqueId().toString())) {
-						Main.xps.put(sender.getUniqueId().toString(), 0);
-					}
 					int oldBal = Main.xps.get(sender.getUniqueId().toString());
 					Main.xps.put(sender.getUniqueId().toString(), oldBal + xpToLose);
 					sender.sendMessage(ChatColor.GREEN + "Xp deposited. New balance: " + Main.xps.get(sender.getUniqueId().toString()));
@@ -206,9 +206,6 @@ public class Xp implements CommandExecutor {
 						break;
 					}
 					removeXp(amount, sender, playerTotalXp);
-					if (!Main.xps.containsKey(sender.getUniqueId().toString())) {
-						Main.xps.put(sender.getUniqueId().toString(), 0);
-					}
 					oldBal = Main.xps.get(sender.getUniqueId().toString());
 					Main.xps.put(sender.getUniqueId().toString(), oldBal + amount);
 					sender.sendMessage(ChatColor.GREEN + "Xp deposited. New balance: " + Main.xps.get(sender.getUniqueId().toString()));
