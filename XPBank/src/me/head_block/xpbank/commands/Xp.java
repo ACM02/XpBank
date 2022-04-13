@@ -147,6 +147,20 @@ public class Xp implements CommandExecutor {
 				Main.xps.put(sender.getUniqueId().toString(), oldBal - amount);
 				sender.sendMessage(ChatColor.GREEN + "Xp withdrawn. New balance: " + Main.xps.get(sender.getUniqueId().toString()));
 				break;
+			case "get":
+				if (!sender.hasPermission("xpbank.admin")) {
+					sender.sendMessage(NO_PERMISSION_MESSAGE);
+					break;
+				}
+				OfflinePlayer offline = Bukkit.getOfflinePlayer(args[1]);
+				if (offline == null) {
+					sender.sendMessage(ChatColor.RED + "Player not found");
+				} else if (!Main.xps.containsKey(offline.getUniqueId().toString())) {
+					sender.sendMessage(ChatColor.RED + "Player has no balance");
+				} else if (Main.xps.containsKey(offline.getUniqueId().toString())) {
+					sender.sendMessage(ChatColor.YELLOW + offline.getName() + "'s stored xp is: " + Main.xps.get(offline.getUniqueId().toString()));
+				}
+				break;
 			default:
 				sender.sendMessage(ChatColor.RED + "Improper usage. Try /xpbank <deposit/withdraw> <amount>");
 				break;
@@ -381,7 +395,6 @@ public class Xp implements CommandExecutor {
 					sender.sendMessage(ChatColor.YELLOW + offline.getName() + "'s balance is now " + Main.xps.get(offline.getUniqueId().toString()));
 					break;
 				}
-				
 			default:
 				sender.sendMessage(ChatColor.RED + "Improper usage. Try /xpbank <deposit/withdraw> <amount>");
 				break;

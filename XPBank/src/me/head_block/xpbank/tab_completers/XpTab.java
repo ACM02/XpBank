@@ -35,6 +35,7 @@ public class XpTab implements TabCompleter {
 				args1.add("set");
 				args1.add("add");
 				args1.add("remove");
+				args1.add("get");
 				args1.add("adminhelp");
 			}
 			for (String a : args1) {
@@ -54,7 +55,7 @@ public class XpTab implements TabCompleter {
 				}
 			}
 			if (sender.hasPermission("xpbank.admin") && (args[0].equalsIgnoreCase("set") || args[0].equalsIgnoreCase("add") || 
-					args[0].equalsIgnoreCase("remove"))) {
+					args[0].equalsIgnoreCase("remove") || args[0].equalsIgnoreCase("get"))) {
 				for (Player p : Bukkit.getOnlinePlayers()) {
 					args2.add(p.getName());
 				}

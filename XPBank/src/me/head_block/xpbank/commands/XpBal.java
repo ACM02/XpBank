@@ -18,10 +18,6 @@ public class XpBal implements CommandExecutor {
 	@SuppressWarnings("deprecation")
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
-		if (!Main.SEE_PLAYER_BALANCES) {
-			sender.sendMessage(ChatColor.RED + "This feature is disabled");
-			return false;
-		}
 		if (!sender.hasPermission("xpbank.use")) {
 			sender.sendMessage(ChatColor.RED + "You do not have permission to use the xp bank");
 		}

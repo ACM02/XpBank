@@ -6,9 +6,12 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.util.ArrayList;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
+
+import me.head_block.xpbank.Main;
 
 public class Utils {
 
@@ -130,5 +133,30 @@ public class Utils {
         	return null;
 		}
 	}
+	
+	
+    /**
+     * An efficient implementation of a bubble sort algorithm it will sort the 
+     * list into ascending order
+     * 
+     * @param list the List to sort
+     */
+    public static void bubbleSort(ArrayList<String> list) {
+        if (list == null) return;                   // error check
+        boolean sorted = true;                      // flag to stop or not
+        for (int i = list.size()-1; i >= 0; i--) {  // traverse list
+            sorted = true;                          // assume sorted
+            for (int j = 0; j < i; j++) {           // traverse again
+                String item1 = list.get(j);  
+                String item2 = list.get(j+1);
+                if (Main.xps.get(list.get(j)) < Main.xps.get(list.get(j+1))) {   // out of order
+                    sorted = false;                 // flag no sorted
+                    list.set(j, item2);             // swap positions
+                    list.set(j+1, item1);
+                } 
+            }
+            if (sorted) return;                     // return early
+        }
+    }
 
 }

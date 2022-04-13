@@ -6,10 +6,13 @@ import java.util.HashMap;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import me.head_block.xpbank.commands.TopXp;
 import me.head_block.xpbank.commands.Xp;
 import me.head_block.xpbank.commands.XpBal;
+import me.head_block.xpbank.tab_completers.TopXpTab;
 import me.head_block.xpbank.tab_completers.XpBalTab;
 import me.head_block.xpbank.tab_completers.XpTab;
+import me.head_block.xpbank.utils.UpdateChecker;
 import me.head_block.xpbank.utils.Utils;
 
 public class Main extends JavaPlugin {
@@ -19,7 +22,6 @@ public class Main extends JavaPlugin {
 	public static int MAX_XP_STORED;
 	public static int MAX_LEVEL_HELD;
 	public static int MAX_XP_HELD;
-	public static boolean SEE_PLAYER_BALANCES;
 	
 	@SuppressWarnings("unchecked")
 	@Override
@@ -39,10 +41,10 @@ public class Main extends JavaPlugin {
 		config.addDefault("maxXpStored", 2000000000);
 		config.addDefault("maxXpHeld", 2000000000);
 		config.addDefault("seePlayerBalances", true);
+		config.addDefault("topXpCommand", true);
 		config.options().copyDefaults(true);
 		saveConfig();
 		
-		SEE_PLAYER_BALANCES = config.getBoolean("seePlayerBalances");
 		MAX_XP_STORED = getConfig().getInt("maxXpStored");
 		if (MAX_XP_STORED >= 2000000000) {
 			MAX_LEVEL_STORED = Utils.level(2000000000);
@@ -67,8 +69,22 @@ public class Main extends JavaPlugin {
 		
 		new Xp(this);
 		new XpTab(this);
-		new XpBal(this);
-		new XpBalTab(this);
+		if (config.getBoolean("seePlayerBalances")) {
+			new XpBal(this);
+			new XpBalTab(this);
+		}
+		if (config.getBoolean("topXpCommand")) {
+			new TopXp(this);
+			new TopXpTab(this);
+		}
+		
+		new UpdateChecker(this, 101132).getVersion(version -> {
+            if (this.getDescription().getVersion().equals(version)) {
+                getLogger().info("There is not a new update available for this plugin");
+            } else {
+                getLogger().info("There is a new update available (" + version + ")! Go to https://www.spigotmc.org/resources/xpbank.101132/ to download the new version.");
+            }
+        });
 	}
 
 	@Override

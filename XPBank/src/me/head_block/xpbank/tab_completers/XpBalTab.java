@@ -19,7 +19,7 @@ public class XpBalTab implements TabCompleter {
 	
 	@Override
 	public List<String> onTabComplete(CommandSender sender, Command cmd, String label, String[] args) {
-		if (!sender.hasPermission("xpbank.use") || !Main.SEE_PLAYER_BALANCES) {
+		if (!sender.hasPermission("xpbank.use")) {
 			return new ArrayList<String>();
 		}
 		List<String> toReturn = new ArrayList<String>();
