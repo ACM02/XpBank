@@ -1,7 +1,7 @@
 name: XpBank
 main: me.head_block.xpbank.Main
 description: Xp Banking System
-version: 1.4.2
+version: 1.5
 author: McCloud
 api-version: 1.18
 
@@ -12,3 +12,5 @@ commands:
 permissions: 
   xpbank.use:
     default: true
+  xpbank.admin:
+    default: op
