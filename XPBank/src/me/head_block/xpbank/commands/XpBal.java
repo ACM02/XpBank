@@ -19,7 +19,7 @@ public class XpBal implements CommandExecutor {
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 		if (!sender.hasPermission("xpbank.use")) {
-			sender.sendMessage(ChatColor.RED + "You do not have permission to use the xp bank");
+			sender.sendMessage(Main.NO_PERM_MESSAGE);
 		}
 		if (args.length == 1) {
 			OfflinePlayer offline = Bukkit.getOfflinePlayer(args[0]);
@@ -33,7 +33,6 @@ public class XpBal implements CommandExecutor {
 		} else {
 			sender.sendMessage(ChatColor.RED + "Improper usage: /xpbal <player>");
 		}
-		
 		return false;
 	}
 

@@ -8,6 +8,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import me.head_block.xpbank.Main;
+import me.head_block.xpbank.ui.MainMenu;
 import me.head_block.xpbank.utils.Utils;
 import net.md_5.bungee.api.ChatColor;
 
@@ -16,7 +17,8 @@ public class Xp implements CommandExecutor {
 	public static final String EXCEEDS_HOLD_LIMIT = ChatColor.RED + "Invalid amount. That exceeds the maximum xp that can be held. (" + Main.MAX_LEVEL_HELD + " levels/" + Main.MAX_XP_HELD + " points)";
 	public static final String EXCEEDS_STORE_LIMIT_TARGET = ChatColor.RED + "Invalid amount. That exceeds the maximum xp that can be held by the target. (" + Main.MAX_LEVEL_HELD + " levels/" + Main.MAX_XP_HELD + " points)";
 	public static final String EXCEEDS_STORE_LIMIT = ChatColor.RED + "Invalid amount. That exceeds the maximum xp that can be stored. (" + Main.MAX_LEVEL_STORED + " levels/" + Main.MAX_XP_STORED + " points)";
-	public static final String HELP_MESSAGE = ChatColor.YELLOW + "------------/xpbank help------------\n"
+	public static final String HELP_MESSAGE = ChatColor.GREEN + "------------/xpbank help------------\n" 
+			+ ChatColor.YELLOW
 			+ "/xpbank - Tells you how much xp you have stored\n"
 			+ "/xpbank xpheld - Tells you how much xp you are holding\n"
 			+ "/xpbank xpstored - Tells you how much xp you have stored\n"
@@ -27,11 +29,12 @@ public class Xp implements CommandExecutor {
 			+ "/xpbank withdraw <amount> <levels/points> - Withdraws <amount> points or levels\n"
 			+ "/xpbank withdraw max - Withdraws all xp up to the max (" + Main.MAX_XP_HELD + " points)\n"
 			+ "/xpbank pay <player> <amount> - Pays <player> the specified amount"; 
-	public static final String ADMIN_HELP_MESSAGE = ChatColor.YELLOW + "------------/xpbank admin help------------\n"
+	public static final String ADMIN_HELP_MESSAGE = ChatColor.GREEN + "------------/xpbank admin help------------\n"
+			+ ChatColor.YELLOW
 			+ "/xpbank set <player> <amount> - Sets <player>'s balance to <amount>\n"
 			+ "/xpbank add <player> <amount> - Adds <amount> to <player>'s balance\n"
 			+ "/xpbank remove <player> <amount> - Removes <amount> from <player>'s balance capping out at 0\n"; 
-	public static final String NO_PERMISSION_MESSAGE = ChatColor.RED + "You don't have permission to do that";
+	public static final String NO_PERMISSION_MESSAGE = Main.NO_PERM_MESSAGE;
 	
 	public Xp (Main plugin) {
 		plugin.getCommand("xpbank").setExecutor(this);
@@ -39,12 +42,8 @@ public class Xp implements CommandExecutor {
 	
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
-		if (sender instanceof Player) {
-			asPlayer((Player) sender, args);
-		} else {
-			asConsole(sender, args);
-		}
-
+		if (sender instanceof Player) asPlayer((Player) sender, args);
+		else asConsole(sender, args);
 		return false;
 	}
 
@@ -56,10 +55,15 @@ public class Xp implements CommandExecutor {
 		}
 		switch (args.length) {
 		case 0:
-			checkBalInstance(sender);
-			sender.sendMessage(ChatColor.YELLOW + "You have " + Main.xps.get(sender.getUniqueId().toString()) + " experience points in the bank. (Enough for level " + 
-					Utils.getMaxLevel(sender, Main.xps.get(sender.getUniqueId().toString())) + ")");
-			break;
+			if (Main.GUI_ENABLED) {
+				MainMenu.openForPlayer(sender);
+				break;
+			} else {
+				checkBalInstance(sender);
+				sender.sendMessage(ChatColor.YELLOW + "You have " + Main.xps.get(sender.getUniqueId().toString()) + " experience points in the bank. (Enough for level " + 
+						Utils.getMaxLevel(sender, Main.xps.get(sender.getUniqueId().toString())) + ")");
+				break;
+			}
 		case 1: 
 			switch(args[0]) {
 			case "help":
@@ -79,10 +83,12 @@ public class Xp implements CommandExecutor {
 						Utils.getMaxLevel(sender, Main.xps.get(sender.getUniqueId().toString())) + ")");
 				break;
 			default:
-				sender.sendMessage(ChatColor.RED + "Improper usage. Try /xpbank help for help");
+				sender.sendMessage(Main.IMPROPER_USE_MESSAGE + "/xpbank help for help");
 				break;
 			}
 			break;
+			
+			
 		case 2:
 			switch(args[0]) {
 			case "deposit":
@@ -93,6 +99,10 @@ public class Xp implements CommandExecutor {
 				}
 				checkBalInstance(sender);
 				int playerTotalXp = Utils.totalXp(sender);
+				if (playerTotalXp == 0) {
+					sender.sendMessage(ChatColor.RED + "You don't have any XP to deposit");
+					break;
+				}
 				if (args[1].equals("max")) {
 					if (Main.xps.get(sender.getUniqueId().toString()) >= Main.MAX_XP_STORED) {
 						sender.sendMessage(EXCEEDS_STORE_LIMIT);
@@ -120,6 +130,10 @@ public class Xp implements CommandExecutor {
 			case "withdraw": 
 				amount = 0;
 				checkBalInstance(sender);
+				if (Main.xps.get(sender.getUniqueId().toString()) == 0) {
+					sender.sendMessage(ChatColor.RED + "You have no XP to withdraw");
+					break;
+				}
 				playerTotalXp = Utils.totalXp(sender);
 				if (args[1].equalsIgnoreCase("max")) {
 					if (playerTotalXp >= Main.MAX_XP_HELD) {
@@ -162,18 +176,24 @@ public class Xp implements CommandExecutor {
 				}
 				break;
 			default:
-				sender.sendMessage(ChatColor.RED + "Improper usage. Try /xpbank <deposit/withdraw> <amount>");
+				sender.sendMessage(Main.IMPROPER_USE_MESSAGE + "/xpbank <deposit/withdraw> <amount>");
 				break;
 			}
 			break;
 			
 		case 3: 
+			
+			
 			switch(args[0]) {
 			case "deposit":
 				int amount = getAmount(args[1], sender);
 				if (amount == -1) break;
 				checkBalInstance(sender);
 				int playerTotalXp = Utils.totalXp(sender);
+				if (playerTotalXp == 0) {
+					sender.sendMessage(ChatColor.RED + "You don't have any XP to deposit");
+					break;
+				}
 				switch (args[2]) {
 				case "levels":
 					if ((long) Main.xps.get(sender.getUniqueId().toString()) + (long) Utils.totalXp(amount) > Main.MAX_XP_STORED) {
@@ -206,7 +226,7 @@ public class Xp implements CommandExecutor {
 					sender.sendMessage(ChatColor.GREEN + "Xp deposited. New balance: " + Main.xps.get(sender.getUniqueId().toString()));
 					break;
 				default:
-					sender.sendMessage(ChatColor.RED + "Improper usage. Try /xpbank <deposit/withdraw> <amount> <levels/points>");
+					sender.sendMessage(Main.IMPROPER_USE_MESSAGE + "/xpbank <deposit/withdraw> <amount> <levels/points>");
 					break;
 				}
 				break;
@@ -214,6 +234,10 @@ public class Xp implements CommandExecutor {
 				amount = getAmount(args[1], sender);
 				if (amount == -1) break;
 				checkBalInstance(sender);
+				if (Main.xps.get(sender.getUniqueId().toString()) == 0) {
+					sender.sendMessage(ChatColor.RED + "You have no XP to withdraw");
+					break;
+				}
 				playerTotalXp = Utils.totalXp(sender);
 				switch(args[2]) {
 				case "levels":
@@ -246,7 +270,7 @@ public class Xp implements CommandExecutor {
 					sender.sendMessage(ChatColor.GREEN + "Xp withdrawn. New balance: " + Main.xps.get(sender.getUniqueId().toString()));
 					break;
 				default:
-					sender.sendMessage(ChatColor.RED + "Improper usage. Try /xpbank <deposit/withdraw> <amount> <levels/points>");
+					sender.sendMessage(Main.IMPROPER_USE_MESSAGE + "/xpbank <deposit/withdraw> <amount> <levels/points>");
 					break;
 				}
 				break;
@@ -396,12 +420,14 @@ public class Xp implements CommandExecutor {
 					break;
 				}
 			default:
-				sender.sendMessage(ChatColor.RED + "Improper usage. Try /xpbank <deposit/withdraw> <amount>");
+				sender.sendMessage(Main.IMPROPER_USE_MESSAGE + "/xpbank <deposit/withdraw> <amount>");
 				break;
 			}
 			break;
+			
+			
 		default:
-			sender.sendMessage(ChatColor.RED + "Improper usage. Try /xpbank help for help");
+			sender.sendMessage(Main.IMPROPER_USE_MESSAGE + "/xpbank help for help");
 			
 			break;
 		}
@@ -409,7 +435,12 @@ public class Xp implements CommandExecutor {
 	
 	private int getAmount(String string, Player p) {
 		try {
-			return Integer.parseInt(string);
+			int toReturn =Integer.parseInt(string);
+			if (toReturn > 0) return toReturn;
+			else {
+				p.sendMessage(ChatColor.RED + "Invalid amount (Must be greater than zero)");
+				return -1;
+			}
 		} catch (NumberFormatException e) {
 			p.sendMessage(ChatColor.RED + "Invalid amount");
 			return -1;
@@ -427,7 +458,7 @@ public class Xp implements CommandExecutor {
 	}
 
 	private void asConsole(CommandSender sender, String[] args) {
-		// TODO Auto-generated method stub
+		
 		
 	}
 	

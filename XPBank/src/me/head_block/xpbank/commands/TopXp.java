@@ -21,7 +21,7 @@ public class TopXp implements CommandExecutor {
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 		if (!sender.hasPermission("xpbank.use")) {
-			sender.sendMessage(ChatColor.RED + "You don't have permission to do that");
+			sender.sendMessage(Main.NO_PERM_MESSAGE);
 			return false;
 		}
 		if (args.length == 0) {
