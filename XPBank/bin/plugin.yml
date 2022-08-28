@@ -1,9 +1,9 @@
 name: XpBank
 main: me.head_block.xpbank.Main
 description: Xp Banking System
-version: 1.9
+version: 1.9.1
 author: McCloud
-api-version: 1.18
+api-version: 1.13
 
 commands: 
   xpbank: 
