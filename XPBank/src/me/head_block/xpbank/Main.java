@@ -26,14 +26,26 @@ import net.md_5.bungee.api.ChatColor;
 public class Main extends JavaPlugin {
 
 	public static HashMap<String,Integer> xps = new HashMap<>();
-	public static int MAX_LEVEL_STORED;
-	public static int MAX_XP_STORED;
-	public static int MAX_LEVEL_HELD;
-	public static int MAX_XP_HELD;
+	public static int MAX_LEVEL_STORED = 21099;		// Default max, just saving computation, same value as Utils.level(2000000000)
+	public static int MAX_XP_STORED = 2000000000;
+	public static int MAX_LEVEL_HELD = 21099;		// Default max, just saving computation, same value as Utils.level(2000000000)
+	public static int MAX_XP_HELD = 2000000000;
 	
 	public static String NO_PERM_MESSAGE;
 	public static String IMPROPER_USE_MESSAGE;
 	public static boolean GUI_ENABLED = true;
+	
+	public final String CONFIG_HEADER = "XpBank version " + this.getDescription().getVersion() + "\n"
+			+ "Spigot page: https://www.spigotmc.org/resources/xpbank.101132/\n"
+			+ "\n"
+			+ "----- Config Explanation -----\n"
+			+ "maxXpStored: Maximum amount of xp points a user can store in the xp bank. (Whole number > 0 below 2B)\n"
+			+ "maxXpHeld: Amount of xp points when the bank will stop adding to the player. (Whole number > 0 below 2B)\n"
+			+ "seePlayerBalances: Toggles whether the /xpbal command is enabled\n"
+			+ "topXpCommand: Toggles whether the /topxp command is enabled\n"
+			+ "guiMenu: Toggles whether the plugin will use the gui menu when /xpbank is used.\n"
+			+ "noPermissionMessage: Message sent to players when they run a command they do not have permission to use\n"
+			+ "improperUseMessage: Message sent to players when they use improper arguments in a command";
 	
 	@SuppressWarnings("unchecked")
 	@Override
@@ -59,16 +71,17 @@ public class Main extends JavaPlugin {
 		config.addDefault("noPermissionMessage", "&cYou don't have permission to do that");
 		config.addDefault("improperUseMessage", "&cImproper usage. Try ");
 		
+		config.options().header(CONFIG_HEADER);
 		
 		config.options().copyDefaults(true);
 		saveConfig();
 		
 		MAX_XP_STORED = getConfig().getInt("maxXpStored");
 		if (MAX_XP_STORED >= 2000000000) {
-			MAX_LEVEL_STORED = Utils.level(2000000000);
+			MAX_LEVEL_STORED = 21099;		// Default max, just saving computation, same value as Utils.level(2000000000)
 			MAX_XP_STORED = 2000000000;
 		} else if (MAX_XP_STORED < 1) {
-			MAX_LEVEL_STORED = Utils.level(2000000000);
+			MAX_LEVEL_STORED = 21099;		// Default max, just saving computation, same value as Utils.level(2000000000)
 			MAX_XP_STORED = 2000000000;
 		} else {
 			MAX_LEVEL_STORED = Utils.level(MAX_XP_STORED);
@@ -76,10 +89,10 @@ public class Main extends JavaPlugin {
 		
 		MAX_XP_HELD = getConfig().getInt("maxXpHeld");
 		if (MAX_XP_HELD >= 2000000000) {
-			MAX_LEVEL_HELD = Utils.level(2000000000);
+			MAX_LEVEL_HELD = 21099;		// Default max, just saving computation, same value as Utils.level(2000000000)
 			MAX_XP_HELD = 2000000000;
 		} else if (MAX_XP_HELD < 1) {
-			MAX_LEVEL_HELD = Utils.level(2000000000);
+			MAX_LEVEL_HELD = 21099;		// Default max, just saving computation, same value as Utils.level(2000000000)
 			MAX_XP_HELD = 2000000000;
 		} else {
 			MAX_LEVEL_HELD = Utils.level(MAX_XP_HELD);
@@ -99,6 +112,10 @@ public class Main extends JavaPlugin {
 			new TopXp(this);
 			new TopXpTab(this);
 		}
+		
+		// GUI menu config
+		//config.addDefault("gui.main-menu.deposit", Utils.createItem(Material.GOLD_INGOT, 1, ChatColor.GREEN + "Deposit XP", ChatColor.YELLOW + "Store up to " + Main.MAX_LEVEL_STORED + " levels"));
+		//saveConfig();
 		
 		new UpdateChecker(this, 101132).getVersion(version -> {
             if (!this.getDescription().getVersion().equals(version)) {
