@@ -7,9 +7,13 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
+import java.util.List;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 
 import me.head_block.xpbank.Main;
 
@@ -158,5 +162,88 @@ public class Utils {
             if (sorted) return;                     // return early
         }
     }
+    
+	public static ItemStack createItem(Material type, int count, String displayName, String...lore) {
+		ItemStack toReturn = new ItemStack(type, count);
+		ItemMeta meta = toReturn.getItemMeta();
+		if (displayName != null) {
+			meta.setDisplayName(displayName);
+		}
+		if (!(lore.length == 1 && lore[0] == "")) {
+			ArrayList<String> loreList = new ArrayList<String>();
+			for (String s : lore) {
+				loreList.add(s);
+			}
+			meta.setLore(loreList);
+		}
+		toReturn.setItemMeta(meta);
+		return toReturn;
+	}
+	
+	public static ItemStack setLore(ItemStack i, String...lore) {
+		ItemMeta meta = i.getItemMeta();
+		if (!(lore.length == 1 && lore[0] == "")) {
+			ArrayList<String> loreList = new ArrayList<String>();
+			for (String s : lore) {
+				loreList.add(s);
+			}
+			meta.setLore(loreList);
+		}
+		i.setItemMeta(meta);
+		return i;
+	}
+	
+	public static ItemStack setLore(ItemStack item, List<String> lore) {
+		ItemMeta meta = item.getItemMeta();
+		if (lore == null || lore.isEmpty()) return item;
+		ArrayList<String> loreList = new ArrayList<String>();
+		for (String s : lore) {
+			loreList.add(s);
+		}
+		meta.setLore(loreList);
+		item.setItemMeta(meta);
+		return item;
+		
+	}
+	
+	public static ItemStack setLoreLine(ItemStack i, int line, String lore) {
+		ItemMeta meta = i.getItemMeta();
+		List<String> loreList;
+		if (meta.hasLore()) {
+			loreList = meta.getLore();
+		} else {
+			loreList = new ArrayList<String>();
+		}
+		loreList.set(line, lore);
+		meta.setLore(loreList);
+		i.setItemMeta(meta);
+		return i;
+	}
+	
+	public static ItemStack setDisplayName(ItemStack i, String name) {
+		ItemMeta meta = i.getItemMeta();
+		meta.setDisplayName(name);
+		i.setItemMeta(meta);
+		return i;
+	}
+	
+	public static ItemStack addLore(ItemStack i, String...lore) {
+		ItemMeta meta = i.getItemMeta();
+		if (!(lore.length == 1 && lore[0] == "")) {
+			List<String> loreList;
+			if (meta.hasLore()) {
+				loreList = meta.getLore();
+			} else {
+				loreList = new ArrayList<String>();
+			}
+
+			for (String s : lore) {
+				loreList.add(s);
+			}
+			meta.setLore(loreList);
+		}
+		i.setItemMeta(meta);
+		return i;
+	}
 
 }
