@@ -31,7 +31,7 @@ public class XpBal implements CommandExecutor {
 				sender.sendMessage(ChatColor.YELLOW + offline.getName() + "'s stored xp is: " + Main.xps.get(offline.getUniqueId().toString()));
 			}
 		} else {
-			sender.sendMessage(ChatColor.RED + "Improper usage: /xpbal <player>");
+			sender.sendMessage(Main.IMPROPER_USE_MESSAGE + " /xpbal <player>");
 		}
 		return false;
 	}

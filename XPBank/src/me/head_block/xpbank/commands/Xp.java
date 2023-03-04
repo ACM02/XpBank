@@ -8,15 +8,14 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import me.head_block.xpbank.Main;
+import me.head_block.xpbank.ui.DepositMenu;
 import me.head_block.xpbank.ui.MainMenu;
+import me.head_block.xpbank.ui.WithdrawMenu;
 import me.head_block.xpbank.utils.Utils;
 import net.md_5.bungee.api.ChatColor;
 
 public class Xp implements CommandExecutor {
 
-	public static final String EXCEEDS_HOLD_LIMIT = ChatColor.RED + "Invalid amount. That exceeds the maximum xp that can be held. (" + Main.MAX_LEVEL_HELD + " levels/" + Main.MAX_XP_HELD + " points)";
-	public static final String EXCEEDS_STORE_LIMIT_TARGET = ChatColor.RED + "Invalid amount. That exceeds the maximum xp that can be held by the target. (" + Main.MAX_LEVEL_HELD + " levels/" + Main.MAX_XP_HELD + " points)";
-	public static final String EXCEEDS_STORE_LIMIT = ChatColor.RED + "Invalid amount. That exceeds the maximum xp that can be stored. (" + Main.MAX_LEVEL_STORED + " levels/" + Main.MAX_XP_STORED + " points)";
 	public static final String HELP_MESSAGE = ChatColor.GREEN + "------------/xpbank help------------\n" 
 			+ ChatColor.YELLOW
 			+ "/xpbank - Tells you how much xp you have stored\n"
@@ -34,7 +33,6 @@ public class Xp implements CommandExecutor {
 			+ "/xpbank set <player> <amount> - Sets <player>'s balance to <amount>\n"
 			+ "/xpbank add <player> <amount> - Adds <amount> to <player>'s balance\n"
 			+ "/xpbank remove <player> <amount> - Removes <amount> from <player>'s balance capping out at 0\n"; 
-	public static final String NO_PERMISSION_MESSAGE = Main.NO_PERM_MESSAGE;
 	
 	public Xp (Main plugin) {
 		plugin.getCommand("xpbank").setExecutor(this);
@@ -70,7 +68,7 @@ public class Xp implements CommandExecutor {
 				sender.sendMessage(HELP_MESSAGE);
 			case "adminhelp":
 				if (!sender.hasPermission("xpbank.admin")) {
-					sender.sendMessage(NO_PERMISSION_MESSAGE);
+					sender.sendMessage(Utils.replacePlaceholders(Main.NO_PERM_MESSAGE));
 				} else {
 					sender.sendMessage(ADMIN_HELP_MESSAGE);
 				}
@@ -81,6 +79,18 @@ public class Xp implements CommandExecutor {
 			case "xpstored":
 				sender.sendMessage(ChatColor.YELLOW + "You have " + Main.xps.get(sender.getUniqueId().toString()) + " experience points in the bank. (Enough for level " + 
 						Utils.getMaxLevel(sender, Main.xps.get(sender.getUniqueId().toString())) + ")");
+				break;
+			case "reload":
+				if (!sender.hasPermission("xpbank.admin")) {
+					sender.sendMessage(Utils.replacePlaceholders(Main.NO_PERM_MESSAGE));
+				} else {
+					Main.instance.reloadConfig();
+					DepositMenu.init();
+					MainMenu.init();
+					WithdrawMenu.init();
+					Main.instance.reloadValues();
+					sender.sendMessage(ChatColor.GREEN + "Reloaded successfully.");
+				}
 				break;
 			default:
 				sender.sendMessage(Main.IMPROPER_USE_MESSAGE + "/xpbank help for help");
@@ -105,7 +115,7 @@ public class Xp implements CommandExecutor {
 				}
 				if (args[1].equals("max")) {
 					if (Main.xps.get(sender.getUniqueId().toString()) >= Main.MAX_XP_STORED) {
-						sender.sendMessage(EXCEEDS_STORE_LIMIT);
+						sender.sendMessage(Utils.replacePlaceholders(Main.EXCEEDS_STORE_LIMIT));
 						break;
 					}
 					amount = playerTotalXp;
@@ -114,7 +124,7 @@ public class Xp implements CommandExecutor {
 					}
 				}
 				if ((long) Main.xps.get(sender.getUniqueId().toString()) + (long) amount > Main.MAX_XP_STORED) {
-					sender.sendMessage(EXCEEDS_STORE_LIMIT);
+					sender.sendMessage(Utils.replacePlaceholders(Main.EXCEEDS_STORE_LIMIT));
 					break;
 				}
 				if (amount > playerTotalXp) {
@@ -137,7 +147,7 @@ public class Xp implements CommandExecutor {
 				playerTotalXp = Utils.totalXp(sender);
 				if (args[1].equalsIgnoreCase("max")) {
 					if (playerTotalXp >= Main.MAX_XP_HELD) {
-						sender.sendMessage(EXCEEDS_HOLD_LIMIT);
+						sender.sendMessage(Utils.replacePlaceholders(Main.EXCEEDS_HOLD_LIMIT));
 						break;
 					}
 					amount = Main.xps.get(sender.getUniqueId().toString());
@@ -149,7 +159,7 @@ public class Xp implements CommandExecutor {
 					if (amount == -1) break;
 				}
 				if ((long) playerTotalXp + (long) amount > Main.MAX_XP_HELD) {
-					sender.sendMessage(EXCEEDS_HOLD_LIMIT);
+					sender.sendMessage(Utils.replacePlaceholders(Main.EXCEEDS_HOLD_LIMIT));
 					break;
 				}
 				if (amount > Main.xps.get(sender.getUniqueId().toString())) {
@@ -163,7 +173,7 @@ public class Xp implements CommandExecutor {
 				break;
 			case "get":
 				if (!sender.hasPermission("xpbank.admin")) {
-					sender.sendMessage(NO_PERMISSION_MESSAGE);
+					sender.sendMessage(Utils.replacePlaceholders(Main.NO_PERM_MESSAGE));
 					break;
 				}
 				OfflinePlayer offline = Bukkit.getOfflinePlayer(args[1]);
@@ -197,7 +207,7 @@ public class Xp implements CommandExecutor {
 				switch (args[2]) {
 				case "levels":
 					if ((long) Main.xps.get(sender.getUniqueId().toString()) + (long) Utils.totalXp(amount) > Main.MAX_XP_STORED) {
-						sender.sendMessage(EXCEEDS_STORE_LIMIT);
+						sender.sendMessage(Utils.replacePlaceholders(Main.EXCEEDS_STORE_LIMIT));
 						break;
 					}
 					if (sender.getLevel() < amount) {
@@ -213,7 +223,7 @@ public class Xp implements CommandExecutor {
 					
 				case "points":
 					if ((long) Main.xps.get(sender.getUniqueId().toString()) + (long) amount > Main.MAX_XP_STORED) {
-						sender.sendMessage(EXCEEDS_STORE_LIMIT);
+						sender.sendMessage(Utils.replacePlaceholders(Main.EXCEEDS_STORE_LIMIT));
 						break;
 					}
 					if (amount > playerTotalXp) {
@@ -243,7 +253,7 @@ public class Xp implements CommandExecutor {
 				case "levels":
 					int xpToAdd = Utils.totalXp(sender.getLevel() + amount) - Utils.totalXp(sender.getLevel());
 					if ((long) playerTotalXp + (long) xpToAdd > Main.MAX_XP_HELD) {
-						sender.sendMessage(EXCEEDS_HOLD_LIMIT);
+						sender.sendMessage(Utils.replacePlaceholders(Main.EXCEEDS_HOLD_LIMIT));
 						break;
 					}
 					if (xpToAdd > Main.xps.get(sender.getUniqueId().toString())) {
@@ -257,7 +267,7 @@ public class Xp implements CommandExecutor {
 					break;
 				case "points":
 					if ((long) playerTotalXp + (long) amount > Main.MAX_XP_HELD) {
-						sender.sendMessage(EXCEEDS_HOLD_LIMIT);
+						sender.sendMessage(Utils.replacePlaceholders(Main.EXCEEDS_HOLD_LIMIT));
 						break;
 					}
 					if (amount > Main.xps.get(sender.getUniqueId().toString())) {
@@ -286,7 +296,7 @@ public class Xp implements CommandExecutor {
 				if (offline != null) {
 					if (Main.xps.containsKey(offline.getUniqueId().toString())) {
 						if ((long) Main.xps.get(offline.getUniqueId().toString()) + (long) amount > Main.MAX_XP_STORED) {
-							sender.sendMessage(EXCEEDS_STORE_LIMIT_TARGET);
+							sender.sendMessage(Utils.replacePlaceholders(Main.EXCEEDS_STORE_LIMIT_TARGET));
 							break;
 						}
 					}
@@ -317,13 +327,13 @@ public class Xp implements CommandExecutor {
 				break;
 			case "set":
 				if (!sender.hasPermission("xpbank.admin")) {
-					sender.sendMessage(NO_PERMISSION_MESSAGE);
+					sender.sendMessage(Utils.replacePlaceholders(Main.NO_PERM_MESSAGE));
 					break;
 				}
 				amount = getAmount(args[2], sender);
 				if (amount == -1) break;
 				if (amount > Main.MAX_XP_STORED) {
-					sender.sendMessage(EXCEEDS_STORE_LIMIT_TARGET);
+					sender.sendMessage(Utils.replacePlaceholders(Main.EXCEEDS_STORE_LIMIT_TARGET));
 					break;
 				}
 				offline = Bukkit.getOfflinePlayer(args[1]);
@@ -352,13 +362,13 @@ public class Xp implements CommandExecutor {
 				}
 			case "add":
 				if (!sender.hasPermission("xpbank.admin")) {
-					sender.sendMessage(NO_PERMISSION_MESSAGE);
+					sender.sendMessage(Utils.replacePlaceholders(Main.NO_PERM_MESSAGE));
 					break;
 				}
 				amount = getAmount(args[2], sender);
 				if (amount == -1) break;
 				if (amount > Main.MAX_XP_STORED) {
-					sender.sendMessage(EXCEEDS_STORE_LIMIT_TARGET);
+					sender.sendMessage(Utils.replacePlaceholders(Main.EXCEEDS_STORE_LIMIT_TARGET));
 					break;
 				}
 				offline = Bukkit.getOfflinePlayer(args[1]);
@@ -387,7 +397,7 @@ public class Xp implements CommandExecutor {
 				}
 			case "remove":
 				if (!sender.hasPermission("xpbank.admin")) {
-					sender.sendMessage(NO_PERMISSION_MESSAGE);
+					sender.sendMessage(Utils.replacePlaceholders(Main.NO_PERM_MESSAGE));
 					break;
 				}
 				amount = getAmount(args[2], sender);

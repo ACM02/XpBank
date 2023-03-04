@@ -2,14 +2,12 @@ package me.head_block.xpbank.ui;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
-import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import me.head_block.xpbank.Main;
-import me.head_block.xpbank.commands.Xp;
 import me.head_block.xpbank.utils.Utils;
 import net.md_5.bungee.api.ChatColor;
 
@@ -31,81 +29,54 @@ public class WithdrawMenu {
 		ItemStack withdraw25 = new ItemStack(Material.GREEN_CONCRETE);
 		ItemMeta meta = withdraw25.getItemMeta();
 		meta.setDisplayName(ChatColor.GREEN + "Withdraw 25%");
-		//ArrayList<String> lore = new ArrayList<String>();
-		//lore.add(ChatColor.YELLOW + "Deposit 25% of your XP");
-		//meta.setLore(lore);
 		withdraw25.setItemMeta(meta);
 		UIinventory[0] = withdraw25;
 		
 		ItemStack withdraw50 = new ItemStack(Material.GREEN_CONCRETE);
 		meta = withdraw50.getItemMeta();
 		meta.setDisplayName(ChatColor.GREEN + "Withdraw 50%");
-		//lore = new ArrayList<String>();
-		//lore.add(ChatColor.YELLOW + "Deposit 50% of your XP");
-		//meta.setLore(lore);
 		withdraw50.setItemMeta(meta);
 		UIinventory[1] = withdraw50;
 		
 		ItemStack withdraw75 = new ItemStack(Material.GREEN_CONCRETE);
 		meta = withdraw75.getItemMeta();
 		meta.setDisplayName(ChatColor.GREEN + "Withdraw 75%");
-		//lore = new ArrayList<String>();
-		//lore.add(ChatColor.YELLOW + "Deposit 75% of your XP");
-		//meta.setLore(lore);
 		withdraw75.setItemMeta(meta);
 		UIinventory[2] = withdraw75;
 		
 		ItemStack withdraw100 = new ItemStack(Material.GREEN_CONCRETE);
 		meta = withdraw100.getItemMeta();
 		meta.setDisplayName(ChatColor.GREEN + "Withdraw 100%");
-		//lore = new ArrayList<String>();
-		//lore.add(ChatColor.YELLOW + "Deposit 100% of your XP");
-		//meta.setLore(lore);
 		withdraw100.setItemMeta(meta);
 		UIinventory[3] = withdraw100;
 		
 		ItemStack withdraw1L = new ItemStack(Material.GREEN_WOOL);
 		meta = withdraw1L.getItemMeta();
 		meta.setDisplayName(ChatColor.GREEN + "Withdraw 1 level");
-		//lore = new ArrayList<String>();
-		//lore.add(ChatColor.YELLOW + "Deposit 100% of your XP");
-		//meta.setLore(lore);
 		withdraw1L.setItemMeta(meta);
 		UIinventory[5] = withdraw1L;
 		
 		ItemStack withdraw5L = new ItemStack(Material.GREEN_WOOL);
 		meta = withdraw5L.getItemMeta();
 		meta.setDisplayName(ChatColor.GREEN + "Withdraw 5 levels");
-		//lore = new ArrayList<String>();
-		//lore.add(ChatColor.YELLOW + "Deposit 100% of your XP");
-		//meta.setLore(lore);
 		withdraw5L.setItemMeta(meta);
 		UIinventory[6] = withdraw5L;
 		
 		ItemStack withdraw10L = new ItemStack(Material.GREEN_WOOL);
 		meta = withdraw10L.getItemMeta();
 		meta.setDisplayName(ChatColor.GREEN + "Withdraw 10 levels");
-		//lore = new ArrayList<String>();
-		//lore.add(ChatColor.YELLOW + "Deposit 100% of your XP");
-		//meta.setLore(lore);
 		withdraw10L.setItemMeta(meta);
 		UIinventory[7] = withdraw10L;
 		
 		ItemStack withdraw15L = new ItemStack(Material.GREEN_WOOL);
 		meta = withdraw5L.getItemMeta();
 		meta.setDisplayName(ChatColor.GREEN + "Withdraw 15 levels");
-		//lore = new ArrayList<String>();
-		//lore.add(ChatColor.YELLOW + "Deposit 100% of your XP");
-		//meta.setLore(lore);
 		withdraw15L.setItemMeta(meta);
 		UIinventory[8] = withdraw15L;
 		
 		ItemStack withdrawMax = new ItemStack(Material.EMERALD_BLOCK);
 		meta = withdrawMax.getItemMeta();
 		meta.setDisplayName(ChatColor.GREEN + "Withdraw max");
-		//lore = new ArrayList<String>();
-		//lore.add(ChatColor.YELLOW + "Deposit 100% of your XP");
-		//meta.setLore(lore);
 		withdrawMax.setItemMeta(meta);
 		UIinventory[4] = withdrawMax;
 		
@@ -142,7 +113,7 @@ public class WithdrawMenu {
 			}
 			if (percentage > 0.00) {
 				int amount = 0;
-				checkBalInstance(p);
+				Utils.checkBalInstance(p);
 				if (Main.xps.get(p.getUniqueId().toString()) == 0) {
 					p.sendMessage(ChatColor.RED + "You have no XP to withdraw");
 					return;
@@ -154,7 +125,7 @@ public class WithdrawMenu {
 					return;
 				}
 				if ((long) playerTotalXp + (long) amount > Main.MAX_XP_HELD) {
-					p.sendMessage(Xp.EXCEEDS_HOLD_LIMIT);
+					p.sendMessage(Utils.replacePlaceholders(Main.EXCEEDS_HOLD_LIMIT));
 					return;
 				} 
 				addXp(amount, p, playerTotalXp);
@@ -176,7 +147,7 @@ public class WithdrawMenu {
 				amount = 5;
 			}
 			if (amount > 0) {
-				checkBalInstance(p);
+				Utils.checkBalInstance(p);
 				if (Main.xps.get(p.getUniqueId().toString()) == 0) {
 					p.sendMessage(ChatColor.RED + "You have no XP to withdraw");
 					return;
@@ -184,7 +155,7 @@ public class WithdrawMenu {
 				int playerTotalXp = Utils.totalXp(p);
 				int xpToAdd = Utils.totalXp(p.getLevel() + amount) - Utils.totalXp(p.getLevel());
 				if ((long) playerTotalXp + (long) xpToAdd > Main.MAX_XP_HELD) {
-					p.sendMessage(Xp.EXCEEDS_HOLD_LIMIT);
+					p.sendMessage(Utils.replacePlaceholders(Main.EXCEEDS_HOLD_LIMIT));
 					return;
 				}
 				if (xpToAdd > Main.xps.get(p.getUniqueId().toString())) {
@@ -200,14 +171,14 @@ public class WithdrawMenu {
 			
 			if (name.contains("max")) {
 				amount = 0;
-				checkBalInstance(p);
+				Utils.checkBalInstance(p);
 				if (Main.xps.get(p.getUniqueId().toString()) == 0) {
 					p.sendMessage(ChatColor.RED + "You have no XP to withdraw");
 					return;
 				}
 				int playerTotalXp = Utils.totalXp(p);
 				if (playerTotalXp >= Main.MAX_XP_HELD) {
-					p.sendMessage(Xp.EXCEEDS_HOLD_LIMIT);
+					p.sendMessage(Utils.replacePlaceholders(Main.EXCEEDS_HOLD_LIMIT));
 					return;
 				}
 				amount = Main.xps.get(p.getUniqueId().toString());
@@ -219,7 +190,7 @@ public class WithdrawMenu {
 					return;
 				}
 				if ((long) playerTotalXp + (long) amount > Main.MAX_XP_HELD) {
-					p.sendMessage(Xp.EXCEEDS_HOLD_LIMIT);
+					p.sendMessage(Utils.replacePlaceholders(Main.EXCEEDS_HOLD_LIMIT));
 					return;
 				} 
 				addXp(amount, p, playerTotalXp);
@@ -229,16 +200,6 @@ public class WithdrawMenu {
 				return;
 			}
 			
-		}
-	}
-	
-	/**
-	 * Checks to see if a player has a balance, if not, creates a balance for the user
-	 * @param p The player to check
-	 */
-	private static void checkBalInstance(OfflinePlayer p) {
-		if (!Main.xps.containsKey(p.getUniqueId().toString())) {
-			Main.xps.put(p.getUniqueId().toString(), 0);
 		}
 	}
 	

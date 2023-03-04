@@ -11,6 +11,7 @@ import java.util.List;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -244,6 +245,43 @@ public class Utils {
 		}
 		i.setItemMeta(meta);
 		return i;
+	}
+
+	/*	GUI menu Placeholders
+	 *  
+	 *  - %MAX_LEVEL_HELD%
+	 *  - %MAX_LEVEL_STORED%
+	 *  - %MAX_XP_HELD%
+	 *  - %MAX_XP_STORED%
+	 *  - %XP_STORED%
+	 *  - %XP_HELD%
+	 *  
+	 */
+	
+	
+	public static String replacePlaceholders(String text) {
+		text = text.replace("%MAX_LEVEL_HELD%", "" + Main.MAX_LEVEL_HELD);
+		text = text.replace("%MAX_LEVEL_STORED%", "" + Main.MAX_LEVEL_STORED);
+		text = text.replace("%MAX_XP_HELD%", "" + Main.MAX_XP_HELD);
+		text = text.replace("%MAX_XP_STORED%", "" + Main.MAX_XP_STORED);
+		return text;
+	}
+	
+	public static String replacePlaceholders(String text, Player p) {
+		text = text.replace("%MAX_LEVEL_HELD%", "" + Main.MAX_LEVEL_HELD);
+		text = text.replace("%MAX_LEVEL_STORED%", "" + Main.MAX_LEVEL_STORED);
+		text = text.replace("%MAX_XP_HELD%", "" + Main.MAX_XP_HELD);
+		text = text.replace("%MAX_XP_STORED%", "" + Main.MAX_XP_STORED);
+		checkBalInstance(p);
+		text = text.replace("%XP_STORED%", "" + Main.xps.get(p.getUniqueId().toString()));
+		text = text.replace("%XP_HELD%", "" + Utils.totalXp(p));
+		return text;
+	}
+	
+	public static void checkBalInstance(OfflinePlayer p) {
+		if (!Main.xps.containsKey(p.getUniqueId().toString())) {
+			Main.xps.put(p.getUniqueId().toString(), 0);
+		}
 	}
 
 }

@@ -37,6 +37,7 @@ public class XpTab implements TabCompleter {
 				args1.add("remove");
 				args1.add("get");
 				args1.add("adminhelp");
+				args1.add("reload");
 			}
 			for (String a : args1) {
 				if (a.toLowerCase().startsWith(args[0].toLowerCase())) {

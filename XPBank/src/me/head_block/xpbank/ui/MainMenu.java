@@ -1,18 +1,15 @@
 package me.head_block.xpbank.ui;
 
-import java.util.ArrayList;
+import java.util.List;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
-import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
 
 import me.head_block.xpbank.Main;
 import me.head_block.xpbank.utils.Utils;
-import net.md_5.bungee.api.ChatColor;
 
 public class MainMenu {
 	
@@ -35,22 +32,35 @@ public class MainMenu {
 	public static void init() {
 		UIinventory = new ItemStack[INV_SIZE];
 		
-		ItemStack deposit = new ItemStack(Material.GOLD_INGOT);
-		ItemMeta meta = deposit.getItemMeta();
-		meta.setDisplayName(ChatColor.GREEN + "Deposit XP");
-		ArrayList<String> lore = new ArrayList<String>();
-		lore.add(ChatColor.YELLOW + "Store up to " + Main.MAX_LEVEL_STORED + " levels");
-		meta.setLore(lore);
-		deposit.setItemMeta(meta);
+		ItemStack deposit = Main.instance.getConfig().getItemStack("gui.main-menu.deposit").clone();
+		if (deposit.hasItemMeta()) {
+			String name = deposit.getItemMeta().getDisplayName();
+			deposit.getItemMeta().setDisplayName(Utils.replacePlaceholders(name));
+		}
+		if (deposit.hasItemMeta() && deposit.getItemMeta().hasLore()) {
+			List<String> lore = deposit.getItemMeta().getLore();
+			for (int i = 0; i < lore.size(); i++) {
+				lore.set(i, Utils.replacePlaceholders(lore.get(i)));
+			}
+			Utils.setLore(deposit, lore);
+		}
+		//ItemStack deposit = Utils.createItem(Material.GOLD_INGOT, 1, ChatColor.GREEN + "Deposit XP", ChatColor.YELLOW + "Store up to " + Main.MAX_LEVEL_STORED + " levels");
 		UIinventory[9*1 + 3] = deposit;
 		
-		ItemStack withdraw = new ItemStack(Material.IRON_INGOT);
-		meta = withdraw.getItemMeta();
-		meta.setDisplayName(ChatColor.GREEN + "Withdraw XP");
-		lore = new ArrayList<String>();
-		lore.add(ChatColor.YELLOW + "Hold up to " + Main.MAX_LEVEL_HELD + " levels");
-		meta.setLore(lore);
-		withdraw.setItemMeta(meta);
+		
+		ItemStack withdraw = Main.instance.getConfig().getItemStack("gui.main-menu.withdraw").clone();
+		if (withdraw.hasItemMeta()) {
+			String name = withdraw.getItemMeta().getDisplayName();
+			withdraw.getItemMeta().setDisplayName(Utils.replacePlaceholders(name));
+		}
+		if (withdraw.hasItemMeta() && withdraw.getItemMeta().hasLore()) {
+			List<String> lore = withdraw.getItemMeta().getLore();
+			for (int i = 0; i < lore.size(); i++) {
+				lore.set(i, Utils.replacePlaceholders(lore.get(i)));
+			}
+			Utils.setLore(withdraw, lore);
+		}
+		//ItemStack withdraw = Utils.createItem(Material.IRON_INGOT, 1, ChatColor.GREEN + "Withdraw XP", ChatColor.YELLOW + "Hold up to " + Main.MAX_LEVEL_HELD + " levels");
 		UIinventory[9*1 + 5] = withdraw;
 		
 		//ItemStack pay = new ItemStack(Material.REDSTONE);
@@ -68,23 +78,35 @@ public class MainMenu {
 		Inventory toOpen = Bukkit.createInventory(null, INV_SIZE, INV_NAME);
 		toOpen.setContents(UIinventory);
 		
-		ItemStack stored = new ItemStack(Material.EXPERIENCE_BOTTLE);
-		ItemMeta meta = stored.getItemMeta();
-		meta.setDisplayName(ChatColor.GREEN + "Xp stored");
-		ArrayList<String> lore = new ArrayList<String>();
-		checkBalInstance(p);
-		lore.add(ChatColor.YELLOW + "" + Main.xps.get(p.getUniqueId().toString()) + "/" + Main.MAX_XP_STORED);
-		meta.setLore(lore);
-		stored.setItemMeta(meta);
+		//ItemStack stored = Utils.createItem(Material.EXPERIENCE_BOTTLE, 1, ChatColor.GREEN + "Xp stored", ChatColor.YELLOW + "" + Main.xps.get(p.getUniqueId().toString()) + "/" + Main.MAX_XP_STORED);
+		ItemStack stored = Main.instance.getConfig().getItemStack("gui.main-menu.xp-stored").clone();
+		
+		if (stored.hasItemMeta()) {
+			String name = stored.getItemMeta().getDisplayName();
+			stored.getItemMeta().setDisplayName(Utils.replacePlaceholders(name, p));
+		}
+		if (stored.hasItemMeta() && stored.getItemMeta().hasLore()) {
+			List<String> lore = stored.getItemMeta().getLore();
+			for (int i = 0; i < lore.size(); i++) {
+				lore.set(i, Utils.replacePlaceholders(lore.get(i), p));
+			}
+			Utils.setLore(stored, lore);
+		}
 		toOpen.setItem(9*3 + 3, stored);
 		
-		ItemStack held = new ItemStack(Material.BRICK);
-		meta = held.getItemMeta();
-		meta.setDisplayName(ChatColor.GREEN + "XP held");
-		lore = new ArrayList<String>();
-		lore.add("" + ChatColor.YELLOW + Utils.totalXp(p) + "/" + Main.MAX_XP_HELD);
-		meta.setLore(lore);
-		held.setItemMeta(meta);
+		//ItemStack held = Utils.createItem(Material.BRICK, 1, ChatColor.GREEN + "XP held", "" + ChatColor.YELLOW + Utils.totalXp(p) + "/" + Main.MAX_XP_HELD);
+		ItemStack held = Main.instance.getConfig().getItemStack("gui.main-menu.xp-held").clone();
+		if (held.hasItemMeta()) {
+			String name = held.getItemMeta().getDisplayName();
+			held.getItemMeta().setDisplayName(Utils.replacePlaceholders(name, p));
+		}
+		if (held.hasItemMeta() && held.getItemMeta().hasLore()) {
+			List<String> lore = held.getItemMeta().getLore();
+			for (int i = 0; i < lore.size(); i++) {
+				lore.set(i, Utils.replacePlaceholders(lore.get(i), p));
+			}
+			Utils.setLore(held, lore);
+		}
 		toOpen.setItem(9*3 + 5, held);
 		
 		p.openInventory(toOpen);
@@ -97,11 +119,4 @@ public class MainMenu {
 			WithdrawMenu.openForPlayer(p);
 		}
 	}
-	
-	private static void checkBalInstance(OfflinePlayer p) {
-		if (!Main.xps.containsKey(p.getUniqueId().toString())) {
-			Main.xps.put(p.getUniqueId().toString(), 0);
-		}
-	}
-	
 }
