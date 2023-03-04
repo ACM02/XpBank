@@ -71,10 +71,7 @@ public class Main extends JavaPlugin {
 	
 	/*
 	 * TODO
-	 * Remember to put that /xpbank reload won't enable/disable commands 
-	 * Make note that users can delete any fields in their config that aren't present in the documentation
 	 * Say I might be doing several little updates
-	 * Document PAPI placeholders
 	 * 
 	 * Fixes:
 	 * Deposit max in GUI is exceeding store limit (Probably in command too) (Seems like only some cases, and hard to debug...)
