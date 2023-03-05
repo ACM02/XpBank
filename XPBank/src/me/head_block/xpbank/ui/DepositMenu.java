@@ -8,6 +8,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import me.head_block.xpbank.Main;
+import me.head_block.xpbank.commands.Xp;
 import me.head_block.xpbank.utils.Utils;
 import net.md_5.bungee.api.ChatColor;
 
@@ -118,14 +119,14 @@ public class DepositMenu {
 				int points = (int) (totalXP * percentage);
 				Utils.checkBalInstance(p);
 				if (points == 0) {
-					p.sendMessage(ChatColor.RED + "You have no xp to deposit");
+					p.sendMessage(Utils.replacePlaceholders(Xp.NO_XP_DEPOSIT_MESSAGE, p));
 				} else if ((long) Main.xps.get(p.getUniqueId().toString()) + (long) points > Main.MAX_XP_STORED) {
 					p.sendMessage(Utils.replacePlaceholders(Main.EXCEEDS_STORE_LIMIT));
 				} else {
 					removeXp(points, p, totalXP);
 					long oldBal = Main.xps.get(p.getUniqueId().toString());
 					Main.xps.put(p.getUniqueId().toString(), (int) (oldBal + points));
-					p.sendMessage(ChatColor.GREEN + "Xp deposited. New balance: " + Main.xps.get(p.getUniqueId().toString()));
+					p.sendMessage(Utils.replacePlaceholders(Xp.DEPOSIT_MESSAGE));
 				}
 				return;
 			}
@@ -145,7 +146,7 @@ public class DepositMenu {
 			if (amount > 0) {
 				Utils.checkBalInstance(p);
 				if ((long) Main.xps.get(p.getUniqueId().toString()) + (long) Utils.totalXp(amount) > Main.MAX_XP_STORED) {
-					p.sendMessage(Utils.replacePlaceholders(Main.EXCEEDS_STORE_LIMIT));
+					p.sendMessage(Utils.replacePlaceholders(Main.EXCEEDS_STORE_LIMIT, p));
 				} else if (p.getLevel() < amount) {
 					p.sendMessage(ChatColor.RED + "You don't have that many levels");
 				} else {
@@ -153,7 +154,7 @@ public class DepositMenu {
 					removeXp(xpToLose, p, Utils.totalXp(p));
 					int oldBal = Main.xps.get(p.getUniqueId().toString());
 					Main.xps.put(p.getUniqueId().toString(), oldBal + xpToLose);
-					p.sendMessage(ChatColor.GREEN + "Xp deposited. New balance: " + Main.xps.get(p.getUniqueId().toString()));
+					p.sendMessage(Utils.replacePlaceholders(Xp.DEPOSIT_MESSAGE, p));
 				}
 				return;
 			}
@@ -161,7 +162,7 @@ public class DepositMenu {
 			if (name.contains("max")) {
 				int totalXP = Utils.totalXp(p);
 				if (totalXP == 0) {
-					p.sendMessage(ChatColor.RED + "You have no xp to deposit");
+					p.sendMessage(Utils.replacePlaceholders(Xp.NO_XP_DEPOSIT_MESSAGE, p));
 					return;
 				}
 				int points = totalXP;
@@ -169,17 +170,17 @@ public class DepositMenu {
 					points = Main.MAX_XP_STORED - Main.xps.get(p.getUniqueId().toString());
 				}
 				if (points == 0) {
-					p.sendMessage(Utils.replacePlaceholders(Main.EXCEEDS_STORE_LIMIT));
+					p.sendMessage(Utils.replacePlaceholders(Main.EXCEEDS_STORE_LIMIT, p));
 					return;
 				}
 				Utils.checkBalInstance(p);
 				if ((long) Main.xps.get(p.getUniqueId().toString()) + (long) points > Main.MAX_XP_STORED) {
-					p.sendMessage(Utils.replacePlaceholders(Main.EXCEEDS_STORE_LIMIT));
+					p.sendMessage(Utils.replacePlaceholders(Main.EXCEEDS_STORE_LIMIT, p));
 				} else {
 					removeXp(points, p, totalXP);
 					long oldBal = Main.xps.get(p.getUniqueId().toString());
 					Main.xps.put(p.getUniqueId().toString(), (int) (oldBal + points));
-					p.sendMessage(ChatColor.GREEN + "Xp deposited. New balance: " + Main.xps.get(p.getUniqueId().toString()));
+					p.sendMessage(Utils.replacePlaceholders(Xp.DEPOSIT_MESSAGE, p));
 				}
 				return;
 			}

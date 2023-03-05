@@ -13,6 +13,7 @@ import me.head_block.xpbank.commands.Xp;
 import me.head_block.xpbank.commands.XpBal;
 import me.head_block.xpbank.listeners.DepositMenuClick;
 import me.head_block.xpbank.listeners.MainMenuClick;
+import me.head_block.xpbank.listeners.UpdateAvailableMessage;
 import me.head_block.xpbank.listeners.WithdrawMenuClick;
 import me.head_block.xpbank.placeholders.XpPlaceHolder;
 import me.head_block.xpbank.tab_completers.TopXpTab;
@@ -44,6 +45,7 @@ public class Main extends JavaPlugin {
 	
 	
 	public static Main instance;
+	public static boolean updateAvailable;
 	
 	public final String CONFIG_HEADER = "XpBank version " + this.getDescription().getVersion() + "\n"
 			+ "Spigot page: https://www.spigotmc.org/resources/xpbank.101132/\n"
@@ -62,6 +64,7 @@ public class Main extends JavaPlugin {
 			+ "seePlayerBalances: Toggles whether the /xpbal command is enabled\n"
 			+ "topXpCommand: Toggles whether the /topxp command is enabled\n"
 			+ "guiMenu: Toggles whether the plugin will use the gui menu when /xpbank is used.\n"
+			+ "update-message: Toggles whether the plugin will send a message to admins saying an update is available for the plugin"
 			+ "messages.noPermission: Message sent to players when they run a command they do not have permission to use\n"
 			+ "messages.improperUse: Message sent to players when they use improper arguments in a command\n"
 			+ "messages.exeeds-hold-limit: Message sent if a player tries to hold more than the max xp\n"
@@ -72,19 +75,25 @@ public class Main extends JavaPlugin {
 	/*
 	 * TODO
 	 * Say I might be doing several little updates
+	 * Update ALL documentation to reflect v1.11 changes on release
 	 * 
 	 * Fixes:
 	 * Deposit max in GUI is exceeding store limit (Probably in command too) (Seems like only some cases, and hard to debug...)
 	 * 
 	 * Future plans:
-	 * Proper API
+	 * Make an economy manager to clean up Xp.java, and the menus (duplicated code)
+	 * xpbank totalxp command for both held and stored xp combined
+	 * Better colours in help menu (Hard to read rn)
+	 * Option to disable admin changed your balance
+	 * Add blocks to UI indicating stored and held xp
+	 * Better API?
+	 * Menu names in config
 	 * Language files
 	 * Even more message config
 	 * Comments spaced out in the config for a better look
-	 * Withdraw and deposit GUI items in config
+	 * Withdraw and deposit GUI menu items in config
 	 * Better documentation/main page
 	 * Pay in xp (GUI)
-	 * Add message to admins when an update is available
 	 */
 	
 	
@@ -109,6 +118,7 @@ public class Main extends JavaPlugin {
 		config.addDefault("seePlayerBalances", true);
 		config.addDefault("topXpCommand", true);
 		config.addDefault("guiMenu", true);
+		config.addDefault("update-message", true);
 		
 		config.addDefault("messages.noPermission", "&cYou don't have permission to do that");
 		config.addDefault("messages.improperUse", "&cImproper usage. Try ");
@@ -181,6 +191,7 @@ public class Main extends JavaPlugin {
 		new UpdateChecker(this, 101132).getVersion(version -> {
             if (!this.getDescription().getVersion().equals(version)) {
                 getLogger().info("There is a new update available (" + version + ")! Go to https://www.spigotmc.org/resources/xpbank.101132/ to download the new version.");
+        		updateAvailable = true;
             }
         });
 		
@@ -197,6 +208,7 @@ public class Main extends JavaPlugin {
 		new DepositMenuClick(this);
 		WithdrawMenu.init();
 		new WithdrawMenuClick(this);
+		new UpdateAvailableMessage(this);
 	}
 
 	@Override

@@ -8,6 +8,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import me.head_block.xpbank.Main;
+import me.head_block.xpbank.commands.Xp;
 import me.head_block.xpbank.utils.Utils;
 import net.md_5.bungee.api.ChatColor;
 
@@ -115,7 +116,7 @@ public class WithdrawMenu {
 				int amount = 0;
 				Utils.checkBalInstance(p);
 				if (Main.xps.get(p.getUniqueId().toString()) == 0) {
-					p.sendMessage(ChatColor.RED + "You have no XP to withdraw");
+					p.sendMessage(Utils.replacePlaceholders(Xp.NO_XP_WITHDRAW_MESSAGE, p));
 					return;
 				}
 				int playerTotalXp = Utils.totalXp(p);
@@ -125,13 +126,13 @@ public class WithdrawMenu {
 					return;
 				}
 				if ((long) playerTotalXp + (long) amount > Main.MAX_XP_HELD) {
-					p.sendMessage(Utils.replacePlaceholders(Main.EXCEEDS_HOLD_LIMIT));
+					p.sendMessage(Utils.replacePlaceholders(Main.EXCEEDS_HOLD_LIMIT, p));
 					return;
 				} 
 				addXp(amount, p, playerTotalXp);
 				int oldBal = Main.xps.get(p.getUniqueId().toString());
 				Main.xps.put(p.getUniqueId().toString(), oldBal - amount);
-				p.sendMessage(ChatColor.GREEN + "Xp withdrawn. New balance: " + Main.xps.get(p.getUniqueId().toString()));
+				p.sendMessage(Utils.replacePlaceholders(Xp.WITHDRAW_MESSAGE, p));
 				return;
 			}
 
@@ -149,13 +150,13 @@ public class WithdrawMenu {
 			if (amount > 0) {
 				Utils.checkBalInstance(p);
 				if (Main.xps.get(p.getUniqueId().toString()) == 0) {
-					p.sendMessage(ChatColor.RED + "You have no XP to withdraw");
+					p.sendMessage(Utils.replacePlaceholders(Xp.NO_XP_WITHDRAW_MESSAGE, p));
 					return;
 				}
 				int playerTotalXp = Utils.totalXp(p);
 				int xpToAdd = Utils.totalXp(p.getLevel() + amount) - Utils.totalXp(p.getLevel());
 				if ((long) playerTotalXp + (long) xpToAdd > Main.MAX_XP_HELD) {
-					p.sendMessage(Utils.replacePlaceholders(Main.EXCEEDS_HOLD_LIMIT));
+					p.sendMessage(Utils.replacePlaceholders(Main.EXCEEDS_HOLD_LIMIT, p));
 					return;
 				}
 				if (xpToAdd > Main.xps.get(p.getUniqueId().toString())) {
@@ -165,7 +166,7 @@ public class WithdrawMenu {
 				addXp(xpToAdd, p, playerTotalXp);
 				int oldBal = Main.xps.get(p.getUniqueId().toString());
 				Main.xps.put(p.getUniqueId().toString(), oldBal - xpToAdd);
-				p.sendMessage(ChatColor.GREEN + "Xp withdrawn. New balance: " + Main.xps.get(p.getUniqueId().toString()));
+				p.sendMessage(Utils.replacePlaceholders(Xp.WITHDRAW_MESSAGE, p));
 				return;
 			}
 			
@@ -173,12 +174,12 @@ public class WithdrawMenu {
 				amount = 0;
 				Utils.checkBalInstance(p);
 				if (Main.xps.get(p.getUniqueId().toString()) == 0) {
-					p.sendMessage(ChatColor.RED + "You have no XP to withdraw");
+					p.sendMessage(Utils.replacePlaceholders(Xp.NO_XP_WITHDRAW_MESSAGE, p));
 					return;
 				}
 				int playerTotalXp = Utils.totalXp(p);
 				if (playerTotalXp >= Main.MAX_XP_HELD) {
-					p.sendMessage(Utils.replacePlaceholders(Main.EXCEEDS_HOLD_LIMIT));
+					p.sendMessage(Utils.replacePlaceholders(Main.EXCEEDS_HOLD_LIMIT, p));
 					return;
 				}
 				amount = Main.xps.get(p.getUniqueId().toString());
@@ -190,13 +191,13 @@ public class WithdrawMenu {
 					return;
 				}
 				if ((long) playerTotalXp + (long) amount > Main.MAX_XP_HELD) {
-					p.sendMessage(Utils.replacePlaceholders(Main.EXCEEDS_HOLD_LIMIT));
+					p.sendMessage(Utils.replacePlaceholders(Main.EXCEEDS_HOLD_LIMIT, p));
 					return;
 				} 
 				addXp(amount, p, playerTotalXp);
 				int oldBal = Main.xps.get(p.getUniqueId().toString());
 				Main.xps.put(p.getUniqueId().toString(), oldBal - amount);
-				p.sendMessage(ChatColor.GREEN + "Xp withdrawn. New balance: " + Main.xps.get(p.getUniqueId().toString()));
+				p.sendMessage(Utils.replacePlaceholders(Xp.WITHDRAW_MESSAGE, p));
 				return;
 			}
 			

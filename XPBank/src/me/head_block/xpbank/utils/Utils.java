@@ -255,7 +255,7 @@ public class Utils {
 	 *  - %MAX_XP_STORED%
 	 *  - %XP_STORED%
 	 *  - %XP_HELD%
-	 *  
+	 *  - %TOTAL_XP_LEVEL%
 	 */
 	
 	
@@ -267,14 +267,17 @@ public class Utils {
 		return text;
 	}
 	
-	public static String replacePlaceholders(String text, Player p) {
+	public static String replacePlaceholders(String text, OfflinePlayer p) {
 		text = text.replace("%MAX_LEVEL_HELD%", "" + Main.MAX_LEVEL_HELD);
 		text = text.replace("%MAX_LEVEL_STORED%", "" + Main.MAX_LEVEL_STORED);
 		text = text.replace("%MAX_XP_HELD%", "" + Main.MAX_XP_HELD);
 		text = text.replace("%MAX_XP_STORED%", "" + Main.MAX_XP_STORED);
 		checkBalInstance(p);
 		text = text.replace("%XP_STORED%", "" + Main.xps.get(p.getUniqueId().toString()));
-		text = text.replace("%XP_HELD%", "" + Utils.totalXp(p));
+		if (p.isOnline()) {
+			text = text.replace("%XP_HELD%", "" + Utils.totalXp(p.getPlayer()));
+			text = text.replace("%TOTAL_XP_LEVEL%", "" + getMaxLevel(p.getPlayer(), Main.xps.get(p.getPlayer().getUniqueId().toString())));
+		}
 		return text;
 	}
 	
