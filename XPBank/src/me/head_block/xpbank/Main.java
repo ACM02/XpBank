@@ -77,12 +77,14 @@ public class Main extends JavaPlugin {
 	 * Deposit max in GUI is exceeding store limit (Probably in command too) (Seems like only some cases, and hard to debug...)
 	 * 
 	 * Future plans:
+	 * Proper API
 	 * Language files
 	 * Even more message config
 	 * Comments spaced out in the config for a better look
 	 * Withdraw and deposit GUI items in config
 	 * Better documentation/main page
 	 * Pay in xp (GUI)
+	 * Add message to admins when an update is available
 	 */
 	
 	
