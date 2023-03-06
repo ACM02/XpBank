@@ -57,7 +57,9 @@ public class Main extends JavaPlugin {
 			+ "- %MAX_XP_HELD%\n"
 			+ "- %MAX_XP_STORED%\n"
 			+ "- %XP_HELD\n"
-			+ "- %XP_STORED%\n"
+			+ "- %XP_STORED%"
+			+ "- %TOTAL_XP%\n"
+			+ "- %TOTAL_XP_LEVEL%\n"
 			+ "----- Config Explanation -----\n"
 			+ "maxXpStored: Maximum amount of xp points a user can store in the xp bank. (Whole number > 0 below 2B)\n"
 			+ "maxXpHeld: Amount of xp points when the bank will stop adding to the player. (Whole number > 0 below 2B)\n"
@@ -71,13 +73,16 @@ public class Main extends JavaPlugin {
 			+ "messages.exeeds-hold-limit: Message sent if a player tries to hold more than the max xp\n"
 			+ "messages.exeeds-store-limit-target: Message sent to player if they're trying to give someone xp but it would push them over the max\n"
 			+ "messages.exceeds-store-limit: Message sent to player if a player tries to store more than the max xp\n"
-			+ "";
+			+ "gui.main-menu.name: The name of the main GUI menu\n"
+			+ "gui.deposit-menu.name: The name of the deposit GUI menu\n"
+			+ "gui.withdraw-menu.name: The name of the wihtdrawl GUI menu\n"
+			+ "gui.<menu>.<value>: All other entries of this format are the respective items held in that menu\n"
+			+ "----- More info -----\n"
+			+ "For more information visit the XpBank wiki at https://github.com/ACM02/XpBank/wiki";
 	
 	/*
 	 * TODO
-	 * Say I might be doing several little updates
 	 * Update ALL documentation to reflect v1.11 changes on release
-	 * Make note in documentation that plugin can get confused when making identical GUI items
 	 * 
 	 * Fixes:
 	 * Deposit max in GUI is exceeding store limit (Probably in command too) (Seems like only some cases, and hard to debug...)
