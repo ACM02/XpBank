@@ -8,31 +8,29 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import me.head_block.xpbank.Main;
-import me.head_block.xpbank.ui.DepositMenu;
 import me.head_block.xpbank.ui.MainMenu;
-import me.head_block.xpbank.ui.WithdrawMenu;
 import me.head_block.xpbank.utils.Utils;
 import net.md_5.bungee.api.ChatColor;
 
 public class Xp implements CommandExecutor {
 
-	public static final String HELP_MESSAGE = ChatColor.GREEN + "------------/xpbank help------------\n" 
-			+ ChatColor.YELLOW
-			+ "/xpbank - Tells you how much xp you have stored\n"
-			+ "/xpbank xpheld - Tells you how much xp you are holding\n"
-			+ "/xpbank xpstored - Tells you how much xp you have stored\n"
-			+ "/xpbank deposit <amount> - Deposits <amount> xp points\n"
-			+ "/xpbank deposit <amount> <levels/points> - Deposits <amount> points or levels\n"
-			+ "/xpbank deposit max - Deposits all xp up to the max (" + "%MAX_XP_STORED%" +  " points)\n"
-			+ "/xpbank withdraw <amount> - Withdraws <amount> xp points\n"
-			+ "/xpbank withdraw <amount> <levels/points> - Withdraws <amount> points or levels\n"
-			+ "/xpbank withdraw max - Withdraws all xp up to the max (" + "%MAX_XP_HELD%" + " points)\n"
-			+ "/xpbank pay <player> <amount> - Pays <player> the specified amount"; 
-	public static final String ADMIN_HELP_MESSAGE = ChatColor.GREEN + "------------/xpbank admin help------------\n"
-			+ ChatColor.YELLOW
-			+ "/xpbank set <player> <amount> - Sets <player>'s balance to <amount>\n"
-			+ "/xpbank add <player> <amount> - Adds <amount> to <player>'s balance\n"
-			+ "/xpbank remove <player> <amount> - Removes <amount> from <player>'s balance capping out at 0\n"; 
+	public static final String HELP_MESSAGE = ChatColor.GRAY + "------------ " + ChatColor.YELLOW +  "/xpbank help" + ChatColor.GRAY +  " ------------\n" 
+			+ ChatColor.GRAY
+			+ "/xpbank - " + ChatColor.AQUA + "Tells you how much xp you have stored\n"
+			+ ChatColor.GRAY + "/xpbank xpheld - " + ChatColor.AQUA + "Tells you how much xp you are holding\n"
+			+ ChatColor.GRAY + "/xpbank xpstored - " + ChatColor.AQUA + "Tells you how much xp you have stored\n"
+			+ ChatColor.GRAY + "/xpbank totalxp - " + ChatColor.AQUA + "Tells you how much xp you have stored and held together\n"
+			+ ChatColor.GRAY + "/xpbank deposit <amount> - " + ChatColor.AQUA + "Deposits <amount> xp points\n"
+			+ ChatColor.GRAY + "/xpbank deposit <amount> <levels/points> - " + ChatColor.AQUA + "Deposits <amount> points or levels\n"
+			+ ChatColor.GRAY + "/xpbank deposit max - " + ChatColor.AQUA + "Deposits all xp up to the max (" + "%MAX_XP_STORED%" +  " points)\n"
+			+ ChatColor.GRAY + "/xpbank withdraw <amount> - " + ChatColor.AQUA + "Withdraws <amount> xp points\n"
+			+ ChatColor.GRAY + "/xpbank withdraw <amount> <levels/points> - " + ChatColor.AQUA + "Withdraws <amount> points or levels\n"
+			+ ChatColor.GRAY + "/xpbank withdraw max - " + ChatColor.AQUA + "Withdraws all xp up to the max (" + "%MAX_XP_HELD%" + " points)\n"
+			+ ChatColor.GRAY + "/xpbank pay <player> <amount> - " + ChatColor.AQUA + "Pays <player> the specified amount"; 
+	public static final String ADMIN_HELP_MESSAGE = ChatColor.GRAY + "------------ " + ChatColor.YELLOW + "/xpbank admin help" + ChatColor.GRAY +   " ------------\n"
+			+ ChatColor.GRAY +  "/xpbank set <player> <amount> - " + ChatColor.AQUA + "Sets <player>'s balance to <amount>\n"
+			+ ChatColor.GRAY +  "/xpbank add <player> <amount> - " + ChatColor.AQUA + "Adds <amount> to <player>'s balance\n"
+			+ ChatColor.GRAY +  "/xpbank remove <player> <amount> - " + ChatColor.AQUA + "Removes <amount> from <player>'s balance capping out at 0\n"; 
 	
 	public static String DEPOSIT_MESSAGE = ChatColor.GREEN + "Xp deposited. New balance: " + "%XP_STORED%";
 	public static String WITHDRAW_MESSAGE = ChatColor.GREEN + "Xp withdrawn. New balance: " + "%XP_STORED%";
@@ -42,6 +40,7 @@ public class Xp implements CommandExecutor {
 	public static String XP_HELD_MESSAGE = ChatColor.YELLOW + "You are holding " + "%XP_HELD%" + " xp";
 	public static String NO_XP_DEPOSIT_MESSAGE = ChatColor.RED + "You don't have any XP to deposit";
 	public static String NO_XP_WITHDRAW_MESSAGE = ChatColor.RED + "You don't have any XP to withdraw";
+	public static String TOTAL_XP_MESSAGE = ChatColor.YELLOW + "Your total xp held and in the bank is: " + "%TOTAL_XP%";
 	
 	public Xp (Main plugin) {
 		plugin.getCommand("xpbank").setExecutor(this);
@@ -87,16 +86,14 @@ public class Xp implements CommandExecutor {
 			case "xpstored":
 				sender.sendMessage(Utils.replacePlaceholders(XP_STORED_MESSAGE, sender));
 				break;
+			case "totalxp":
+				sender.sendMessage(Utils.replacePlaceholders(TOTAL_XP_MESSAGE , sender));
+				break;
 			case "reload":
 				if (!sender.hasPermission("xpbank.admin")) {
 					sender.sendMessage(Utils.replacePlaceholders(Main.NO_PERM_MESSAGE));
 				} else {
-					Main.instance.reloadConfig();
-					DepositMenu.init();
-					MainMenu.init();
-					WithdrawMenu.init();
-					Main.instance.reloadValues();
-					Main.updateAvailable = Main.instance.getConfig().getBoolean("update-message");
+					Main.reloadPlugin();
 					sender.sendMessage(ChatColor.GREEN + "Reloaded successfully.");
 				}
 				break;

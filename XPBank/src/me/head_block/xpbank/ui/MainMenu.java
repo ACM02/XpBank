@@ -10,6 +10,7 @@ import org.bukkit.inventory.ItemStack;
 
 import me.head_block.xpbank.Main;
 import me.head_block.xpbank.utils.Utils;
+import net.md_5.bungee.api.ChatColor;
 
 public class MainMenu {
 	
@@ -25,11 +26,13 @@ public class MainMenu {
 	 * 
 	 */
 	
-	public static final String INV_NAME = "Xp Bank";
+	public static String INV_NAME;
 	public static final int INV_SIZE = 9*4;
 	public static ItemStack[] UIinventory;
 	
 	public static void init() {
+		INV_NAME = ChatColor.translateAlternateColorCodes('&', Main.instance.getConfig().getString("gui.main-menu.name"));
+		
 		UIinventory = new ItemStack[INV_SIZE];
 		
 		ItemStack deposit = Main.instance.getConfig().getItemStack("gui.main-menu.deposit").clone();

@@ -256,6 +256,7 @@ public class Utils {
 	 *  - %XP_STORED%
 	 *  - %XP_HELD%
 	 *  - %TOTAL_XP_LEVEL%
+	 *  - %TOTAL_XP%
 	 */
 	
 	
@@ -276,6 +277,7 @@ public class Utils {
 		text = text.replace("%XP_STORED%", "" + Main.xps.get(p.getUniqueId().toString()));
 		if (p.isOnline()) {
 			text = text.replace("%XP_HELD%", "" + Utils.totalXp(p.getPlayer()));
+			text = text.replace("%TOTAL_XP%", "" + (totalXp(p.getPlayer()) + Main.xps.get(p.getUniqueId().toString())));
 			text = text.replace("%TOTAL_XP_LEVEL%", "" + getMaxLevel(p.getPlayer(), Main.xps.get(p.getPlayer().getUniqueId().toString())));
 		}
 		return text;

@@ -31,6 +31,7 @@ public class XpTab implements TabCompleter {
 			args1.add("help");
 			args1.add("xpheld");
 			args1.add("xpstored");
+			args1.add("totalxp");
 			if (sender.hasPermission("xpbank.admin")) {
 				args1.add("set");
 				args1.add("add");

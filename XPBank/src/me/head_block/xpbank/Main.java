@@ -82,16 +82,13 @@ public class Main extends JavaPlugin {
 	 * 
 	 * Future plans:
 	 * Make an economy manager to clean up Xp.java, and the menus (duplicated code)
-	 * xpbank totalxp command for both held and stored xp combined
-	 * Better colours in help menu (Hard to read rn)
 	 * Option to disable admin changed your balance
 	 * Add blocks to UI indicating stored and held xp
 	 * Better API?
-	 * Menu names in config
 	 * Language files
 	 * Even more message config
 	 * Comments spaced out in the config for a better look
-	 * Withdraw and deposit GUI menu items in config
+	 * Withdraw and deposit GUI menus in config
 	 * Better documentation/main page
 	 * Pay in xp (GUI)
 	 */
@@ -136,6 +133,7 @@ public class Main extends JavaPlugin {
 		 *  - %XP_HELD%
 		 *  
 		 */
+		config.addDefault("gui.main-menu.name", "XpBank");
 		config.addDefault("gui.main-menu.deposit", Utils.createItem(Material.GOLD_INGOT, 1, ChatColor.GREEN + "Deposit XP", ChatColor.YELLOW + "Store up to " + "%MAX_LEVEL_STORED%" + " levels"));
 		config.addDefault("gui.main-menu.withdraw", Utils.createItem(Material.IRON_INGOT, 1, ChatColor.GREEN + "Withdraw XP", ChatColor.YELLOW + "Hold up to " +"%MAX_LEVEL_HELD%" + " levels"));
 		config.addDefault("gui.main-menu.xp-stored", Utils.createItem(Material.EXPERIENCE_BOTTLE, 1, ChatColor.GREEN + "Xp stored", ChatColor.YELLOW + "%XP_STORED%" + "/" + "%MAX_XP_STORED%"));
@@ -217,7 +215,33 @@ public class Main extends JavaPlugin {
 	}
 	
 	public void reloadValues() {
-		MAX_XP_STORED = getConfig().getInt("maxXpStored");
+		FileConfiguration config = getConfig();
+		config.addDefault("maxXpStored", 2000000000);
+		config.addDefault("maxXpHeld", 2000000000);
+		config.addDefault("seePlayerBalances", true);
+		config.addDefault("topXpCommand", true);
+		config.addDefault("guiMenu", true);
+		config.addDefault("update-message", true);
+		
+		config.addDefault("messages.noPermission", "&cYou don't have permission to do that");
+		config.addDefault("messages.improperUse", "&cImproper usage. Try ");
+		config.addDefault("messages.exeeds-hold-limit", "&cInvalid amount. That exceeds the maximum xp that can be held. (" + "%MAX_LEVEL_HELD%" + " levels/" + "%MAX_XP_HELD%" + " points)");
+		config.addDefault("messages.exeeds-store-limit-target", "&cInvalid amount. That exceeds the maximum xp that can be held by the target. (" + "%MAX_LEVEL_HELD%" + " levels/" + "%MAX_XP_HELD%" + " points)");
+		config.addDefault("messages.exceeds-store-limit", "&cInvalid amount. That exceeds the maximum xp that can be stored. (" + "%MAX_LEVEL_STORED%" + " levels/" + "%MAX_XP_STORED%" + " points)");
+		
+		config.addDefault("gui.main-menu.name", "XpBank");
+		config.addDefault("gui.main-menu.deposit", Utils.createItem(Material.GOLD_INGOT, 1, ChatColor.GREEN + "Deposit XP", ChatColor.YELLOW + "Store up to " + "%MAX_LEVEL_STORED%" + " levels"));
+		config.addDefault("gui.main-menu.withdraw", Utils.createItem(Material.IRON_INGOT, 1, ChatColor.GREEN + "Withdraw XP", ChatColor.YELLOW + "Hold up to " +"%MAX_LEVEL_HELD%" + " levels"));
+		config.addDefault("gui.main-menu.xp-stored", Utils.createItem(Material.EXPERIENCE_BOTTLE, 1, ChatColor.GREEN + "Xp stored", ChatColor.YELLOW + "%XP_STORED%" + "/" + "%MAX_XP_STORED%"));
+		config.addDefault("gui.main-menu.xp-held", Utils.createItem(Material.BRICK, 1, ChatColor.GREEN + "XP held", "" + ChatColor.YELLOW + "%XP_HELD%" + "/" + "%MAX_XP_HELD%"));
+		
+		config.options().header(CONFIG_HEADER);
+		
+		config.options().copyDefaults(true);
+		saveConfig();
+		
+		
+		MAX_XP_STORED = config.getInt("maxXpStored");
 		if (MAX_XP_STORED >= 2000000000) {
 			MAX_LEVEL_STORED = 21099;		// Default max, just saving computation, same value as Utils.level(2000000000)
 			MAX_XP_STORED = 2000000000;
@@ -228,7 +252,7 @@ public class Main extends JavaPlugin {
 			MAX_LEVEL_STORED = Utils.level(MAX_XP_STORED);
 		}
 		
-		MAX_XP_HELD = getConfig().getInt("maxXpHeld");
+		MAX_XP_HELD = config.getInt("maxXpHeld");
 		if (MAX_XP_HELD >= 2000000000) {
 			MAX_LEVEL_HELD = 21099;		// Default max, just saving computation, same value as Utils.level(2000000000)
 			MAX_XP_HELD = 2000000000;
@@ -239,13 +263,21 @@ public class Main extends JavaPlugin {
 			MAX_LEVEL_HELD = Utils.level(MAX_XP_HELD);
 		}
 		
-		NO_PERM_MESSAGE = ChatColor.translateAlternateColorCodes('&', getConfig().getString("messages.noPermission"));
-		IMPROPER_USE_MESSAGE = ChatColor.translateAlternateColorCodes('&', getConfig().getString("messages.improperUse"));
-		EXCEEDS_HOLD_LIMIT = ChatColor.translateAlternateColorCodes('&', getConfig().getString("messages.exeeds-hold-limit"));
-		EXCEEDS_STORE_LIMIT_TARGET = ChatColor.translateAlternateColorCodes('&', getConfig().getString("messages.exeeds-store-limit-target"));
-		EXCEEDS_STORE_LIMIT = ChatColor.translateAlternateColorCodes('&', getConfig().getString("messages.exceeds-store-limit"));
+		NO_PERM_MESSAGE = ChatColor.translateAlternateColorCodes('&', config.getString("messages.noPermission"));
+		IMPROPER_USE_MESSAGE = ChatColor.translateAlternateColorCodes('&', config.getString("messages.improperUse"));
+		EXCEEDS_HOLD_LIMIT = ChatColor.translateAlternateColorCodes('&', config.getString("messages.exeeds-hold-limit"));
+		EXCEEDS_STORE_LIMIT_TARGET = ChatColor.translateAlternateColorCodes('&', config.getString("messages.exeeds-store-limit-target"));
+		EXCEEDS_STORE_LIMIT = ChatColor.translateAlternateColorCodes('&', config.getString("messages.exceeds-store-limit"));
+		updateAvailable = config.getBoolean("update-message");
 		
-		
-		GUI_ENABLED = getConfig().getBoolean("guiMenu");
+		GUI_ENABLED = config.getBoolean("guiMenu");
+	}
+
+	public static void reloadPlugin() {
+		instance.reloadConfig();
+		instance.reloadValues();
+		DepositMenu.init();
+		MainMenu.init();
+		WithdrawMenu.init();
 	}
 }
