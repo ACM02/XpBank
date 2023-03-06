@@ -345,7 +345,7 @@ public class Xp implements CommandExecutor {
 				}
 				if (Main.xps.containsKey(offline.getUniqueId().toString())) {
 					Main.xps.put(offline.getUniqueId().toString(), amount);
-					if (offline.isOnline()) {
+					if (Main.instance.getConfig().getBoolean("notify-on-admin-balance-change") && offline.isOnline()) {
 						Player online = offline.getPlayer();
 						online.sendMessage(ChatColor.YELLOW + "Your balance has been set to " + amount + " by an admin");
 					}
@@ -355,7 +355,8 @@ public class Xp implements CommandExecutor {
 					if (offline.isOnline()) {
 						Main.xps.put(offline.getUniqueId().toString(), amount);
 						Player online = offline.getPlayer();
-						online.sendMessage(ChatColor.YELLOW + "Your balance has been set to " + amount + " by an admin");
+						if (Main.instance.getConfig().getBoolean("notify-on-admin-balance-change"))
+							online.sendMessage(ChatColor.YELLOW + "Your balance has been set to " + amount + " by an admin");
 						sender.sendMessage(Utils.replacePlaceholders(ChatColor.YELLOW + offline.getName() + "'s balance is now " + "%XP_STORED%", offline));
 						break;
 					} else {
@@ -380,7 +381,7 @@ public class Xp implements CommandExecutor {
 				}
 				if (Main.xps.containsKey(offline.getUniqueId().toString())) {
 					Main.xps.put(offline.getUniqueId().toString(), amount + Main.xps.get(offline.getUniqueId().toString()));
-					if (offline.isOnline()) {
+					if (Main.instance.getConfig().getBoolean("notify-on-admin-balance-change") && offline.isOnline()) {
 						Player online = offline.getPlayer();
 						online.sendMessage(Utils.replacePlaceholders(ChatColor.YELLOW + "Your xp balance has been set to " + "%XP_STORED%" + " by an admin", online));
 					}
@@ -390,7 +391,8 @@ public class Xp implements CommandExecutor {
 					if (offline.isOnline()) {
 						Main.xps.put(offline.getUniqueId().toString(), amount);
 						Player online = offline.getPlayer();
-						online.sendMessage(Utils.replacePlaceholders(ChatColor.YELLOW + "Your balance has been set to " + "%XP_STORED%" + " by an admin", online));
+						if (Main.instance.getConfig().getBoolean("notify-on-admin-balance-change"))
+							online.sendMessage(Utils.replacePlaceholders(ChatColor.YELLOW + "Your balance has been set to " + "%XP_STORED%" + " by an admin", online));
 						sender.sendMessage(Utils.replacePlaceholders(ChatColor.YELLOW + offline.getName() + "'s balance is now " + "%XP_STORED%", offline));
 						break;
 					} else {
@@ -413,7 +415,8 @@ public class Xp implements CommandExecutor {
 					if (offline.isOnline()) {
 						Main.xps.put(offline.getUniqueId().toString(), 0);
 						Player online = offline.getPlayer();
-						online.sendMessage(Utils.replacePlaceholders(ChatColor.YELLOW + "Your balance has been set to " + "%XP_STORED%" + " by an admin", online));
+						if (Main.instance.getConfig().getBoolean("notify-on-admin-balance-change"))
+							online.sendMessage(Utils.replacePlaceholders(ChatColor.YELLOW + "Your balance has been set to " + "%XP_STORED%" + " by an admin", online));
 						sender.sendMessage(Utils.replacePlaceholders(ChatColor.YELLOW + offline.getName() + "'s balance is now " + "%XP_STORED%", offline));
 						break;
 					} else {
@@ -425,7 +428,7 @@ public class Xp implements CommandExecutor {
 						amount = Main.xps.get(offline.getUniqueId().toString());
 					}
 					Main.xps.put(offline.getUniqueId().toString(), Main.xps.get(offline.getUniqueId().toString()) - amount);
-					if (offline.isOnline()) {
+					if (Main.instance.getConfig().getBoolean("notify-on-admin-balance-change") && offline.isOnline()) {
 						Player online = offline.getPlayer();
 						online.sendMessage(Utils.replacePlaceholders(ChatColor.YELLOW + "Your balance has been set to " + "%XP_STORED%" + " by an admin", online));
 					}

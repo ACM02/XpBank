@@ -64,7 +64,8 @@ public class Main extends JavaPlugin {
 			+ "seePlayerBalances: Toggles whether the /xpbal command is enabled\n"
 			+ "topXpCommand: Toggles whether the /topxp command is enabled\n"
 			+ "guiMenu: Toggles whether the plugin will use the gui menu when /xpbank is used.\n"
-			+ "update-message: Toggles whether the plugin will send a message to admins saying an update is available for the plugin"
+			+ "update-message: Toggles whether the plugin will send a message to admins saying an update is available for the plugin\n"
+			+ "notify-on-admin-balance-change: Toggles whether users are sent a message when an admin modifies their balance with admin commands\n"
 			+ "messages.noPermission: Message sent to players when they run a command they do not have permission to use\n"
 			+ "messages.improperUse: Message sent to players when they use improper arguments in a command\n"
 			+ "messages.exeeds-hold-limit: Message sent if a player tries to hold more than the max xp\n"
@@ -76,21 +77,22 @@ public class Main extends JavaPlugin {
 	 * TODO
 	 * Say I might be doing several little updates
 	 * Update ALL documentation to reflect v1.11 changes on release
+	 * Make note in documentation that plugin can get confused when making identical GUI items
 	 * 
 	 * Fixes:
 	 * Deposit max in GUI is exceeding store limit (Probably in command too) (Seems like only some cases, and hard to debug...)
 	 * 
 	 * Future plans:
 	 * Make an economy manager to clean up Xp.java, and the menus (duplicated code)
-	 * Option to disable admin changed your balance
+	 * Back button customization
 	 * Add blocks to UI indicating stored and held xp
 	 * Better API?
 	 * Language files
 	 * Even more message config
 	 * Comments spaced out in the config for a better look
-	 * Withdraw and deposit GUI menus in config
 	 * Better documentation/main page
 	 * Pay in xp (GUI)
+	 * K,M,B text formatting
 	 */
 	
 	
@@ -109,40 +111,7 @@ public class Main extends JavaPlugin {
 			xps = new HashMap<String, Integer>();
 		}
 		
-		FileConfiguration config = this.getConfig();
-		config.addDefault("maxXpStored", 2000000000);
-		config.addDefault("maxXpHeld", 2000000000);
-		config.addDefault("seePlayerBalances", true);
-		config.addDefault("topXpCommand", true);
-		config.addDefault("guiMenu", true);
-		config.addDefault("update-message", true);
-		
-		config.addDefault("messages.noPermission", "&cYou don't have permission to do that");
-		config.addDefault("messages.improperUse", "&cImproper usage. Try ");
-		config.addDefault("messages.exeeds-hold-limit", "&cInvalid amount. That exceeds the maximum xp that can be held. (" + "%MAX_LEVEL_HELD%" + " levels/" + "%MAX_XP_HELD%" + " points)");
-		config.addDefault("messages.exeeds-store-limit-target", "&cInvalid amount. That exceeds the maximum xp that can be held by the target. (" + "%MAX_LEVEL_HELD%" + " levels/" + "%MAX_XP_HELD%" + " points)");
-		config.addDefault("messages.exceeds-store-limit", "&cInvalid amount. That exceeds the maximum xp that can be stored. (" + "%MAX_LEVEL_STORED%" + " levels/" + "%MAX_XP_STORED%" + " points)");
-		
-		/*	GUI menu config
-		 *  Placeholders
-		 *  - %MAX_LEVEL_HELD%
-		 *  - %MAX_LEVEL_STORED%
-		 *  - %MAX_XP_HELD%
-		 *  - %MAX_XP_STORED%
-		 *  - %XP_STORED%
-		 *  - %XP_HELD%
-		 *  
-		 */
-		config.addDefault("gui.main-menu.name", "XpBank");
-		config.addDefault("gui.main-menu.deposit", Utils.createItem(Material.GOLD_INGOT, 1, ChatColor.GREEN + "Deposit XP", ChatColor.YELLOW + "Store up to " + "%MAX_LEVEL_STORED%" + " levels"));
-		config.addDefault("gui.main-menu.withdraw", Utils.createItem(Material.IRON_INGOT, 1, ChatColor.GREEN + "Withdraw XP", ChatColor.YELLOW + "Hold up to " +"%MAX_LEVEL_HELD%" + " levels"));
-		config.addDefault("gui.main-menu.xp-stored", Utils.createItem(Material.EXPERIENCE_BOTTLE, 1, ChatColor.GREEN + "Xp stored", ChatColor.YELLOW + "%XP_STORED%" + "/" + "%MAX_XP_STORED%"));
-		config.addDefault("gui.main-menu.xp-held", Utils.createItem(Material.BRICK, 1, ChatColor.GREEN + "XP held", "" + ChatColor.YELLOW + "%XP_HELD%" + "/" + "%MAX_XP_HELD%"));
-		
-		config.options().header(CONFIG_HEADER);
-		
-		config.options().copyDefaults(true);
-		saveConfig();
+		initConfig();
 		
 		MAX_XP_STORED = getConfig().getInt("maxXpStored");
 		if (MAX_XP_STORED >= 2000000000) {
@@ -177,6 +146,7 @@ public class Main extends JavaPlugin {
 		
 		new Xp(this);
 		new XpTab(this);
+		FileConfiguration config = this.getConfig();
 		if (config.getBoolean("seePlayerBalances")) {
 			new XpBal(this);
 			new XpBalTab(this);
@@ -208,20 +178,16 @@ public class Main extends JavaPlugin {
 		new WithdrawMenuClick(this);
 		new UpdateAvailableMessage(this);
 	}
-
-	@Override
-	public void onDisable() {
-		Utils.save(xps, new File(getDataFolder(), "xps.dat"));
-	}
 	
-	public void reloadValues() {
-		FileConfiguration config = getConfig();
+	private void initConfig() {
+		FileConfiguration config = this.getConfig();
 		config.addDefault("maxXpStored", 2000000000);
 		config.addDefault("maxXpHeld", 2000000000);
 		config.addDefault("seePlayerBalances", true);
 		config.addDefault("topXpCommand", true);
 		config.addDefault("guiMenu", true);
 		config.addDefault("update-message", true);
+		config.addDefault("notify-on-admin-balance-change", true);
 		
 		config.addDefault("messages.noPermission", "&cYou don't have permission to do that");
 		config.addDefault("messages.improperUse", "&cImproper usage. Try ");
@@ -229,18 +195,65 @@ public class Main extends JavaPlugin {
 		config.addDefault("messages.exeeds-store-limit-target", "&cInvalid amount. That exceeds the maximum xp that can be held by the target. (" + "%MAX_LEVEL_HELD%" + " levels/" + "%MAX_XP_HELD%" + " points)");
 		config.addDefault("messages.exceeds-store-limit", "&cInvalid amount. That exceeds the maximum xp that can be stored. (" + "%MAX_LEVEL_STORED%" + " levels/" + "%MAX_XP_STORED%" + " points)");
 		
+		/*	GUI menu config
+		 *  Placeholders
+		 *  - %MAX_LEVEL_HELD%
+		 *  - %MAX_LEVEL_STORED%
+		 *  - %MAX_XP_HELD%
+		 *  - %MAX_XP_STORED%
+		 *  - %XP_STORED%
+		 *  - %XP_HELD%
+		 *  
+		 */
 		config.addDefault("gui.main-menu.name", "XpBank");
-		config.addDefault("gui.main-menu.deposit", Utils.createItem(Material.GOLD_INGOT, 1, ChatColor.GREEN + "Deposit XP", ChatColor.YELLOW + "Store up to " + "%MAX_LEVEL_STORED%" + " levels"));
-		config.addDefault("gui.main-menu.withdraw", Utils.createItem(Material.IRON_INGOT, 1, ChatColor.GREEN + "Withdraw XP", ChatColor.YELLOW + "Hold up to " +"%MAX_LEVEL_HELD%" + " levels"));
-		config.addDefault("gui.main-menu.xp-stored", Utils.createItem(Material.EXPERIENCE_BOTTLE, 1, ChatColor.GREEN + "Xp stored", ChatColor.YELLOW + "%XP_STORED%" + "/" + "%MAX_XP_STORED%"));
-		config.addDefault("gui.main-menu.xp-held", Utils.createItem(Material.BRICK, 1, ChatColor.GREEN + "XP held", "" + ChatColor.YELLOW + "%XP_HELD%" + "/" + "%MAX_XP_HELD%"));
+		config.addDefault("gui.main-menu.deposit", Utils.createItem(Material.GOLD_INGOT, 1, "&aDeposit XP", "&eStore up to " + "%MAX_LEVEL_STORED%" + " levels"));
+		config.addDefault("gui.main-menu.withdraw", Utils.createItem(Material.IRON_INGOT, 1, "&aWithdraw XP", "&eHold up to " +"%MAX_LEVEL_HELD%" + " levels"));
+		config.addDefault("gui.main-menu.xp-stored", Utils.createItem(Material.EXPERIENCE_BOTTLE, 1, "&aXp stored", "&e%XP_STORED%" + "/" + "%MAX_XP_STORED%"));
+		config.addDefault("gui.main-menu.xp-held", Utils.createItem(Material.BRICK, 1, "&aXP held", "&e%XP_HELD%" + "/" + "%MAX_XP_HELD%"));
+		
+		config.addDefault("gui.deposit-menu.name", "Deposit");
+		config.addDefault("gui.deposit-menu.25-percent", Utils.createItem(Material.GREEN_CONCRETE, 1, "&aDeposit 25%"));
+		config.addDefault("gui.deposit-menu.50-percent", Utils.createItem(Material.GREEN_CONCRETE, 1, "&aDeposit 50%"));
+		config.addDefault("gui.deposit-menu.75-percent", Utils.createItem(Material.GREEN_CONCRETE, 1, "&aDeposit 75%"));
+		config.addDefault("gui.deposit-menu.100-percent", Utils.createItem(Material.GREEN_CONCRETE, 1, "&aDeposit 100%"));
+		
+		config.addDefault("gui.deposit-menu.max", Utils.createItem(Material.EMERALD_BLOCK, 1, "&aDeposit max"));
+		
+		config.addDefault("gui.deposit-menu.1-level", Utils.createItem(Material.GREEN_WOOL, 1, "&aDeposit 1 level"));
+		config.addDefault("gui.deposit-menu.5-levels", Utils.createItem(Material.GREEN_WOOL, 1, "&aDeposit 5 levels"));
+		config.addDefault("gui.deposit-menu.10-levels", Utils.createItem(Material.GREEN_WOOL, 1, "&aDeposit 10 levels"));
+		config.addDefault("gui.deposit-menu.15-levels", Utils.createItem(Material.GREEN_WOOL, 1, "&aDeposit 15 levels"));
+		
+		
+		config.addDefault("gui.withdraw-menu.name", "Withdraw");
+		config.addDefault("gui.withdraw-menu.25-percent", Utils.createItem(Material.GREEN_CONCRETE, 1, "&aWithdraw 25%"));
+		config.addDefault("gui.withdraw-menu.50-percent", Utils.createItem(Material.GREEN_CONCRETE, 1, "&aWithdraw 50%"));
+		config.addDefault("gui.withdraw-menu.75-percent", Utils.createItem(Material.GREEN_CONCRETE, 1, "&aWithdraw 75%"));
+		config.addDefault("gui.withdraw-menu.100-percent", Utils.createItem(Material.GREEN_CONCRETE, 1, "&aWithdraw 100%"));
+		
+		config.addDefault("gui.withdraw-menu.max", Utils.createItem(Material.EMERALD_BLOCK, 1, "&aWithdraw max"));
+		
+		config.addDefault("gui.withdraw-menu.1-level", Utils.createItem(Material.GREEN_WOOL, 1, "&aWithdraw 1 level"));
+		config.addDefault("gui.withdraw-menu.5-levels", Utils.createItem(Material.GREEN_WOOL, 1, "&aWithdraw 5 levels"));
+		config.addDefault("gui.withdraw-menu.10-levels", Utils.createItem(Material.GREEN_WOOL, 1, "&aWithdraw 10 levels"));
+		config.addDefault("gui.withdraw-menu.15-levels", Utils.createItem(Material.GREEN_WOOL, 1, "&aWithdraw 15 levels"));
+		
 		
 		config.options().header(CONFIG_HEADER);
 		
 		config.options().copyDefaults(true);
 		saveConfig();
+	}
+
+	@Override
+	public void onDisable() {
+		Utils.save(xps, new File(getDataFolder(), "xps.dat"));
+	}
+	
+	public void reloadValues() {
+		initConfig();
 		
-		
+		FileConfiguration config = this.getConfig();
 		MAX_XP_STORED = config.getInt("maxXpStored");
 		if (MAX_XP_STORED >= 2000000000) {
 			MAX_LEVEL_STORED = 21099;		// Default max, just saving computation, same value as Utils.level(2000000000)

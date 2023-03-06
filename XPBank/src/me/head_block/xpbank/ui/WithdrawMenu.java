@@ -1,5 +1,7 @@
 package me.head_block.xpbank.ui;
 
+import java.util.List;
+
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -20,65 +22,52 @@ public class WithdrawMenu {
 	 * - Deposit 1 level, 5 levels, 10 levels, 15 levels
 	 */
 	
-	public static final String INV_NAME = "Withdraw";
+	public static String INV_NAME;
 	public static final int INV_SIZE = 9*2;
 	public static ItemStack[] UIinventory;
 	
+	private static ItemStack withdraw25;
+	private static ItemStack withdraw50;
+	private static ItemStack withdraw75;
+	private static ItemStack withdraw100;
+	
+	private static ItemStack withdrawMax;
+	
+	private static ItemStack withdraw1L;
+	private static ItemStack withdraw5L;
+	private static ItemStack withdraw10L;
+	private static ItemStack withdraw15L;
+	
 	public static void init() {
+		INV_NAME = ChatColor.translateAlternateColorCodes('&', Main.instance.getConfig().getString("gui.withdraw-menu.name"));
 		UIinventory = new ItemStack[INV_SIZE];
 		
-		ItemStack withdraw25 = new ItemStack(Material.GREEN_CONCRETE);
-		ItemMeta meta = withdraw25.getItemMeta();
-		meta.setDisplayName(ChatColor.GREEN + "Withdraw 25%");
-		withdraw25.setItemMeta(meta);
+		withdraw25 = loadItem("gui.withdraw-menu.25-percent");
 		UIinventory[0] = withdraw25;
 		
-		ItemStack withdraw50 = new ItemStack(Material.GREEN_CONCRETE);
-		meta = withdraw50.getItemMeta();
-		meta.setDisplayName(ChatColor.GREEN + "Withdraw 50%");
-		withdraw50.setItemMeta(meta);
+		withdraw50 = loadItem("gui.withdraw-menu.50-percent");
 		UIinventory[1] = withdraw50;
 		
-		ItemStack withdraw75 = new ItemStack(Material.GREEN_CONCRETE);
-		meta = withdraw75.getItemMeta();
-		meta.setDisplayName(ChatColor.GREEN + "Withdraw 75%");
-		withdraw75.setItemMeta(meta);
+		
+		withdraw75 = loadItem("gui.withdraw-menu.75-percent");
 		UIinventory[2] = withdraw75;
 		
-		ItemStack withdraw100 = new ItemStack(Material.GREEN_CONCRETE);
-		meta = withdraw100.getItemMeta();
-		meta.setDisplayName(ChatColor.GREEN + "Withdraw 100%");
-		withdraw100.setItemMeta(meta);
+		withdraw100 = loadItem("gui.withdraw-menu.75-percent");
 		UIinventory[3] = withdraw100;
 		
-		ItemStack withdraw1L = new ItemStack(Material.GREEN_WOOL);
-		meta = withdraw1L.getItemMeta();
-		meta.setDisplayName(ChatColor.GREEN + "Withdraw 1 level");
-		withdraw1L.setItemMeta(meta);
+		withdraw1L = loadItem("gui.withdraw-menu.1-level");
 		UIinventory[5] = withdraw1L;
 		
-		ItemStack withdraw5L = new ItemStack(Material.GREEN_WOOL);
-		meta = withdraw5L.getItemMeta();
-		meta.setDisplayName(ChatColor.GREEN + "Withdraw 5 levels");
-		withdraw5L.setItemMeta(meta);
+		withdraw5L = loadItem("gui.withdraw-menu.5-levels");
 		UIinventory[6] = withdraw5L;
 		
-		ItemStack withdraw10L = new ItemStack(Material.GREEN_WOOL);
-		meta = withdraw10L.getItemMeta();
-		meta.setDisplayName(ChatColor.GREEN + "Withdraw 10 levels");
-		withdraw10L.setItemMeta(meta);
+		withdraw10L = loadItem("gui.withdraw-menu.10-levels");
 		UIinventory[7] = withdraw10L;
 		
-		ItemStack withdraw15L = new ItemStack(Material.GREEN_WOOL);
-		meta = withdraw5L.getItemMeta();
-		meta.setDisplayName(ChatColor.GREEN + "Withdraw 15 levels");
-		withdraw15L.setItemMeta(meta);
+		withdraw15L = loadItem("gui.withdraw-menu.15-levels");
 		UIinventory[8] = withdraw15L;
 		
-		ItemStack withdrawMax = new ItemStack(Material.EMERALD_BLOCK);
-		meta = withdrawMax.getItemMeta();
-		meta.setDisplayName(ChatColor.GREEN + "Withdraw max");
-		withdrawMax.setItemMeta(meta);
+		withdrawMax = loadItem("gui.withdraw-menu.max");
 		UIinventory[4] = withdrawMax;
 		
 		ItemStack back = new ItemStack(Material.BARRIER);
@@ -87,6 +76,25 @@ public class WithdrawMenu {
 		back.setItemMeta(iMeta);
 		UIinventory[INV_SIZE - 1] = back;
 		
+	}
+	
+	private static ItemStack loadItem(String path) {
+		ItemStack item = Main.instance.getConfig().getItemStack(path).clone();		
+		if (item.hasItemMeta()) {
+			String name = item.getItemMeta().getDisplayName();
+			name = Utils.replacePlaceholders(name);
+			name = ChatColor.translateAlternateColorCodes('&', name);
+			Utils.setDisplayName(item, name);
+		}
+		if (item.hasItemMeta() && item.getItemMeta().hasLore()) {
+			List<String> lore = item.getItemMeta().getLore();
+			for (int i = 0; i < lore.size(); i++) {
+				String loreLine = Utils.replacePlaceholders(lore.get(i));
+				lore.set(i, ChatColor.translateAlternateColorCodes('&', loreLine));
+			}
+			Utils.setLore(item, lore);
+		}
+		return item;
 	}
 	
 	public static void openForPlayer(Player p) {
@@ -101,17 +109,17 @@ public class WithdrawMenu {
 			MainMenu.openForPlayer(p);
 		}
 		if (slot < INV_SIZE && clicked.hasItemMeta() && clicked.getItemMeta().hasDisplayName()) {
-			String name = clicked.getItemMeta().getDisplayName();
 			double percentage = 0.00;
-			if (name.contains("25%")) {	// ------------------ 25% --------------------------
+			if (clicked.equals(withdraw25)) {	// ------------------ 25% --------------------------
 				percentage = 0.25;
-			} else if (name.contains("50%")) { // ------------------ 50% --------------------------
+			} else if (clicked.equals(withdraw50)) { // ------------------ 50% --------------------------
 				percentage = 0.50;
-			} else if (name.contains("75%")) { // ------------------ 75% --------------------------
+			} else if (clicked.equals(withdraw75)) { // ------------------ 75% --------------------------
 				percentage = 0.75;
-			} else if (name.contains("100%")) { // ------------------ 100% --------------------------
+			} else if (clicked.equals(withdraw100)) { // ------------------ 100% --------------------------
 				percentage = 1.00;
 			}
+			
 			if (percentage > 0.00) {
 				int amount = 0;
 				Utils.checkBalInstance(p);
@@ -138,15 +146,16 @@ public class WithdrawMenu {
 
 			
 			int amount = 0;
-			if (name.contains("1 level")) { // ------------------ 1 Level --------------------------
+			if (clicked.equals(withdraw1L)) { // ------------------ 1 Level --------------------------
 				amount = 1;
-			} else if (name.contains("15 levels")) { // ------------------ 15 Levels --------------------------
+			} else if (clicked.equals(withdraw15L)) { // ------------------ 15 Levels --------------------------
 				amount = 15;
-			} else if (name.contains("10 levels")) { // ------------------ 10 Levels --------------------------
+			} else if (clicked.equals(withdraw10L)) { // ------------------ 10 Levels --------------------------
 				amount = 10;
-			} else if (name.contains("5 levels")) { // ------------------ 5 Levels --------------------------
+			} else if (clicked.equals(withdraw5L)) { // ------------------ 5 Levels --------------------------
 				amount = 5;
 			}
+			
 			if (amount > 0) {
 				Utils.checkBalInstance(p);
 				if (Main.xps.get(p.getUniqueId().toString()) == 0) {
@@ -170,7 +179,7 @@ public class WithdrawMenu {
 				return;
 			}
 			
-			if (name.contains("max")) {
+			if (clicked.equals(withdrawMax)) {
 				amount = 0;
 				Utils.checkBalInstance(p);
 				if (Main.xps.get(p.getUniqueId().toString()) == 0) {
