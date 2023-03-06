@@ -28,9 +28,10 @@ public class Xp implements CommandExecutor {
 			+ ChatColor.GRAY + "/xpbank withdraw max - " + ChatColor.AQUA + "Withdraws all xp up to the max (" + "%MAX_XP_HELD%" + " points)\n"
 			+ ChatColor.GRAY + "/xpbank pay <player> <amount> - " + ChatColor.AQUA + "Pays <player> the specified amount"; 
 	public static final String ADMIN_HELP_MESSAGE = ChatColor.GRAY + "------------ " + ChatColor.YELLOW + "/xpbank admin help" + ChatColor.GRAY +   " ------------\n"
-			+ ChatColor.GRAY +  "/xpbank set <player> <amount> - " + ChatColor.AQUA + "Sets <player>'s balance to <amount>\n"
-			+ ChatColor.GRAY +  "/xpbank add <player> <amount> - " + ChatColor.AQUA + "Adds <amount> to <player>'s balance\n"
-			+ ChatColor.GRAY +  "/xpbank remove <player> <amount> - " + ChatColor.AQUA + "Removes <amount> from <player>'s balance capping out at 0\n"; 
+			+ ChatColor.GRAY + "/xpbank set <player> <amount> - " + ChatColor.AQUA + "Sets <player>'s balance to <amount>\n"
+			+ ChatColor.GRAY + "/xpbank add <player> <amount> - " + ChatColor.AQUA + "Adds <amount> to <player>'s balance\n"
+			+ ChatColor.GRAY + "/xpbank remove <player> <amount> - " + ChatColor.AQUA + "Removes <amount> from <player>'s balance capping out at 0\n"
+			+ ChatColor.GRAY + "/xpbank reload - " + ChatColor.AQUA + "Reloads config values. (Will not enable/disable commands)"; 
 	
 	public static String DEPOSIT_MESSAGE = ChatColor.GREEN + "Xp deposited. New balance: " + "%XP_STORED%";
 	public static String WITHDRAW_MESSAGE = ChatColor.GREEN + "Xp withdrawn. New balance: " + "%XP_STORED%";

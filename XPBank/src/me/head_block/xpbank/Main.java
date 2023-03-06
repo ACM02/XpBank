@@ -82,12 +82,13 @@ public class Main extends JavaPlugin {
 	
 	/*
 	 * TODO
-	 * Update ALL documentation to reflect v1.11 changes on release
 	 * 
 	 * Fixes:
 	 * Deposit max in GUI is exceeding store limit (Probably in command too) (Seems like only some cases, and hard to debug...)
 	 * 
 	 * Future plans:
+	 * Permissions page in Wiki
+	 * xpbank info command which will give plugin version and link to wiki
 	 * Make an economy manager to clean up Xp.java, and the menus (duplicated code)
 	 * Back button customization
 	 * Add blocks to UI indicating stored and held xp
