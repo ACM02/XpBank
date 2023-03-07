@@ -87,7 +87,7 @@ public class Main extends JavaPlugin {
 	 * Deposit max in GUI is exceeding store limit (Probably in command too) (Seems like only some cases, and hard to debug...)
 	 * 
 	 * Future plans:
-	 * Permissions page in Wiki
+	 * Option so users can select if they get sent numbers in levels or points?
 	 * xpbank info command which will give plugin version and link to wiki
 	 * Make an economy manager to clean up Xp.java, and the menus (duplicated code)
 	 * Back button customization
