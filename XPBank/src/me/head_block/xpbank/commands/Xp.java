@@ -33,6 +33,9 @@ public class Xp implements CommandExecutor {
 			+ ChatColor.GRAY + "/xpbank remove <player> <amount> - " + ChatColor.AQUA + "Removes <amount> from <player>'s balance capping out at 0\n"
 			+ ChatColor.GRAY + "/xpbank reload - " + ChatColor.AQUA + "Reloads config values. (Will not enable/disable commands)"; 
 	
+	public static String INFO_MESSAGE;
+	
+	
 	public static String DEPOSIT_MESSAGE = ChatColor.GREEN + "Xp deposited. New balance: " + "%XP_STORED%";
 	public static String WITHDRAW_MESSAGE = ChatColor.GREEN + "Xp withdrawn. New balance: " + "%XP_STORED%";
 	public static String PLAYER_NOT_FOUND_MESSAGE = ChatColor.RED + "Player not found.";
@@ -45,6 +48,11 @@ public class Xp implements CommandExecutor {
 	
 	public Xp (Main plugin) {
 		plugin.getCommand("xpbank").setExecutor(this);
+		
+		INFO_MESSAGE = ChatColor.GRAY + "------------ " + ChatColor.YELLOW +  "/xpbank info" + ChatColor.GRAY +  " ------------\n"
+				+ ChatColor.GRAY + "Plugin version: " + ChatColor.AQUA + Main.instance.getDescription().getVersion() + ChatColor.GRAY + " (Newest version: " + ChatColor.AQUA + Main.newestVersion + ChatColor.GRAY + ")\n"
+				+ "Spigot page: " + ChatColor.AQUA + "https://www.spigotmc.org/resources/xpbank.101132/ \n"
+				+ ChatColor.GRAY + "Wiki page: " + ChatColor.AQUA + "https://github.com/ACM02/XpBank/wiki";
 	}
 	
 	@Override
@@ -61,7 +69,7 @@ public class Xp implements CommandExecutor {
 			return;
 		}
 		switch (args.length) {
-		case 0:
+		case 0:		// ---------------------- No Arguments ----------------------
 			if (Main.GUI_ENABLED) {
 				MainMenu.openForPlayer(sender);
 				break;
@@ -70,32 +78,39 @@ public class Xp implements CommandExecutor {
 				sender.sendMessage(Utils.replacePlaceholders(XP_STORED_MESSAGE, sender));
 				break;
 			}
-		case 1: 
+		case 1:		// ---------------------- 1 Argument ----------------------
 			switch(args[0]) {
-			case "help":
+			case "help":	// /xpbank help
 				sender.sendMessage(Utils.replacePlaceholders(HELP_MESSAGE, sender));
-			case "adminhelp":
+			case "adminhelp":	// /xpbank adminhelp
 				if (!sender.hasPermission("xpbank.admin")) {
 					sender.sendMessage(Utils.replacePlaceholders(Main.NO_PERM_MESSAGE));
 				} else {
 					sender.sendMessage(ADMIN_HELP_MESSAGE);
 				}
 				break;
-			case "xpheld":
+			case "xpheld":	// /xpbank xpheld
 				sender.sendMessage(Utils.replacePlaceholders(XP_HELD_MESSAGE, sender) );
 				break;
-			case "xpstored":
+			case "xpstored":	// /xpbank xpstored
 				sender.sendMessage(Utils.replacePlaceholders(XP_STORED_MESSAGE, sender));
 				break;
-			case "totalxp":
+			case "totalxp":		// /xpbank totalxp
 				sender.sendMessage(Utils.replacePlaceholders(TOTAL_XP_MESSAGE , sender));
 				break;
-			case "reload":
+			case "reload":		// /xpbank reload
 				if (!sender.hasPermission("xpbank.admin")) {
 					sender.sendMessage(Utils.replacePlaceholders(Main.NO_PERM_MESSAGE));
 				} else {
 					Main.reloadPlugin();
 					sender.sendMessage(ChatColor.GREEN + "Reloaded successfully.");
+				}
+				break;
+			case "info":		// /xpbank info
+				if (!sender.hasPermission("xpbank.admin")) {
+					sender.sendMessage(Utils.replacePlaceholders(Main.NO_PERM_MESSAGE));
+				} else {
+					sender.sendMessage(Utils.replacePlaceholders(INFO_MESSAGE, sender));
 				}
 				break;
 			default:
@@ -105,9 +120,9 @@ public class Xp implements CommandExecutor {
 			break;
 			
 			
-		case 2:
+		case 2:		// ---------------------- 2 Arguments ----------------------
 			switch(args[0]) {
-			case "deposit":
+			case "deposit":		// /xpbank deposit <amount>/max
 				int amount = 1;
 				if (!args[1].equals("max")) {
 					amount = getAmount(args[1], sender);
@@ -143,7 +158,7 @@ public class Xp implements CommandExecutor {
 				sender.sendMessage(Utils.replacePlaceholders(DEPOSIT_MESSAGE, sender));
 				break;
 				
-			case "withdraw": 
+			case "withdraw": 		// /xpbank withdraw <amount>/max
 				amount = 0;
 				checkBalInstance(sender);
 				if (Main.xps.get(sender.getUniqueId().toString()) == 0) {
@@ -177,7 +192,7 @@ public class Xp implements CommandExecutor {
 				Main.xps.put(sender.getUniqueId().toString(), oldBal - amount);
 				sender.sendMessage(Utils.replacePlaceholders(WITHDRAW_MESSAGE, sender));
 				break;
-			case "get":
+			case "get":		// /xpbank get <player>
 				if (!sender.hasPermission("xpbank.admin")) {
 					sender.sendMessage(Utils.replacePlaceholders(Main.NO_PERM_MESSAGE));
 					break;
@@ -197,9 +212,9 @@ public class Xp implements CommandExecutor {
 			}
 			break;
 			
-		case 3: 
+		case 3:		// ---------------------- 3 Arguments ----------------------
 			switch(args[0]) {
-			case "deposit":
+			case "deposit":		// /xpbank deposit <amount> levels/points
 				int amount = getAmount(args[1], sender);
 				if (amount == -1) break;
 				checkBalInstance(sender);
@@ -209,7 +224,7 @@ public class Xp implements CommandExecutor {
 					break;
 				}
 				switch (args[2]) {
-				case "levels":
+				case "levels":		// /xpbank deposit <amount> levels
 					if ((long) Main.xps.get(sender.getUniqueId().toString()) + (long) Utils.totalXp(amount) > Main.MAX_XP_STORED) {
 						sender.sendMessage(Utils.replacePlaceholders(Main.EXCEEDS_STORE_LIMIT));
 						break;
@@ -225,7 +240,7 @@ public class Xp implements CommandExecutor {
 					sender.sendMessage(Utils.replacePlaceholders(DEPOSIT_MESSAGE, sender));
 					break;
 					
-				case "points":
+				case "points":		// /xpbank deposit <amount> points
 					if ((long) Main.xps.get(sender.getUniqueId().toString()) + (long) amount > Main.MAX_XP_STORED) {
 						sender.sendMessage(Utils.replacePlaceholders(Main.EXCEEDS_STORE_LIMIT));
 						break;
@@ -244,7 +259,7 @@ public class Xp implements CommandExecutor {
 					break;
 				}
 				break;
-			case "withdraw": 
+			case "withdraw": 		// /xpbank withdraw <amount> levels/points
 				amount = getAmount(args[1], sender);
 				if (amount == -1) break;
 				checkBalInstance(sender);
@@ -254,7 +269,7 @@ public class Xp implements CommandExecutor {
 				}
 				playerTotalXp = Utils.totalXp(sender);
 				switch(args[2]) {
-				case "levels":
+				case "levels": 		// /xpbank withdraw <amount> levels
 					int xpToAdd = Utils.totalXp(sender.getLevel() + amount) - Utils.totalXp(sender.getLevel());
 					if ((long) playerTotalXp + (long) xpToAdd > Main.MAX_XP_HELD) {
 						sender.sendMessage(Utils.replacePlaceholders(Main.EXCEEDS_HOLD_LIMIT));
@@ -269,7 +284,7 @@ public class Xp implements CommandExecutor {
 					Main.xps.put(sender.getUniqueId().toString(), oldBal - xpToAdd);
 					sender.sendMessage(Utils.replacePlaceholders(WITHDRAW_MESSAGE, sender));
 					break;
-				case "points":
+				case "points": 		// /xpbank withdraw <amount> points
 					if ((long) playerTotalXp + (long) amount > Main.MAX_XP_HELD) {
 						sender.sendMessage(Utils.replacePlaceholders(Main.EXCEEDS_HOLD_LIMIT));
 						break;
@@ -288,7 +303,7 @@ public class Xp implements CommandExecutor {
 					break;
 				}
 				break;
-			case "pay":
+			case "pay":		// /xpbank pay <player> <amount>
 				amount = getAmount(args[2], sender);
 				if (amount == -1) break;
 				checkBalInstance(sender);
@@ -329,7 +344,7 @@ public class Xp implements CommandExecutor {
 					break;
 				}
 				break;
-			case "set":
+			case "set":		// /xpbank set <player> <amount>
 				if (!sender.hasPermission("xpbank.admin")) {
 					sender.sendMessage(Utils.replacePlaceholders(Main.NO_PERM_MESSAGE));
 					break;
@@ -365,7 +380,7 @@ public class Xp implements CommandExecutor {
 						break;
 					}
 				}
-			case "add":
+			case "add":		// /xpbank add <player> <amount>
 				if (!sender.hasPermission("xpbank.admin")) {
 					sender.sendMessage(Utils.replacePlaceholders(Main.NO_PERM_MESSAGE));
 					break;
@@ -401,7 +416,7 @@ public class Xp implements CommandExecutor {
 						break;
 					}
 				}
-			case "remove":
+			case "remove":		// /xpbank remove <player> <amount>
 				if (!sender.hasPermission("xpbank.admin")) {
 					sender.sendMessage(Utils.replacePlaceholders(Main.NO_PERM_MESSAGE));
 					break;
@@ -444,8 +459,7 @@ public class Xp implements CommandExecutor {
 			
 			
 		default:
-			sender.sendMessage(Utils.replacePlaceholders(Main.IMPROPER_USE_MESSAGE + "/xpbank help for help"));
-			
+			sender.sendMessage(Utils.replacePlaceholders(Main.IMPROPER_USE_MESSAGE + "/xpbank help for help"));	
 			break;
 		}
 	}

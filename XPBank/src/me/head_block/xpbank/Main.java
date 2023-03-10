@@ -46,6 +46,7 @@ public class Main extends JavaPlugin {
 	
 	public static Main instance;
 	public static boolean updateAvailable;
+	public static String newestVersion = "";
 	
 	public final String CONFIG_HEADER = "XpBank version " + this.getDescription().getVersion() + "\n"
 			+ "Spigot page: https://www.spigotmc.org/resources/xpbank.101132/\n"
@@ -87,6 +88,8 @@ public class Main extends JavaPlugin {
 	 * Deposit max in GUI is exceeding store limit (Probably in command too) (Seems like only some cases, and hard to debug...)
 	 * 
 	 * Future plans:
+	 * Better main page: images(?), uhhhh, I'm bad at graphic design
+	 * Shortened command arguments?
 	 * Option so users can select if they get sent numbers in levels or points?
 	 * xpbank info command which will give plugin version and link to wiki
 	 * Make an economy manager to clean up Xp.java, and the menus (duplicated code)
@@ -150,6 +153,15 @@ public class Main extends JavaPlugin {
 		
 		GUI_ENABLED = getConfig().getBoolean("guiMenu");
 		
+		newestVersion = getDescription().getVersion();
+		new UpdateChecker(this, 101132).getVersion(version -> {
+            if (!this.getDescription().getVersion().equals(version)) {
+            	newestVersion = version;
+                getLogger().info("There is a new update available (" + version + ")! Go to https://www.spigotmc.org/resources/xpbank.101132/ to download the new version.");
+        		updateAvailable = true;
+            }
+        });
+		
 		new Xp(this);
 		new XpTab(this);
 		FileConfiguration config = this.getConfig();
@@ -161,13 +173,6 @@ public class Main extends JavaPlugin {
 			new TopXp(this);
 			new TopXpTab(this);
 		}
-		
-		new UpdateChecker(this, 101132).getVersion(version -> {
-            if (!this.getDescription().getVersion().equals(version)) {
-                getLogger().info("There is a new update available (" + version + ")! Go to https://www.spigotmc.org/resources/xpbank.101132/ to download the new version.");
-        		updateAvailable = true;
-            }
-        });
 		
 		@SuppressWarnings("unused")
 		Metrics metrics = new Metrics(this, 14929);
