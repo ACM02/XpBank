@@ -91,7 +91,6 @@ public class Main extends JavaPlugin {
 	 * Better main page: images(?), uhhhh, I'm bad at graphic design
 	 * Shortened command arguments?
 	 * Option so users can select if they get sent numbers in levels or points?
-	 * xpbank info command which will give plugin version and link to wiki
 	 * Make an economy manager to clean up Xp.java, and the menus (duplicated code)
 	 * Back button customization
 	 * Add blocks to UI indicating stored and held xp
