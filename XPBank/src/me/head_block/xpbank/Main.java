@@ -43,6 +43,15 @@ public class Main extends JavaPlugin {
 	public static String EXCEEDS_STORE_LIMIT_TARGET;
 	public static String EXCEEDS_STORE_LIMIT;
 	
+	public static String DEPOSIT_MESSAGE = ChatColor.GREEN + "Xp deposited. New balance: " + "%XP_STORED%";
+	public static String WITHDRAW_MESSAGE = ChatColor.GREEN + "Xp withdrawn. New balance: " + "%XP_STORED%";
+	public static String PLAYER_NOT_FOUND_MESSAGE = ChatColor.RED + "Player not found.";
+	public static String XP_STORED_MESSAGE = ChatColor.YELLOW + "You have " + "%XP_STORED%" + " experience points in the bank. (Enough for level " + 
+			"%TOTAL_XP_LEVEL%" + ")";
+	public static String XP_HELD_MESSAGE = ChatColor.YELLOW + "You are holding " + "%XP_HELD%" + " xp";
+	public static String NO_XP_DEPOSIT_MESSAGE = ChatColor.RED + "You don't have any XP to deposit";
+	public static String NO_XP_WITHDRAW_MESSAGE = ChatColor.RED + "You don't have any XP to withdraw";
+	public static String TOTAL_XP_MESSAGE = ChatColor.YELLOW + "Your total xp held and in the bank is: " + "%TOTAL_XP%";
 	
 	public static Main instance;
 	public static boolean updateAvailable;
@@ -74,6 +83,14 @@ public class Main extends JavaPlugin {
 			+ "messages.exeeds-hold-limit: Message sent if a player tries to hold more than the max xp\n"
 			+ "messages.exeeds-store-limit-target: Message sent to player if they're trying to give someone xp but it would push them over the max\n"
 			+ "messages.exceeds-store-limit: Message sent to player if a player tries to store more than the max xp\n"
+			+ "messages.deposit: Message sent to player when they deposit xp \n"
+			+ "messages.withdraw: Message sent to player when they withdraw xp\n"
+			+ "messages.player-not-found: Message sent to player when the plugin cannot find the player they specified\n"
+			+ "messages.xp-stored: Message sent to player saying how much xp they have stored\n"
+			+ "messages.xp-held: Message sent to player saying how much xp they are holding\n"
+			+ "messages.no-xp-to-deposit: Message sent to player when they try to deposit but have no xp\n"
+			+ "messages.no-xp-to-withdraw: Message sent to player when they try to withdraw but have no xp in the bank\n"
+			+ "messages.total-xp: Message sent to player saying the total xp they have held and stored\n"
 			+ "gui.main-menu.name: The name of the main GUI menu\n"
 			+ "gui.deposit-menu.name: The name of the deposit GUI menu\n"
 			+ "gui.withdraw-menu.name: The name of the wihtdrawl GUI menu\n"
@@ -87,6 +104,7 @@ public class Main extends JavaPlugin {
 	 * Fixes:
 	 * Deposit max in GUI is exceeding store limit (Probably in command too) (Seems like only some cases, and hard to debug...)
 	 * xpbank info message (New version not being set right because update checker is Async)
+	 * 1.8-1.12 version support (Material.GRAY_GLASS_PANE) throws errors because not legacy items
 	 * 
 	 * Future plans:
 	 * Better main page: images(?), uhhhh, I'm bad at graphic design
@@ -202,6 +220,15 @@ public class Main extends JavaPlugin {
 		config.addDefault("messages.exeeds-hold-limit", "&cInvalid amount. That exceeds the maximum xp that can be held. (" + "%MAX_LEVEL_HELD%" + " levels/" + "%MAX_XP_HELD%" + " points)");
 		config.addDefault("messages.exeeds-store-limit-target", "&cInvalid amount. That exceeds the maximum xp that can be held by the target. (" + "%MAX_LEVEL_HELD%" + " levels/" + "%MAX_XP_HELD%" + " points)");
 		config.addDefault("messages.exceeds-store-limit", "&cInvalid amount. That exceeds the maximum xp that can be stored. (" + "%MAX_LEVEL_STORED%" + " levels/" + "%MAX_XP_STORED%" + " points)");
+		config.addDefault("messages.deposit", "&aXp deposited. New balance: " + "%XP_STORED%");
+		config.addDefault("messages.withdraw", "&aXp withdrawn. New balance: " + "%XP_STORED%");
+		config.addDefault("messages.player-not-found", "&cPlayer not found.");
+		config.addDefault("messages.xp-stored", "&eYou have " + "%XP_STORED%" + " experience points in the bank. (Enough for level " + 
+				"%TOTAL_XP_LEVEL%" + ")");
+		config.addDefault("messages.xp-held", "&eYou are holding " + "%XP_HELD%" + " xp");
+		config.addDefault("messages.no-xp-to-deposit", "&cYou don't have any XP to deposit");
+		config.addDefault("messages.no-xp-to-withdraw", "&cYou don't have any XP to withdraw");
+		config.addDefault("messages.total-xp", "&eYour total xp held and in the bank is: " + "%TOTAL_XP%");
 		
 		config.addDefault("gui.main-menu.name", "XpBank");
 		config.addDefault("gui.main-menu.deposit", Utils.createItem(Material.GOLD_INGOT, 1, "&aDeposit XP", "&eStore up to " + "%MAX_LEVEL_STORED%" + " levels"));
@@ -284,6 +311,15 @@ public class Main extends JavaPlugin {
 		EXCEEDS_HOLD_LIMIT = ChatColor.translateAlternateColorCodes('&', config.getString("messages.exeeds-hold-limit"));
 		EXCEEDS_STORE_LIMIT_TARGET = ChatColor.translateAlternateColorCodes('&', config.getString("messages.exeeds-store-limit-target"));
 		EXCEEDS_STORE_LIMIT = ChatColor.translateAlternateColorCodes('&', config.getString("messages.exceeds-store-limit"));
+		DEPOSIT_MESSAGE = ChatColor.translateAlternateColorCodes('&', config.getString("messages.deposit"));
+		WITHDRAW_MESSAGE = ChatColor.translateAlternateColorCodes('&', config.getString("messages.withdraw"));
+		PLAYER_NOT_FOUND_MESSAGE = ChatColor.translateAlternateColorCodes('&', config.getString("messages.player-not-found"));
+		XP_STORED_MESSAGE = ChatColor.translateAlternateColorCodes('&', config.getString("messages.xp-stored"));
+		XP_HELD_MESSAGE = ChatColor.translateAlternateColorCodes('&', config.getString("messages.xp-held"));
+		NO_XP_DEPOSIT_MESSAGE = ChatColor.translateAlternateColorCodes('&', config.getString("messages.no-xp-to-deposit"));
+		NO_XP_WITHDRAW_MESSAGE = ChatColor.translateAlternateColorCodes('&', config.getString("messages.no-xp-to-withdraw"));
+		TOTAL_XP_MESSAGE = ChatColor.translateAlternateColorCodes('&', config.getString("messages.total-xp"));
+		
 		updateAvailable = config.getBoolean("update-message");
 		
 		GUI_ENABLED = config.getBoolean("guiMenu");

@@ -35,17 +35,6 @@ public class Xp implements CommandExecutor {
 	
 	public static String INFO_MESSAGE;
 	
-	
-	public static String DEPOSIT_MESSAGE = ChatColor.GREEN + "Xp deposited. New balance: " + "%XP_STORED%";
-	public static String WITHDRAW_MESSAGE = ChatColor.GREEN + "Xp withdrawn. New balance: " + "%XP_STORED%";
-	public static String PLAYER_NOT_FOUND_MESSAGE = ChatColor.RED + "Player not found.";
-	public static String XP_STORED_MESSAGE = ChatColor.YELLOW + "You have " + "%XP_STORED%" + " experience points in the bank. (Enough for level " + 
-			"%TOTAL_XP_LEVEL%" + ")";
-	public static String XP_HELD_MESSAGE = ChatColor.YELLOW + "You are holding " + "%XP_HELD%" + " xp";
-	public static String NO_XP_DEPOSIT_MESSAGE = ChatColor.RED + "You don't have any XP to deposit";
-	public static String NO_XP_WITHDRAW_MESSAGE = ChatColor.RED + "You don't have any XP to withdraw";
-	public static String TOTAL_XP_MESSAGE = ChatColor.YELLOW + "Your total xp held and in the bank is: " + "%TOTAL_XP%";
-	
 	public Xp (Main plugin) {
 		plugin.getCommand("xpbank").setExecutor(this);
 		
@@ -75,7 +64,7 @@ public class Xp implements CommandExecutor {
 				break;
 			} else {
 				checkBalInstance(sender);
-				sender.sendMessage(Utils.replacePlaceholders(XP_STORED_MESSAGE, sender));
+				sender.sendMessage(Utils.replacePlaceholders(Main.XP_STORED_MESSAGE, sender));
 				break;
 			}
 		case 1:		// ---------------------- 1 Argument ----------------------
@@ -90,13 +79,13 @@ public class Xp implements CommandExecutor {
 				}
 				break;
 			case "xpheld":	// /xpbank xpheld
-				sender.sendMessage(Utils.replacePlaceholders(XP_HELD_MESSAGE, sender) );
+				sender.sendMessage(Utils.replacePlaceholders(Main.XP_HELD_MESSAGE, sender) );
 				break;
 			case "xpstored":	// /xpbank xpstored
-				sender.sendMessage(Utils.replacePlaceholders(XP_STORED_MESSAGE, sender));
+				sender.sendMessage(Utils.replacePlaceholders(Main.XP_STORED_MESSAGE, sender));
 				break;
 			case "totalxp":		// /xpbank totalxp
-				sender.sendMessage(Utils.replacePlaceholders(TOTAL_XP_MESSAGE , sender));
+				sender.sendMessage(Utils.replacePlaceholders(Main.TOTAL_XP_MESSAGE , sender));
 				break;
 			case "reload":		// /xpbank reload
 				if (!sender.hasPermission("xpbank.admin")) {
@@ -134,7 +123,7 @@ public class Xp implements CommandExecutor {
 				checkBalInstance(sender);
 				int playerTotalXp = Utils.totalXp(sender);
 				if (playerTotalXp == 0) {
-					sender.sendMessage(Utils.replacePlaceholders(NO_XP_DEPOSIT_MESSAGE, sender));
+					sender.sendMessage(Utils.replacePlaceholders(Main.NO_XP_DEPOSIT_MESSAGE, sender));
 					break;
 				}
 				if (args[1].equals("max")) {
@@ -158,14 +147,14 @@ public class Xp implements CommandExecutor {
 				removeXp(amount, sender, playerTotalXp);
 				int oldBal = Main.xps.get(sender.getUniqueId().toString());
 				Main.xps.put(sender.getUniqueId().toString(), oldBal + amount);
-				sender.sendMessage(Utils.replacePlaceholders(DEPOSIT_MESSAGE, sender));
+				sender.sendMessage(Utils.replacePlaceholders(Main.DEPOSIT_MESSAGE, sender));
 				break;
 				
 			case "withdraw": 		// /xpbank withdraw <amount>/max
 				amount = 0;
 				checkBalInstance(sender);
 				if (Main.xps.get(sender.getUniqueId().toString()) == 0) {
-					sender.sendMessage(Utils.replacePlaceholders(NO_XP_WITHDRAW_MESSAGE, sender));
+					sender.sendMessage(Utils.replacePlaceholders(Main.NO_XP_WITHDRAW_MESSAGE, sender));
 					break;
 				}
 				playerTotalXp = Utils.totalXp(sender);
@@ -193,7 +182,7 @@ public class Xp implements CommandExecutor {
 				addXp(amount, sender, playerTotalXp);
 				oldBal = Main.xps.get(sender.getUniqueId().toString());
 				Main.xps.put(sender.getUniqueId().toString(), oldBal - amount);
-				sender.sendMessage(Utils.replacePlaceholders(WITHDRAW_MESSAGE, sender));
+				sender.sendMessage(Utils.replacePlaceholders(Main.WITHDRAW_MESSAGE, sender));
 				break;
 			case "get":		// /xpbank get <player>
 				if (!sender.hasPermission("xpbank.admin")) {
@@ -202,7 +191,7 @@ public class Xp implements CommandExecutor {
 				}
 				OfflinePlayer offline = Bukkit.getOfflinePlayer(args[1]);
 				if (offline == null) {
-					sender.sendMessage(Utils.replacePlaceholders(PLAYER_NOT_FOUND_MESSAGE));
+					sender.sendMessage(Utils.replacePlaceholders(Main.PLAYER_NOT_FOUND_MESSAGE));
 				} else if (!Main.xps.containsKey(offline.getUniqueId().toString())) {
 					sender.sendMessage(ChatColor.RED + "Player has no balance");
 				} else if (Main.xps.containsKey(offline.getUniqueId().toString())) {
@@ -223,7 +212,7 @@ public class Xp implements CommandExecutor {
 				checkBalInstance(sender);
 				int playerTotalXp = Utils.totalXp(sender);
 				if (playerTotalXp == 0) {
-					sender.sendMessage(Utils.replacePlaceholders(NO_XP_DEPOSIT_MESSAGE, sender));
+					sender.sendMessage(Utils.replacePlaceholders(Main.NO_XP_DEPOSIT_MESSAGE, sender));
 					break;
 				}
 				switch (args[2]) {
@@ -240,7 +229,7 @@ public class Xp implements CommandExecutor {
 					removeXp(xpToLose, sender, playerTotalXp);
 					int oldBal = Main.xps.get(sender.getUniqueId().toString());
 					Main.xps.put(sender.getUniqueId().toString(), oldBal + xpToLose);
-					sender.sendMessage(Utils.replacePlaceholders(DEPOSIT_MESSAGE, sender));
+					sender.sendMessage(Utils.replacePlaceholders(Main.DEPOSIT_MESSAGE, sender));
 					break;
 					
 				case "points":		// /xpbank deposit <amount> points
@@ -255,7 +244,7 @@ public class Xp implements CommandExecutor {
 					removeXp(amount, sender, playerTotalXp);
 					oldBal = Main.xps.get(sender.getUniqueId().toString());
 					Main.xps.put(sender.getUniqueId().toString(), oldBal + amount);
-					sender.sendMessage(Utils.replacePlaceholders(DEPOSIT_MESSAGE, sender));
+					sender.sendMessage(Utils.replacePlaceholders(Main.DEPOSIT_MESSAGE, sender));
 					break;
 				default:
 					sender.sendMessage(Utils.replacePlaceholders(Main.IMPROPER_USE_MESSAGE + "/xpbank <deposit/withdraw> <amount> <levels/points>"));
@@ -267,7 +256,7 @@ public class Xp implements CommandExecutor {
 				if (amount == -1) break;
 				checkBalInstance(sender);
 				if (Main.xps.get(sender.getUniqueId().toString()) == 0) {
-					sender.sendMessage(Utils.replacePlaceholders(NO_XP_WITHDRAW_MESSAGE, sender));
+					sender.sendMessage(Utils.replacePlaceholders(Main.NO_XP_WITHDRAW_MESSAGE, sender));
 					break;
 				}
 				playerTotalXp = Utils.totalXp(sender);
@@ -285,7 +274,7 @@ public class Xp implements CommandExecutor {
 					addXp(xpToAdd, sender, playerTotalXp);
 					int oldBal = Main.xps.get(sender.getUniqueId().toString());
 					Main.xps.put(sender.getUniqueId().toString(), oldBal - xpToAdd);
-					sender.sendMessage(Utils.replacePlaceholders(WITHDRAW_MESSAGE, sender));
+					sender.sendMessage(Utils.replacePlaceholders(Main.WITHDRAW_MESSAGE, sender));
 					break;
 				case "points": 		// /xpbank withdraw <amount> points
 					if ((long) playerTotalXp + (long) amount > Main.MAX_XP_HELD) {
@@ -299,7 +288,7 @@ public class Xp implements CommandExecutor {
 					addXp(amount, sender, playerTotalXp);
 					oldBal = Main.xps.get(sender.getUniqueId().toString());
 					Main.xps.put(sender.getUniqueId().toString(), oldBal - amount);
-					sender.sendMessage(Utils.replacePlaceholders(WITHDRAW_MESSAGE, sender));
+					sender.sendMessage(Utils.replacePlaceholders(Main.WITHDRAW_MESSAGE, sender));
 					break;
 				default:
 					sender.sendMessage(Utils.replacePlaceholders(Main.IMPROPER_USE_MESSAGE + "/xpbank <deposit/withdraw> <amount> <levels/points>"));
@@ -338,12 +327,12 @@ public class Xp implements CommandExecutor {
 							online.sendMessage(Utils.replacePlaceholders(ChatColor.YELLOW + sender.getName() + " has sent you " + amount + " xp. New balance: " + "%XP_STORED%", online));
 							sender.sendMessage(Utils.replacePlaceholders(ChatColor.YELLOW + "Transfer complete. New balance: " + "%XP_STORED%", sender));
 						} else {
-							sender.sendMessage(Utils.replacePlaceholders(PLAYER_NOT_FOUND_MESSAGE));
+							sender.sendMessage(Utils.replacePlaceholders(Main.PLAYER_NOT_FOUND_MESSAGE));
 							break;
 						}
 					}
 				} else {
-					sender.sendMessage(Utils.replacePlaceholders(PLAYER_NOT_FOUND_MESSAGE));
+					sender.sendMessage(Utils.replacePlaceholders(Main.PLAYER_NOT_FOUND_MESSAGE));
 					break;
 				}
 				break;
@@ -360,7 +349,7 @@ public class Xp implements CommandExecutor {
 				}
 				offline = Bukkit.getOfflinePlayer(args[1]);
 				if (offline == null) {
-					sender.sendMessage(Utils.replacePlaceholders(PLAYER_NOT_FOUND_MESSAGE));
+					sender.sendMessage(Utils.replacePlaceholders(Main.PLAYER_NOT_FOUND_MESSAGE));
 				}
 				if (Main.xps.containsKey(offline.getUniqueId().toString())) {
 					Main.xps.put(offline.getUniqueId().toString(), amount);
@@ -379,7 +368,7 @@ public class Xp implements CommandExecutor {
 						sender.sendMessage(Utils.replacePlaceholders(ChatColor.YELLOW + offline.getName() + "'s balance is now " + "%XP_STORED%", offline));
 						break;
 					} else {
-						sender.sendMessage(Utils.replacePlaceholders(PLAYER_NOT_FOUND_MESSAGE));
+						sender.sendMessage(Utils.replacePlaceholders(Main.PLAYER_NOT_FOUND_MESSAGE));
 						break;
 					}
 				}
@@ -396,7 +385,7 @@ public class Xp implements CommandExecutor {
 				}
 				offline = Bukkit.getOfflinePlayer(args[1]);
 				if (offline == null) {
-					sender.sendMessage(Utils.replacePlaceholders(PLAYER_NOT_FOUND_MESSAGE));
+					sender.sendMessage(Utils.replacePlaceholders(Main.PLAYER_NOT_FOUND_MESSAGE));
 				}
 				if (Main.xps.containsKey(offline.getUniqueId().toString())) {
 					Main.xps.put(offline.getUniqueId().toString(), amount + Main.xps.get(offline.getUniqueId().toString()));
@@ -415,7 +404,7 @@ public class Xp implements CommandExecutor {
 						sender.sendMessage(Utils.replacePlaceholders(ChatColor.YELLOW + offline.getName() + "'s balance is now " + "%XP_STORED%", offline));
 						break;
 					} else {
-						sender.sendMessage(Utils.replacePlaceholders(PLAYER_NOT_FOUND_MESSAGE));
+						sender.sendMessage(Utils.replacePlaceholders(Main.PLAYER_NOT_FOUND_MESSAGE));
 						break;
 					}
 				}
@@ -428,7 +417,7 @@ public class Xp implements CommandExecutor {
 				if (amount == -1) break;
 				offline = Bukkit.getOfflinePlayer(args[1]);
 				if (offline == null) {
-					sender.sendMessage(Utils.replacePlaceholders(PLAYER_NOT_FOUND_MESSAGE));
+					sender.sendMessage(Utils.replacePlaceholders(Main.PLAYER_NOT_FOUND_MESSAGE));
 				}
 				if (!Main.xps.containsKey(offline.getUniqueId().toString())) {
 					if (offline.isOnline()) {
@@ -439,7 +428,7 @@ public class Xp implements CommandExecutor {
 						sender.sendMessage(Utils.replacePlaceholders(ChatColor.YELLOW + offline.getName() + "'s balance is now " + "%XP_STORED%", offline));
 						break;
 					} else {
-						sender.sendMessage(Utils.replacePlaceholders(PLAYER_NOT_FOUND_MESSAGE));
+						sender.sendMessage(Utils.replacePlaceholders(Main.PLAYER_NOT_FOUND_MESSAGE));
 						break;
 					}
 				} else { 

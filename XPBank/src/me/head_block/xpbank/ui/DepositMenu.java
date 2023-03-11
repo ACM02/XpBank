@@ -10,7 +10,6 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import me.head_block.xpbank.Main;
-import me.head_block.xpbank.commands.Xp;
 import me.head_block.xpbank.utils.Utils;
 import net.md_5.bungee.api.ChatColor;
 
@@ -127,14 +126,14 @@ public class DepositMenu {
 				int points = (int) (totalXP * percentage);
 				Utils.checkBalInstance(p);
 				if (points == 0) {
-					p.sendMessage(Utils.replacePlaceholders(Xp.NO_XP_DEPOSIT_MESSAGE, p));
+					p.sendMessage(Utils.replacePlaceholders(Main.NO_XP_DEPOSIT_MESSAGE, p));
 				} else if ((long) Main.xps.get(p.getUniqueId().toString()) + (long) points > Main.MAX_XP_STORED) {
 					p.sendMessage(Utils.replacePlaceholders(Main.EXCEEDS_STORE_LIMIT));
 				} else {
 					removeXp(points, p, totalXP);
 					long oldBal = Main.xps.get(p.getUniqueId().toString());
 					Main.xps.put(p.getUniqueId().toString(), (int) (oldBal + points));
-					p.sendMessage(Utils.replacePlaceholders(Xp.DEPOSIT_MESSAGE));
+					p.sendMessage(Utils.replacePlaceholders(Main.DEPOSIT_MESSAGE));
 				}
 				return;
 			}
@@ -162,7 +161,7 @@ public class DepositMenu {
 					removeXp(xpToLose, p, Utils.totalXp(p));
 					int oldBal = Main.xps.get(p.getUniqueId().toString());
 					Main.xps.put(p.getUniqueId().toString(), oldBal + xpToLose);
-					p.sendMessage(Utils.replacePlaceholders(Xp.DEPOSIT_MESSAGE, p));
+					p.sendMessage(Utils.replacePlaceholders(Main.DEPOSIT_MESSAGE, p));
 				}
 				return;
 			}
@@ -170,7 +169,7 @@ public class DepositMenu {
 			if (clicked.equals(depositMax)) {
 				int totalXP = Utils.totalXp(p);
 				if (totalXP == 0) {
-					p.sendMessage(Utils.replacePlaceholders(Xp.NO_XP_DEPOSIT_MESSAGE, p));
+					p.sendMessage(Utils.replacePlaceholders(Main.NO_XP_DEPOSIT_MESSAGE, p));
 					return;
 				}
 				int points = totalXP;
@@ -188,7 +187,7 @@ public class DepositMenu {
 					removeXp(points, p, totalXP);
 					long oldBal = Main.xps.get(p.getUniqueId().toString());
 					Main.xps.put(p.getUniqueId().toString(), (int) (oldBal + points));
-					p.sendMessage(Utils.replacePlaceholders(Xp.DEPOSIT_MESSAGE, p));
+					p.sendMessage(Utils.replacePlaceholders(Main.DEPOSIT_MESSAGE, p));
 				}
 				return;
 			}
