@@ -217,8 +217,13 @@ public class Main extends JavaPlugin {
 		config.addDefault("gui.main-menu.name", "XpBank");
 		config.addDefault("gui.main-menu.deposit", Utils.createItem(Material.GOLD_INGOT, 1, "&aDeposit XP", "&eStore up to " + "%MAX_LEVEL_STORED%" + " levels"));
 		config.addDefault("gui.main-menu.withdraw", Utils.createItem(Material.IRON_INGOT, 1, "&aWithdraw XP", "&eHold up to " +"%MAX_LEVEL_HELD%" + " levels"));
-		config.addDefault("gui.main-menu.xp-stored", Utils.createItem(Material.EXPERIENCE_BOTTLE, 1, "&aXp stored", "&e%XP_STORED%" + "/" + "%MAX_XP_STORED%"));
-		config.addDefault("gui.main-menu.xp-held", Utils.createItem(Material.BRICK, 1, "&aXP held", "&e%XP_HELD%" + "/" + "%MAX_XP_HELD%"));
+		//config.addDefault("gui.main-menu.xp-stored", Utils.createItem(Material.EXPERIENCE_BOTTLE, 1, "&aXp stored", "&e%XP_STORED%" + "/" + "%MAX_XP_STORED%"));
+		//config.addDefault("gui.main-menu.xp-held", Utils.createItem(Material.BRICK, 1, "&aXP held", "&e%XP_HELD%" + "/" + "%MAX_XP_HELD%"));
+		config.addDefault("gui.main-menu.held-full", Utils.createItem(Material.GREEN_STAINED_GLASS_PANE, 1, "&eXp held:", "&a%XP_HELD%/%MAX_XP_HELD%"));
+		config.addDefault("gui.main-menu.held-empty", Utils.createItem(Material.GRAY_STAINED_GLASS_PANE, 1, "&eXp held:", "&a%XP_HELD%/%MAX_XP_HELD%"));
+		
+		config.addDefault("gui.main-menu.stored-full", Utils.createItem(Material.GREEN_STAINED_GLASS_PANE, 1, "&eXp Stored:", "&a%XP_STORED%/%MAX_XP_STORED%"));
+		config.addDefault("gui.main-menu.stored-empty", Utils.createItem(Material.GRAY_STAINED_GLASS_PANE, 1, "&eXp Stored:", "&a%XP_STORED%/%MAX_XP_STORED%"));
 		
 		config.addDefault("gui.deposit-menu.name", "Deposit");
 		config.addDefault("gui.deposit-menu.25-percent", Utils.createItem(Material.GREEN_CONCRETE, 1, "&aDeposit 25%"));

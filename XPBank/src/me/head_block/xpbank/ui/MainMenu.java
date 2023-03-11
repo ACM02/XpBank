@@ -62,12 +62,38 @@ public class MainMenu {
 		toOpen.setContents(UIinventory);
 		
 		//ItemStack stored = Utils.createItem(Material.EXPERIENCE_BOTTLE, 1, ChatColor.GREEN + "Xp stored", ChatColor.YELLOW + "" + Main.xps.get(p.getUniqueId().toString()) + "/" + Main.MAX_XP_STORED);
-		ItemStack stored = loadItem("gui.main-menu.xp-stored", p);
-		toOpen.setItem(9*3 + 3, stored);
+		//ItemStack stored = loadItem("gui.main-menu.xp-stored", p);
+		//toOpen.setItem(9*3 + 3, stored);
 		
 		//ItemStack held = Utils.createItem(Material.BRICK, 1, ChatColor.GREEN + "XP held", "" + ChatColor.YELLOW + Utils.totalXp(p) + "/" + Main.MAX_XP_HELD);
-		ItemStack held = loadItem("gui.main-menu.xp-held", p);
-		toOpen.setItem(9*3 + 5, held);
+		//ItemStack held = loadItem("gui.main-menu.xp-held", p);
+		//toOpen.setItem(9*3 + 5, held);
+		
+
+		ItemStack heldFull = loadItem("gui.main-menu.held-full", p);
+		ItemStack heldEmpty = loadItem("gui.main-menu.held-empty", p);
+		float percentFull = (float) (Utils.totalXp(p)) / (float) (Main.MAX_XP_HELD);
+		percentFull = (float) (Utils.trunc(percentFull, 1) * 10);
+		if (percentFull > 10) percentFull = 10;
+		int i;
+		for (i = 0; i < percentFull-1; i++) {
+			toOpen.setItem(i, heldFull);
+		}
+		for (int j = i; j < 9; j++) {
+			toOpen.setItem(j, heldEmpty);
+		}
+		
+		ItemStack storedFull = loadItem("gui.main-menu.stored-full", p);
+		ItemStack storedEmpty = loadItem("gui.main-menu.stored-empty", p);
+		percentFull = (float) (Main.xps.get(p.getUniqueId().toString())) / (float) (Main.MAX_XP_STORED);
+		percentFull = (float) (Utils.trunc(percentFull, 1) * 10);
+		if (percentFull > 10) percentFull = 10;
+		for (i = 9*3; i < 9*3+percentFull-1; i++) {
+			toOpen.setItem(i, storedFull);
+		}
+		for (int j = i; j < 9*4; j++) {
+			toOpen.setItem(j, storedEmpty);
+		}
 		
 		p.openInventory(toOpen);
 	}
