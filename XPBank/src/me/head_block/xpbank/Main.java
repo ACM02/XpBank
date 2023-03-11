@@ -86,6 +86,7 @@ public class Main extends JavaPlugin {
 	 * 
 	 * Fixes:
 	 * Deposit max in GUI is exceeding store limit (Probably in command too) (Seems like only some cases, and hard to debug...)
+	 * xpbank info message (New version not being set right because update checker is Async)
 	 * 
 	 * Future plans:
 	 * Better main page: images(?), uhhhh, I'm bad at graphic design
@@ -146,7 +147,6 @@ public class Main extends JavaPlugin {
 		EXCEEDS_HOLD_LIMIT = ChatColor.translateAlternateColorCodes('&', getConfig().getString("messages.exeeds-hold-limit"));
 		EXCEEDS_STORE_LIMIT_TARGET = ChatColor.translateAlternateColorCodes('&', getConfig().getString("messages.exeeds-store-limit-target"));
 		EXCEEDS_STORE_LIMIT = ChatColor.translateAlternateColorCodes('&', getConfig().getString("messages.exceeds-store-limit"));
-		
 		
 		GUI_ENABLED = getConfig().getBoolean("guiMenu");
 		

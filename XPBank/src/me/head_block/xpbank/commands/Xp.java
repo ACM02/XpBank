@@ -110,7 +110,10 @@ public class Xp implements CommandExecutor {
 				if (!sender.hasPermission("xpbank.admin")) {
 					sender.sendMessage(Utils.replacePlaceholders(Main.NO_PERM_MESSAGE));
 				} else {
-					sender.sendMessage(Utils.replacePlaceholders(INFO_MESSAGE, sender));
+					sender.sendMessage(Utils.replacePlaceholders(ChatColor.GRAY + "------------ " + ChatColor.YELLOW +  "/xpbank info" + ChatColor.GRAY +  " ------------\n"
+							+ ChatColor.GRAY + "Plugin version: " + ChatColor.AQUA + Main.instance.getDescription().getVersion() + ChatColor.GRAY + " (Newest version: " + ChatColor.AQUA + Main.newestVersion + ChatColor.GRAY + ")\n"
+							+ "Spigot page: " + ChatColor.AQUA + "https://www.spigotmc.org/resources/xpbank.101132/ \n"
+							+ ChatColor.GRAY + "Wiki page: " + ChatColor.AQUA + "https://github.com/ACM02/XpBank/wiki", sender));
 				}
 				break;
 			default:
