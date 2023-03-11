@@ -52,7 +52,7 @@ public class Main extends JavaPlugin {
 			+ "Spigot page: https://www.spigotmc.org/resources/xpbank.101132/\n"
 			+ "\n"
 			+ "----- Placeholders -----\n"
-			+ "The following placeholders will work in the GUI config and in messages:\n"
+			+ "The following placeholders will work in the GUI config and in messages, along with \"_RAW\" added to the end:\n"
 			+ "- %MAX_LEVEL_HELD%\n"
 			+ "- %MAX_LEVEL_STORED%\n"
 			+ "- %MAX_XP_HELD%\n"
@@ -93,7 +93,6 @@ public class Main extends JavaPlugin {
 	 * Option so users can select if they get sent numbers in levels or points?
 	 * Make an economy manager to clean up Xp.java, and the menus (duplicated code)
 	 * Back button customization
-	 * Add blocks to UI indicating stored and held xp
 	 * Better API?
 	 * Language files
 	 * Even more message config
@@ -204,16 +203,6 @@ public class Main extends JavaPlugin {
 		config.addDefault("messages.exeeds-store-limit-target", "&cInvalid amount. That exceeds the maximum xp that can be held by the target. (" + "%MAX_LEVEL_HELD%" + " levels/" + "%MAX_XP_HELD%" + " points)");
 		config.addDefault("messages.exceeds-store-limit", "&cInvalid amount. That exceeds the maximum xp that can be stored. (" + "%MAX_LEVEL_STORED%" + " levels/" + "%MAX_XP_STORED%" + " points)");
 		
-		/*	GUI menu config
-		 *  Placeholders
-		 *  - %MAX_LEVEL_HELD%
-		 *  - %MAX_LEVEL_STORED%
-		 *  - %MAX_XP_HELD%
-		 *  - %MAX_XP_STORED%
-		 *  - %XP_STORED%
-		 *  - %XP_HELD%
-		 *  
-		 */
 		config.addDefault("gui.main-menu.name", "XpBank");
 		config.addDefault("gui.main-menu.deposit", Utils.createItem(Material.GOLD_INGOT, 1, "&aDeposit XP", "&eStore up to " + "%MAX_LEVEL_STORED%" + " levels"));
 		config.addDefault("gui.main-menu.withdraw", Utils.createItem(Material.IRON_INGOT, 1, "&aWithdraw XP", "&eHold up to " +"%MAX_LEVEL_HELD%" + " levels"));
