@@ -16,7 +16,7 @@ public class Xp implements CommandExecutor {
 
 	public static final String HELP_MESSAGE = ChatColor.GRAY + "------------ " + ChatColor.YELLOW +  "/xpbank help" + ChatColor.GRAY +  " ------------\n" 
 			+ ChatColor.GRAY
-			+ "/xpbank - " + ChatColor.AQUA + "Tells you how much xp you have stored\n"
+			+ "/xpbank - " + ChatColor.AQUA + "Tells you how much xp you have stored or opens the XpBank GUI\n"
 			+ ChatColor.GRAY + "/xpbank xpheld - " + ChatColor.AQUA + "Tells you how much xp you are holding\n"
 			+ ChatColor.GRAY + "/xpbank xpstored - " + ChatColor.AQUA + "Tells you how much xp you have stored\n"
 			+ ChatColor.GRAY + "/xpbank totalxp - " + ChatColor.AQUA + "Tells you how much xp you have stored and held together\n"

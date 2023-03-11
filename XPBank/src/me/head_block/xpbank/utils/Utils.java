@@ -253,32 +253,50 @@ public class Utils {
 	 *  - %MAX_LEVEL_STORED%
 	 *  - %MAX_XP_HELD%
 	 *  - %MAX_XP_STORED%
+	 *  
+	 *  - %MAX_LEVEL_HELD_RAW%
+	 *  - %MAX_LEVEL_STORED_RAW%
+	 *  - %MAX_XP_HELD_RAW%
+	 *  - %MAX_XP_STORED_RAW%
+	 *  
 	 *  - %XP_STORED%
 	 *  - %XP_HELD%
 	 *  - %TOTAL_XP_LEVEL%
 	 *  - %TOTAL_XP%
+	 *  
+	 *  - %XP_STORED_RAW%
+	 *  - %XP_HELD_RAW%
+	 *  - %TOTAL_XP_LEVEL_RAW%
+	 *  - %TOTAL_XP_RAW%
 	 */
 	
 	
 	public static String replacePlaceholders(String text) {
-		text = text.replace("%MAX_LEVEL_HELD%", "" + Main.MAX_LEVEL_HELD);
-		text = text.replace("%MAX_LEVEL_STORED%", "" + Main.MAX_LEVEL_STORED);
-		text = text.replace("%MAX_XP_HELD%", "" + Main.MAX_XP_HELD);
-		text = text.replace("%MAX_XP_STORED%", "" + Main.MAX_XP_STORED);
+		text = text.replace("%MAX_LEVEL_HELD%", Utils.formatNumber(Main.MAX_LEVEL_HELD));
+		text = text.replace("%MAX_LEVEL_STORED%", Utils.formatNumber(Main.MAX_LEVEL_STORED));
+		text = text.replace("%MAX_XP_HELD%", Utils.formatNumber(Main.MAX_XP_HELD));
+		text = text.replace("%MAX_XP_STORED%", Utils.formatNumber(Main.MAX_XP_STORED));
+		
+		text = text.replace("%MAX_LEVEL_HELD_RAW%", "" + Main.MAX_LEVEL_HELD);
+		text = text.replace("%MAX_LEVEL_STORED_RAW%", "" + Main.MAX_LEVEL_STORED);
+		text = text.replace("%MAX_XP_HELD_RAW%", "" + Main.MAX_XP_HELD);
+		text = text.replace("%MAX_XP_STORED_RAW%", "" + Main.MAX_XP_STORED);
 		return text;
 	}
 	
 	public static String replacePlaceholders(String text, OfflinePlayer p) {
-		text = text.replace("%MAX_LEVEL_HELD%", "" + Main.MAX_LEVEL_HELD);
-		text = text.replace("%MAX_LEVEL_STORED%", "" + Main.MAX_LEVEL_STORED);
-		text = text.replace("%MAX_XP_HELD%", "" + Main.MAX_XP_HELD);
-		text = text.replace("%MAX_XP_STORED%", "" + Main.MAX_XP_STORED);
+		text = replacePlaceholders(text);
 		checkBalInstance(p);
-		text = text.replace("%XP_STORED%", "" + Main.xps.get(p.getUniqueId().toString()));
+		text = text.replace("%XP_STORED%", Utils.formatNumber(Main.xps.get(p.getUniqueId().toString())));
+		text = text.replace("%XP_STORED_RAW%", "" + Main.xps.get(p.getUniqueId().toString()));
 		if (p.isOnline()) {
-			text = text.replace("%XP_HELD%", "" + Utils.totalXp(p.getPlayer()));
-			text = text.replace("%TOTAL_XP%", "" + (totalXp(p.getPlayer()) + Main.xps.get(p.getUniqueId().toString())));
-			text = text.replace("%TOTAL_XP_LEVEL%", "" + getMaxLevel(p.getPlayer(), Main.xps.get(p.getPlayer().getUniqueId().toString())));
+			text = text.replace("%XP_HELD%", Utils.formatNumber(Utils.totalXp(p.getPlayer())));
+			text = text.replace("%TOTAL_XP%", Utils.formatNumber((totalXp(p.getPlayer()) + Main.xps.get(p.getUniqueId().toString()))));
+			text = text.replace("%TOTAL_XP_LEVEL%", Utils.formatNumber(getMaxLevel(p.getPlayer(), Main.xps.get(p.getPlayer().getUniqueId().toString()))));
+			
+			text = text.replace("%XP_HELD_RAW%", "" + Utils.totalXp(p.getPlayer()));
+			text = text.replace("%TOTAL_XP_RAW%", "" + (totalXp(p.getPlayer()) + Main.xps.get(p.getUniqueId().toString())));
+			text = text.replace("%TOTAL_XP_LEVEL_RAW%", "" + getMaxLevel(p.getPlayer(), Main.xps.get(p.getPlayer().getUniqueId().toString())));
 		}
 		return text;
 	}
@@ -287,6 +305,26 @@ public class Utils {
 		if (!Main.xps.containsKey(p.getUniqueId().toString())) {
 			Main.xps.put(p.getUniqueId().toString(), 0);
 		}
+	}
+	
+	public static String formatNumber(int num) {
+		int length = ("" + num).length();
+		String toReturn = "" + num;
+		if (length >= 4 && length < 7) {
+			toReturn = "" + Utils.trunc((double)num/1000, 2) + "K";
+		} else if (length >= 7 && length < 10) {
+			toReturn = "" + Utils.trunc((double)num/1000000, 2)  + "M";
+		} else if (length >= 10 && length < 14) {
+			toReturn = "" + Utils.trunc((double)num/1000000000, 2)  + "B";
+		}
+		return toReturn;
+	}
+	
+	public static double trunc(double d, int decimalsToKeep) {
+		d *= Math.pow(10, decimalsToKeep);
+		d = (int) d;
+		d /= Math.pow(10, decimalsToKeep);
+		return d;
 	}
 
 }

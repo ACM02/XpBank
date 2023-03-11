@@ -100,7 +100,6 @@ public class Main extends JavaPlugin {
 	 * Comments spaced out in the config for a better look
 	 * Better documentation/main page
 	 * Pay in xp (GUI)
-	 * K,M,B text formatting
 	 */
 	
 	
