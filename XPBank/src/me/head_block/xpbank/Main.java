@@ -4,7 +4,6 @@ import java.io.File;
 import java.util.HashMap;
 
 import org.bukkit.Bukkit;
-import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -22,6 +21,9 @@ import me.head_block.xpbank.tab_completers.XpTab;
 import me.head_block.xpbank.ui.DepositMenu;
 import me.head_block.xpbank.ui.MainMenu;
 import me.head_block.xpbank.ui.WithdrawMenu;
+import me.head_block.xpbank.utils.ConfigManager;
+import me.head_block.xpbank.utils.Config_1_13;
+import me.head_block.xpbank.utils.Config_1_8;
 import me.head_block.xpbank.utils.Metrics;
 import me.head_block.xpbank.utils.UpdateChecker;
 import me.head_block.xpbank.utils.Utils;
@@ -98,6 +100,8 @@ public class Main extends JavaPlugin {
 			+ "----- More info -----\n"
 			+ "For more information visit the XpBank wiki at https://github.com/ACM02/XpBank/wiki";
 	
+	public static ConfigManager configManager;
+	
 	/*
 	 * TODO
 	 * 
@@ -107,6 +111,7 @@ public class Main extends JavaPlugin {
 	 * 1.8-1.12 version support (Material.GRAY_GLASS_PANE) throws errors because not legacy items
 	 * 
 	 * Future plans:
+	 * More in-depth permissions
 	 * Better main page: images(?), uhhhh, I'm bad at graphic design
 	 * Shortened command arguments?
 	 * Option so users can select if they get sent numbers in levels or points?
@@ -118,6 +123,11 @@ public class Main extends JavaPlugin {
 	 * Comments spaced out in the config for a better look
 	 * Better documentation/main page
 	 * Pay in xp (GUI)
+	 * 
+	 * Requested features:
+	 * Generic back button in main menu that can be set to run a command specified in config.yml
+	 * Option to change positions of items in menus
+	 * 
 	 */
 	
 	
@@ -136,7 +146,15 @@ public class Main extends JavaPlugin {
 			xps = new HashMap<String, Integer>();
 		}
 		
-		initConfig();
+		String serverVersion = getServerVersion();
+		if (serverVersion.contains("1.19") || serverVersion.contains("1.18")|| serverVersion.contains("1.17")|| serverVersion.contains("1.16")|| serverVersion.contains("1.15")|| serverVersion.contains("1.14")|| serverVersion.contains("1.13")) {
+			configManager = new Config_1_13();
+		} else if (serverVersion.contains("1.8") || serverVersion.contains("1.9") || serverVersion.contains("1.10") || serverVersion.contains("1.11") || serverVersion.contains("1.12")) {
+			configManager = new Config_1_8();
+		} else {
+			configManager = new Config_1_13(); // For future untested versions
+		}
+		configManager.initConfig();
 		
 		MAX_XP_STORED = getConfig().getInt("maxXpStored");
 		if (MAX_XP_STORED >= 2000000000) {
@@ -204,76 +222,6 @@ public class Main extends JavaPlugin {
 		new WithdrawMenuClick(this);
 		new UpdateAvailableMessage(this);
 	}
-	
-	private void initConfig() {
-		FileConfiguration config = this.getConfig();
-		config.addDefault("maxXpStored", 2000000000);
-		config.addDefault("maxXpHeld", 2000000000);
-		config.addDefault("seePlayerBalances", true);
-		config.addDefault("topXpCommand", true);
-		config.addDefault("guiMenu", true);
-		config.addDefault("update-message", true);
-		config.addDefault("notify-on-admin-balance-change", true);
-		
-		config.addDefault("messages.noPermission", "&cYou don't have permission to do that");
-		config.addDefault("messages.improperUse", "&cImproper usage. Try ");
-		config.addDefault("messages.exeeds-hold-limit", "&cInvalid amount. That exceeds the maximum xp that can be held. (" + "%MAX_LEVEL_HELD%" + " levels/" + "%MAX_XP_HELD%" + " points)");
-		config.addDefault("messages.exeeds-store-limit-target", "&cInvalid amount. That exceeds the maximum xp that can be held by the target. (" + "%MAX_LEVEL_HELD%" + " levels/" + "%MAX_XP_HELD%" + " points)");
-		config.addDefault("messages.exceeds-store-limit", "&cInvalid amount. That exceeds the maximum xp that can be stored. (" + "%MAX_LEVEL_STORED%" + " levels/" + "%MAX_XP_STORED%" + " points)");
-		config.addDefault("messages.deposit", "&aXp deposited. New balance: " + "%XP_STORED%");
-		config.addDefault("messages.withdraw", "&aXp withdrawn. New balance: " + "%XP_STORED%");
-		config.addDefault("messages.player-not-found", "&cPlayer not found.");
-		config.addDefault("messages.xp-stored", "&eYou have " + "%XP_STORED%" + " experience points in the bank. (Enough for level " + 
-				"%TOTAL_XP_LEVEL%" + ")");
-		config.addDefault("messages.xp-held", "&eYou are holding " + "%XP_HELD%" + " xp");
-		config.addDefault("messages.no-xp-to-deposit", "&cYou don't have any XP to deposit");
-		config.addDefault("messages.no-xp-to-withdraw", "&cYou don't have any XP to withdraw");
-		config.addDefault("messages.total-xp", "&eYour total xp held and in the bank is: " + "%TOTAL_XP%");
-		
-		config.addDefault("gui.main-menu.name", "XpBank");
-		config.addDefault("gui.main-menu.deposit", Utils.createItem(Material.GOLD_INGOT, 1, "&aDeposit XP", "&eStore up to " + "%MAX_LEVEL_STORED%" + " levels"));
-		config.addDefault("gui.main-menu.withdraw", Utils.createItem(Material.IRON_INGOT, 1, "&aWithdraw XP", "&eHold up to " +"%MAX_LEVEL_HELD%" + " levels"));
-		//config.addDefault("gui.main-menu.xp-stored", Utils.createItem(Material.EXPERIENCE_BOTTLE, 1, "&aXp stored", "&e%XP_STORED%" + "/" + "%MAX_XP_STORED%"));
-		//config.addDefault("gui.main-menu.xp-held", Utils.createItem(Material.BRICK, 1, "&aXP held", "&e%XP_HELD%" + "/" + "%MAX_XP_HELD%"));
-		config.addDefault("gui.main-menu.held-full", Utils.createItem(Material.GREEN_STAINED_GLASS_PANE, 1, "&eXp held:", "&a%XP_HELD%/%MAX_XP_HELD%"));
-		config.addDefault("gui.main-menu.held-empty", Utils.createItem(Material.GRAY_STAINED_GLASS_PANE, 1, "&eXp held:", "&a%XP_HELD%/%MAX_XP_HELD%"));
-		
-		config.addDefault("gui.main-menu.stored-full", Utils.createItem(Material.GREEN_STAINED_GLASS_PANE, 1, "&eXp Stored:", "&a%XP_STORED%/%MAX_XP_STORED%"));
-		config.addDefault("gui.main-menu.stored-empty", Utils.createItem(Material.GRAY_STAINED_GLASS_PANE, 1, "&eXp Stored:", "&a%XP_STORED%/%MAX_XP_STORED%"));
-		
-		config.addDefault("gui.deposit-menu.name", "Deposit");
-		config.addDefault("gui.deposit-menu.25-percent", Utils.createItem(Material.GREEN_CONCRETE, 1, "&aDeposit 25%"));
-		config.addDefault("gui.deposit-menu.50-percent", Utils.createItem(Material.GREEN_CONCRETE, 1, "&aDeposit 50%"));
-		config.addDefault("gui.deposit-menu.75-percent", Utils.createItem(Material.GREEN_CONCRETE, 1, "&aDeposit 75%"));
-		config.addDefault("gui.deposit-menu.100-percent", Utils.createItem(Material.GREEN_CONCRETE, 1, "&aDeposit 100%"));
-		
-		config.addDefault("gui.deposit-menu.max", Utils.createItem(Material.EMERALD_BLOCK, 1, "&aDeposit max"));
-		
-		config.addDefault("gui.deposit-menu.1-level", Utils.createItem(Material.GREEN_WOOL, 1, "&aDeposit 1 level"));
-		config.addDefault("gui.deposit-menu.5-levels", Utils.createItem(Material.GREEN_WOOL, 1, "&aDeposit 5 levels"));
-		config.addDefault("gui.deposit-menu.10-levels", Utils.createItem(Material.GREEN_WOOL, 1, "&aDeposit 10 levels"));
-		config.addDefault("gui.deposit-menu.15-levels", Utils.createItem(Material.GREEN_WOOL, 1, "&aDeposit 15 levels"));
-		
-		
-		config.addDefault("gui.withdraw-menu.name", "Withdraw");
-		config.addDefault("gui.withdraw-menu.25-percent", Utils.createItem(Material.GREEN_CONCRETE, 1, "&aWithdraw 25%"));
-		config.addDefault("gui.withdraw-menu.50-percent", Utils.createItem(Material.GREEN_CONCRETE, 1, "&aWithdraw 50%"));
-		config.addDefault("gui.withdraw-menu.75-percent", Utils.createItem(Material.GREEN_CONCRETE, 1, "&aWithdraw 75%"));
-		config.addDefault("gui.withdraw-menu.100-percent", Utils.createItem(Material.GREEN_CONCRETE, 1, "&aWithdraw 100%"));
-		
-		config.addDefault("gui.withdraw-menu.max", Utils.createItem(Material.EMERALD_BLOCK, 1, "&aWithdraw max"));
-		
-		config.addDefault("gui.withdraw-menu.1-level", Utils.createItem(Material.GREEN_WOOL, 1, "&aWithdraw 1 level"));
-		config.addDefault("gui.withdraw-menu.5-levels", Utils.createItem(Material.GREEN_WOOL, 1, "&aWithdraw 5 levels"));
-		config.addDefault("gui.withdraw-menu.10-levels", Utils.createItem(Material.GREEN_WOOL, 1, "&aWithdraw 10 levels"));
-		config.addDefault("gui.withdraw-menu.15-levels", Utils.createItem(Material.GREEN_WOOL, 1, "&aWithdraw 15 levels"));
-		
-		
-		config.options().header(CONFIG_HEADER);
-		
-		config.options().copyDefaults(true);
-		saveConfig();
-	}
 
 	@Override
 	public void onDisable() {
@@ -281,7 +229,7 @@ public class Main extends JavaPlugin {
 	}
 	
 	public void reloadValues() {
-		initConfig();
+		configManager.initConfig();
 		
 		FileConfiguration config = this.getConfig();
 		MAX_XP_STORED = config.getInt("maxXpStored");
@@ -331,5 +279,13 @@ public class Main extends JavaPlugin {
 		DepositMenu.init();
 		MainMenu.init();
 		WithdrawMenu.init();
+	}
+	
+	private static String getServerVersion() {
+	    return Bukkit.getBukkitVersion().split("-")[0];
+	}
+	
+	public static String getConfigHeader() {
+		return instance.CONFIG_HEADER;
 	}
 }

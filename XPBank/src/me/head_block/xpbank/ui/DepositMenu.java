@@ -128,12 +128,12 @@ public class DepositMenu {
 				if (points == 0) {
 					p.sendMessage(Utils.replacePlaceholders(Main.NO_XP_DEPOSIT_MESSAGE, p));
 				} else if ((long) Main.xps.get(p.getUniqueId().toString()) + (long) points > Main.MAX_XP_STORED) {
-					p.sendMessage(Utils.replacePlaceholders(Main.EXCEEDS_STORE_LIMIT));
+					p.sendMessage(Utils.replacePlaceholders(Main.EXCEEDS_STORE_LIMIT, p));
 				} else {
 					removeXp(points, p, totalXP);
 					long oldBal = Main.xps.get(p.getUniqueId().toString());
 					Main.xps.put(p.getUniqueId().toString(), (int) (oldBal + points));
-					p.sendMessage(Utils.replacePlaceholders(Main.DEPOSIT_MESSAGE));
+					p.sendMessage(Utils.replacePlaceholders(Main.DEPOSIT_MESSAGE, p));
 				}
 				return;
 			}

@@ -19,7 +19,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import me.head_block.xpbank.Main;
 
 public class Utils {
-
+	
 	public static int getMaxLevel(Player sender, int xpStored) {
 		int totalXp = totalXp(sender.getLevel(), xpPointsInBar(sender.getExp(), sender.getExpToLevel()));
 		totalXp += xpStored;
@@ -166,6 +166,24 @@ public class Utils {
     
 	public static ItemStack createItem(Material type, int count, String displayName, String...lore) {
 		ItemStack toReturn = new ItemStack(type, count);
+		ItemMeta meta = toReturn.getItemMeta();
+		if (displayName != null) {
+			meta.setDisplayName(displayName);
+		}
+		if (!(lore.length == 1 && lore[0] == "")) {
+			ArrayList<String> loreList = new ArrayList<String>();
+			for (String s : lore) {
+				loreList.add(s);
+			}
+			meta.setLore(loreList);
+		}
+		toReturn.setItemMeta(meta);
+		return toReturn;
+	}
+	
+	@SuppressWarnings("deprecation")
+	public static ItemStack createItem(Material type, short damage, int count, String displayName, String...lore) {
+		ItemStack toReturn = new ItemStack(type, count, damage);
 		ItemMeta meta = toReturn.getItemMeta();
 		if (displayName != null) {
 			meta.setDisplayName(displayName);
