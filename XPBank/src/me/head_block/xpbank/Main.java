@@ -147,7 +147,7 @@ public class Main extends JavaPlugin {
 		}
 		
 		String serverVersion = getServerVersion();
-		if (serverVersion.contains("1.19") || serverVersion.contains("1.18")|| serverVersion.contains("1.17")|| serverVersion.contains("1.16")|| serverVersion.contains("1.15")|| serverVersion.contains("1.14")|| serverVersion.contains("1.13")) {
+		if (serverVersion.contains("1.20") || serverVersion.contains("1.19") || serverVersion.contains("1.18")|| serverVersion.contains("1.17")|| serverVersion.contains("1.16")|| serverVersion.contains("1.15")|| serverVersion.contains("1.14")|| serverVersion.contains("1.13")) {
 			configManager = new Config_1_13();
 		} else if (serverVersion.contains("1.8") || serverVersion.contains("1.9") || serverVersion.contains("1.10") || serverVersion.contains("1.11") || serverVersion.contains("1.12")) {
 			configManager = new Config_1_8();

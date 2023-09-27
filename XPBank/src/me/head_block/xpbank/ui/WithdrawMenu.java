@@ -51,7 +51,7 @@ public class WithdrawMenu {
 		withdraw75 = loadItem("gui.withdraw-menu.75-percent");
 		UIinventory[2] = withdraw75;
 		
-		withdraw100 = loadItem("gui.withdraw-menu.75-percent");
+		withdraw100 = loadItem("gui.withdraw-menu.100-percent");
 		UIinventory[3] = withdraw100;
 		
 		withdraw1L = loadItem("gui.withdraw-menu.1-level");

@@ -52,7 +52,7 @@ public class DepositMenu {
 		deposit75 = loadItem("gui.deposit-menu.75-percent");
 		UIinventory[2] = deposit75;
 		
-		deposit100 = loadItem("gui.deposit-menu.75-percent");
+		deposit100 = loadItem("gui.deposit-menu.100-percent");
 		UIinventory[3] = deposit100;
 		
 		deposit1L = loadItem("gui.deposit-menu.1-level");
