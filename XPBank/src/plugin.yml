@@ -10,6 +10,7 @@ commands:
   xpbank: 
   xpbal:
   topxp:
+  xpbankdebug:
   
 permissions: 
   xpbank.use:

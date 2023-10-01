@@ -11,6 +11,7 @@ public class Config_1_13 extends ConfigManager {
 	@Override
 	public void initConfig() {
 		FileConfiguration config = Main.instance.getConfig();
+		config.addDefault("debug-mode", false);
 		config.addDefault("maxXpStored", 2000000000);
 		config.addDefault("maxXpHeld", 2000000000);
 		config.addDefault("seePlayerBalances", true);

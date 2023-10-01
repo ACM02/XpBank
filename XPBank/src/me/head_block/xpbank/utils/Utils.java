@@ -27,14 +27,7 @@ public class Utils {
 	}
 	
 	public static int totalXp(int level, int xp) {
-		int total = 0;
-		if (level <= 16) {
-			total = (level*level) + (6*level);
-		} else if (level <= 31) {
-			total = (int) ((2.5*level*level) - (40.5*level) + 360);
-		} else if (level >= 32) {
-			total = (int) ((4.5*level*level) - (162.5*level) + 2220);
-		}
+		int total = totalXp(level);
 		total += xp;
 		return total;
 	}
@@ -49,7 +42,7 @@ public class Utils {
 			total = (level*level) + (6*level);
 		} else if (level < 31) {
 			total = (int) ((2.5*level*level) - (40.5*level) + 360);
-		} else if (level > 31) {
+		} else if (level >= 31) {
 			total = (int) ((4.5*level*level) - (162.5*level) + 2220);
 		}
 		return total;
