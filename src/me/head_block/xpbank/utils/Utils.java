@@ -80,7 +80,7 @@ public class Utils {
 			return 2*level + 7;
 		} else if (level < 31) {
 			return 5*level-38;
-		} else if (level > 31) {
+		} else if (level >= 31) {
 			return 9*level-158;
 		} else {
 			return -1;
