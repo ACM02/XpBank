@@ -1,0 +1,19 @@
+name: XpBank
+main: me.head_block.xpbank.Main
+description: Xp Banking System
+version: 1.12.4
+author: McCloud
+api-version: 1.13
+softdepend: [PlaceholderAPI]
+
+commands: 
+  xpbank: 
+  xpbal:
+  topxp:
+  xpbankdebug:
+  
+permissions: 
+  xpbank.use:
+    default: true
+  xpbank.admin:
+    default: op
