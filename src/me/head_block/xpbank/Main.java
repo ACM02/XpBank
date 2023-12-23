@@ -1,10 +1,14 @@
 package me.head_block.xpbank;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Set;
 
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import me.head_block.xpbank.commands.TopXp;
@@ -85,6 +89,7 @@ public class Main extends JavaPlugin {
 	 * Comments spaced out in the config for a better look
 	 * Better documentation/main page
 	 * Pay in xp (GUI)
+	 * Make a merge-sort to replace bubble, just take it from your assignment
 	 * 
 	 * Requested features:
 	 * Generic back button in main menu that can be set to run a command specified in config.yml
@@ -98,8 +103,13 @@ public class Main extends JavaPlugin {
 	public void onEnable() {	
 		instance = this;
 		File dir = getDataFolder();
+		File xps_old = new File(dir, "xps.dat");
 		
-		xps = (HashMap<String, Integer>) Utils.load(new File(getDataFolder(), "xps.dat"));
+		if (xps_old.exists()) { // Backwards compatibility with old file storage format
+			xps = (HashMap<String, Integer>) Utils.load(new File(dir, "xps.dat"));
+		} else {
+			xps = loadXpsFile();
+		}
 		
 		if (!dir.exists())
 			if (!dir.mkdir())
@@ -191,9 +201,46 @@ public class Main extends JavaPlugin {
 		new UpdateAvailableMessage(this);
 	}
 
+	private HashMap<String, Integer> loadXpsFile() {
+		
+		HashMap<String, Integer> toReturn = null;
+		
+		File xp_file = new File(getDataFolder(), "xps.yml");
+		if (!xp_file.exists()) return toReturn;
+		
+		FileConfiguration xp_config = YamlConfiguration.loadConfiguration(xp_file);
+		toReturn = new HashMap<String, Integer>();
+		
+		Set<String> keys = xp_config.getKeys(false);
+		for (String key : keys) {
+			toReturn.put(key, xp_config.getInt(key));
+		}
+		return toReturn;
+	}
+
 	@Override
 	public void onDisable() {
-		Utils.save(xps, new File(getDataFolder(), "xps.dat"));
+		//Utils.save(xps, new File(getDataFolder(), "xps.dat"));
+		
+		File xp_file = new File(getDataFolder(), "xps.yml");
+		if (!xp_file.exists()) {
+			try {
+				xp_file.createNewFile();
+			} catch (IOException e) {
+				Bukkit.getLogger().severe("Error: Failed to create xp save file.");
+				return;
+			}
+		}
+		FileConfiguration xp_config = YamlConfiguration.loadConfiguration(xp_file);
+		for (String uuid : xps.keySet()) {
+			xp_config.set(uuid, xps.get(uuid));
+		}
+		try {
+			xp_config.save(xp_file);
+		} catch (IOException e) {
+			Bukkit.getLogger().severe("Error: Failed to save xp file");
+		}
+		
 	}
 	
 	public void reloadValues() {

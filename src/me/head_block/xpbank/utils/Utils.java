@@ -134,7 +134,7 @@ public class Utils {
 	
 	
     /**
-     * An efficient implementation of a bubble sort algorithm it will sort the 
+     * An efficient implementation of a bubble sort algorithm, it will sort the 
      * list into ascending order
      * 
      * @param list the List to sort
