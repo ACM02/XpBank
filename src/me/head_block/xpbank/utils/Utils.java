@@ -134,8 +134,7 @@ public class Utils {
 	
 	
     /**
-     * An efficient implementation of a bubble sort algorithm, it will sort the 
-     * list into ascending order
+     * An efficient implementation of a bubble sort algorithm, it will sort the list into ascending order. No longer used.
      * 
      * @param list the List to sort
      */
@@ -159,22 +158,21 @@ public class Utils {
     
     
     /**
-     * A public diver method for the merge sort, takes in an int[] and sorts it using the merge method
-     * @param toSort toSort The int[] to be passed into the merge sort. toSort will be modified as it will be sorted in place.
+     * A public diver method for the merge sort, takes in an "int[]" and sorts it using the merge method
+     * @param toSort toSort The "int[]" to be passed into the merge sort. toSort will be modified as it will be sorted in place.
      */
-    public static void mergeSort(int[] toSort) {
-        mergeSort(toSort, new int[toSort.length], 0, toSort.length-1);
+    public static void mergeSort(ArrayList<String> toSort) {
+        mergeSort(toSort, new ArrayList<String>(), 0, toSort.size()-1);
     }
 
     /**
-     * A private helper method that performs a recursive
-     * merge sort between 2 indicies in an array.
-     * @param toSort The int[] to be sorted, which will be modified as it will be sorted in place.
+     * A private helper method that performs a recursive merge sort between 2 indicies in an array.
+     * @param toSort The "int[]" to be sorted, which will be modified as it will be sorted in place.
      * @param target The target array to be used by the merge sort.
      * @param minIndex The index at which the sorting algorithm will start. Not modified.
      * @param maxIndex The index at which the sorting algorithm will end. Not modified.
      */
-    private static void mergeSort(int[] toSort, int[] target, int minIndex, int maxIndex) {
+    private static void mergeSort(ArrayList<String> toSort, ArrayList<String> target, int minIndex, int maxIndex) {
         // Step one, break into sub-arrays
         if (maxIndex-minIndex<=5) {
             // Base case, sort a list 5 or less long
@@ -191,22 +189,22 @@ public class Utils {
             while (leftCounter <= middleIndex || rightCounter <= maxIndex) {
                 if (leftCounter > middleIndex) { 
                     // Case 1: left counter has hit its max
-                    target[targetCounter] = toSort[rightCounter];
+                    target.set(targetCounter, toSort.get(rightCounter));  //[targetCounter] = toSort[rightCounter];
                     rightCounter++;
                     targetCounter++;
                 } else if (rightCounter > maxIndex) { 
                     // Case 2: right counter has hit its max
-                    target[targetCounter] = toSort[leftCounter];
+                    target.set(targetCounter, toSort.get(leftCounter));				//[targetCounter] = toSort[leftCounter];
                     leftCounter++;
                     targetCounter++;
-                } else if (toSort[leftCounter] < toSort[rightCounter]) { 
+                } else if (Main.xps.get(toSort.get(leftCounter)) > Main.xps.get(toSort.get(rightCounter))) { 
                     // Case 3: Neither have hit their maxes, the 'left' subarray is smaller
-                    target[targetCounter] = toSort[leftCounter];
+                    target.set(targetCounter, toSort.get(leftCounter));	//[targetCounter] = toSort[leftCounter];
                     targetCounter++;
                     leftCounter++;
                 } else { 
                     // Case 4: Neither have hit their maxes, the 'right' subarray is smaller or equal
-                    target[targetCounter] = toSort[rightCounter];
+                    target.set(targetCounter, toSort.get(rightCounter));// [targetCounter] = toSort[rightCounter];
                     targetCounter++;
                     rightCounter++;
                 }
@@ -214,47 +212,47 @@ public class Utils {
 
             // Copy contents of target into toSort
             for (int i = minIndex; i < maxIndex+1; i++) {
-                toSort[i] = target[i-minIndex];
+                toSort.set(i, target.get(i-minIndex)); // [i] = target[i-minIndex];
             }
         }
     }
     
     
     /**
-     * A public diver method for the insertion sort, takes in an int[] and sorts it using the insertion sort method
-     * @param toSort The int[] to be passed into the insertion sort. toSort will be modified as it will be sorted in place.
+     * A public diver method for the insertion sort, takes in an "int[]" and sorts it using the insertion sort method
+     * @param toSort The "int[]" to be passed into the insertion sort. toSort will be modified as it will be sorted in place.
      */
-    public static void insertionSort(int[] toSort) {
-        insertionSort(toSort, 0, toSort.length-1);
+    public static void insertionSort(ArrayList<String> toSort) {
+        insertionSort(toSort, 0, toSort.size()-1);
     }
 
 
     /**
      * A private helper method that performs an iterative
      * insertion sort between 2 indicies in an array.
-     * @param toSort The int[] to be sorted, which will be modified as it will be sorted in place.
+     * @param toSort The "int[]" to be sorted, which will be modified as it will be sorted in place.
      * @param start The index at which the sorting algorithm will start. Not modified.
      * @param end The index at which the sorting algorithm will end. Not modified.
      */
-    private static void insertionSort(int[] toSort, int start, int end) {
+    private static void insertionSort(ArrayList<String> toSort, int start, int end) {
         // Looping from the start index to the end index
         for (int i = start; i<=end; i++) {
             // Selecting an element to insert
-            int toPlace = toSort[i];
+            String toPlace = toSort.get(i);
             int j = i;
             boolean placed = false;
             while (!placed) {
                 if (j==start) {
                     // If we have reached the smallest index, place our element
-                    toSort[j] = toPlace;
+                    toSort.set(j, toPlace); // [j] = toPlace;
                     placed = true;
-                } else if (toPlace < toSort[j-1]) { 
+                } else if (Main.xps.get(toPlace) > Main.xps.get(toSort.get(j-1))) { 
                     // If our element is smaller than the one being checked, shift it over and try the next one
-                    toSort[j] = toSort[j-1];
+                    toSort.set(j, toSort.get(j-1)); // [j] = toSort[j-1];
                     j--;
                 } else {
                     // If our element is larger or equal to the one being checked, place it and finish.
-                    toSort[j] = toPlace;
+                    toSort.set(j, toPlace); // [j] = toPlace;
                     placed = true;
                 }
             }

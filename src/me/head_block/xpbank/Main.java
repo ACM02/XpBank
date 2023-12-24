@@ -103,12 +103,14 @@ public class Main extends JavaPlugin {
 		instance = this;
 		File dir = getDataFolder();
 		File xps_old = new File(dir, "xps.dat");
+		File xps_new = new File(dir, "xps.yml");
 		
-		if (xps_old.exists()) { // Backwards compatibility with old file storage format
-			
+		if (xps_new.exists()) { // Backwards compatibility with old file storage format
+			xps = loadXpsFile();
+		} else if (xps_old.exists()) {
 			xps = (HashMap<String, Integer>) Utils.load(new File(dir, "xps.dat"));
 		} else {
-			xps = loadXpsFile();
+			xps = null;
 		}
 		
 		if (!dir.exists())
@@ -237,6 +239,9 @@ public class Main extends JavaPlugin {
 		}
 		try {
 			xp_config.save(xp_file);
+			
+			File xps_old = new File(getDataFolder(), "xps.dat");
+			if (xps_old.exists()) xps_old.delete();
 		} catch (IOException e) {
 			Bukkit.getLogger().severe("Error: Failed to save xp file");
 		}
