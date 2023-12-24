@@ -70,6 +70,12 @@ public class Utils {
 		return xpToLevelUp(level) / newTotal;
 	}
 	
+	/**
+	 * Gets the 0 to 1 float value for the xp in a player's xp bar for a given total xp and level
+	 * @param totalXp The total xp the player is carrying
+	 * @param level The current xp level of the player
+	 * @return The desired float
+	 */
 	public static float xp(int totalXp, int level) {
 		int newTotal = totalXp - totalXp(level);
 		return ((float) newTotal / (float)xpToLevelUp(level));
