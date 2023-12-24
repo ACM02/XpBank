@@ -157,6 +157,110 @@ public class Utils {
         }
     }
     
+    
+    /**
+     * A public diver method for the merge sort, takes in an int[] and sorts it using the merge method
+     * @param toSort toSort The int[] to be passed into the merge sort. toSort will be modified as it will be sorted in place.
+     */
+    public static void mergeSort(int[] toSort) {
+        mergeSort(toSort, new int[toSort.length], 0, toSort.length-1);
+    }
+
+    /**
+     * A private helper method that performs a recursive
+     * merge sort between 2 indicies in an array.
+     * @param toSort The int[] to be sorted, which will be modified as it will be sorted in place.
+     * @param target The target array to be used by the merge sort.
+     * @param minIndex The index at which the sorting algorithm will start. Not modified.
+     * @param maxIndex The index at which the sorting algorithm will end. Not modified.
+     */
+    private static void mergeSort(int[] toSort, int[] target, int minIndex, int maxIndex) {
+        // Step one, break into sub-arrays
+        if (maxIndex-minIndex<=5) {
+            // Base case, sort a list 5 or less long
+            insertionSort(toSort, minIndex, maxIndex);
+        } else {
+            int middleIndex = (maxIndex-minIndex)/2 + minIndex;
+            mergeSort(toSort, target, minIndex, middleIndex);
+            mergeSort(toSort, target, middleIndex + 1, maxIndex);
+
+            // Put it back together
+            int leftCounter = minIndex;
+            int rightCounter = middleIndex + 1;
+            int targetCounter = 0;
+            while (leftCounter <= middleIndex || rightCounter <= maxIndex) {
+                if (leftCounter > middleIndex) { 
+                    // Case 1: left counter has hit its max
+                    target[targetCounter] = toSort[rightCounter];
+                    rightCounter++;
+                    targetCounter++;
+                } else if (rightCounter > maxIndex) { 
+                    // Case 2: right counter has hit its max
+                    target[targetCounter] = toSort[leftCounter];
+                    leftCounter++;
+                    targetCounter++;
+                } else if (toSort[leftCounter] < toSort[rightCounter]) { 
+                    // Case 3: Neither have hit their maxes, the 'left' subarray is smaller
+                    target[targetCounter] = toSort[leftCounter];
+                    targetCounter++;
+                    leftCounter++;
+                } else { 
+                    // Case 4: Neither have hit their maxes, the 'right' subarray is smaller or equal
+                    target[targetCounter] = toSort[rightCounter];
+                    targetCounter++;
+                    rightCounter++;
+                }
+            }
+
+            // Copy contents of target into toSort
+            for (int i = minIndex; i < maxIndex+1; i++) {
+                toSort[i] = target[i-minIndex];
+            }
+        }
+    }
+    
+    
+    /**
+     * A public diver method for the insertion sort, takes in an int[] and sorts it using the insertion sort method
+     * @param toSort The int[] to be passed into the insertion sort. toSort will be modified as it will be sorted in place.
+     */
+    public static void insertionSort(int[] toSort) {
+        insertionSort(toSort, 0, toSort.length-1);
+    }
+
+
+    /**
+     * A private helper method that performs an iterative
+     * insertion sort between 2 indicies in an array.
+     * @param toSort The int[] to be sorted, which will be modified as it will be sorted in place.
+     * @param start The index at which the sorting algorithm will start. Not modified.
+     * @param end The index at which the sorting algorithm will end. Not modified.
+     */
+    private static void insertionSort(int[] toSort, int start, int end) {
+        // Looping from the start index to the end index
+        for (int i = start; i<=end; i++) {
+            // Selecting an element to insert
+            int toPlace = toSort[i];
+            int j = i;
+            boolean placed = false;
+            while (!placed) {
+                if (j==start) {
+                    // If we have reached the smallest index, place our element
+                    toSort[j] = toPlace;
+                    placed = true;
+                } else if (toPlace < toSort[j-1]) { 
+                    // If our element is smaller than the one being checked, shift it over and try the next one
+                    toSort[j] = toSort[j-1];
+                    j--;
+                } else {
+                    // If our element is larger or equal to the one being checked, place it and finish.
+                    toSort[j] = toPlace;
+                    placed = true;
+                }
+            }
+        }
+    }
+    
 	public static ItemStack createItem(Material type, int count, String displayName, String...lore) {
 		ItemStack toReturn = new ItemStack(type, count);
 		ItemMeta meta = toReturn.getItemMeta();

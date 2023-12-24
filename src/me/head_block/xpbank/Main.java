@@ -3,7 +3,6 @@ package me.head_block.xpbank;
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Set;
 
 import org.bukkit.Bukkit;
@@ -106,6 +105,7 @@ public class Main extends JavaPlugin {
 		File xps_old = new File(dir, "xps.dat");
 		
 		if (xps_old.exists()) { // Backwards compatibility with old file storage format
+			
 			xps = (HashMap<String, Integer>) Utils.load(new File(dir, "xps.dat"));
 		} else {
 			xps = loadXpsFile();
@@ -125,6 +125,7 @@ public class Main extends JavaPlugin {
 			configManager = new Config_1_8();
 		} else {
 			configManager = new Config_1_13(); // For future untested versions
+			Bukkit.getLogger().warning("Loading XpBank with an untested Minecraft version, this plugin has only been tested for up to 1.20");
 		}
 		configManager.initConfig();
 		
@@ -202,7 +203,6 @@ public class Main extends JavaPlugin {
 	}
 
 	private HashMap<String, Integer> loadXpsFile() {
-		
 		HashMap<String, Integer> toReturn = null;
 		
 		File xp_file = new File(getDataFolder(), "xps.yml");
