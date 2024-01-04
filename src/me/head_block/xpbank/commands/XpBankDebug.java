@@ -101,7 +101,7 @@ public class XpBankDebug implements CommandExecutor {
 		else return false;
 	}
 	
-	@SuppressWarnings("unused")
+	//@SuppressWarnings("unused")
 	private boolean testTotalXp(int level, int expected) {
 		if (Utils.totalXp(level) == expected) return true;
 		else return false;
