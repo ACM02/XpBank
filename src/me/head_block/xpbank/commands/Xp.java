@@ -52,104 +52,228 @@ public class Xp implements CommandExecutor {
 		return false;
 	}
 
-	@SuppressWarnings("deprecation")
 	private void asPlayer(XpBPlayer sender, String[] args) {
 		if (!sender.hasPermission("xpbank.use")) {
 			sender.sendPlaceholderMessage(Main.NO_PERM_MESSAGE);
-			//sender.sendMessage(Utils.replacePlaceholders(, sender));
 			return;
 		}
 		switch (args.length) {
 		case 0:		// ---------------------- No Arguments ----------------------
-			if (Main.GUI_ENABLED) {
-				MainMenu.openForPlayer(sender);
-				break;
-			} else {
-				//sender.checkBalInstance();
-				sender.sendPlaceholderMessage(Main.XP_STORED_MESSAGE);
-				//sender.sendMessage(Utils.replacePlaceholders(Main.XP_STORED_MESSAGE, sender));
-				break;
-			}
+			handle0Args(sender);
+			break;
 		case 1:		// ---------------------- 1 Argument ----------------------
-			switch(args[0]) {
-			case "help":	// /xpbank help
-				sender.sendPlaceholderMessage(HELP_MESSAGE);
-				//sender.sendMessage(Utils.replacePlaceholders(HELP_MESSAGE, sender));
-			case "adminhelp":	// /xpbank adminhelp
-				if (!sender.hasPermission("xpbank.admin")) {
-					sender.sendPlaceholderMessage(Main.NO_PERM_MESSAGE);
-					//sender.sendMessage(Utils.replacePlaceholders(Main.NO_PERM_MESSAGE));
-				} else {
-					sender.sendMessage(ADMIN_HELP_MESSAGE);
-				}
-				break;
-			case "xpheld":	// /xpbank xpheld
-				sender.sendPlaceholderMessage(Main.XP_HELD_MESSAGE);
-				//sender.sendMessage(Utils.replacePlaceholders(Main.XP_HELD_MESSAGE, sender) );
-				break;
-			case "xpstored":	// /xpbank xpstored
-				//sender.sendMessage(Utils.replacePlaceholders(Main.XP_STORED_MESSAGE, sender));
-				sender.sendPlaceholderMessage(Main.XP_STORED_MESSAGE);
-				break;
-			case "totalxp":		// /xpbank totalxp
-				//sender.sendMessage(Utils.replacePlaceholders(Main.TOTAL_XP_MESSAGE , sender));
-				sender.sendPlaceholderMessage(Main.TOTAL_XP_MESSAGE);
-				break;
-			case "reload":		// /xpbank reload
-				if (!sender.hasPermission("xpbank.admin")) {
-					sender.sendPlaceholderMessage(Main.NO_PERM_MESSAGE);
-					//sender.sendMessage(Utils.replacePlaceholders(Main.NO_PERM_MESSAGE));
-				} else {
-					Main.reloadPlugin();
-					sender.sendMessage(ChatColor.GREEN + "Reloaded successfully.");
-				}
-				break;
-			case "info":		// /xpbank info
-				if (!sender.hasPermission("xpbank.admin")) {
-					//sender.sendMessage(Utils.replacePlaceholders(Main.NO_PERM_MESSAGE));
-					sender.sendPlaceholderMessage(Main.NO_PERM_MESSAGE);
-				} else {
-					sender.sendPlaceholderMessage(ChatColor.GRAY + "------------ " + ChatColor.YELLOW +  "/xpbank info" + ChatColor.GRAY +  " ------------\n"
-							+ ChatColor.GRAY + "Plugin version: " + ChatColor.AQUA + Main.instance.getDescription().getVersion() + ChatColor.GRAY + " (Newest version: " + ChatColor.AQUA + Main.newestVersion + ChatColor.GRAY + ")\n"
-							+ "Spigot page: " + ChatColor.AQUA + "https://www.spigotmc.org/resources/xpbank.101132/ \n"
-							+ ChatColor.GRAY + "Wiki page: " + ChatColor.AQUA + "https://github.com/ACM02/XpBank/wiki");
-				}
-				break;
-			default:
-				//sender.sendMessage(Utils.replacePlaceholders(Main.IMPROPER_USE_MESSAGE + "/xpbank help for help"));
-				sender.sendPlaceholderMessage(Main.IMPROPER_USE_MESSAGE + "/xpbank help for help");
-				break;
+			handle1Arg(sender, args[0]);
+			break;
+		case 2:		// ---------------------- 2 Arguments ----------------------
+			handle2Args(sender, args);
+			break;
+		case 3:		// ---------------------- 3 Arguments ----------------------
+			handle3Args(sender, args);
+			break;
+		default:
+			sender.sendPlaceholderMessage(Main.IMPROPER_USE_MESSAGE + "/xpbank help for help");
+			break;
+		}
+	}
+	
+	private void handle0Args(XpBPlayer sender) {
+		if (Main.GUI_ENABLED) {
+			MainMenu.openForPlayer(sender);
+		} else {
+			//sender.checkBalInstance();
+			sender.sendPlaceholderMessage(Main.XP_STORED_MESSAGE);
+			//sender.sendMessage(Utils.replacePlaceholders(Main.XP_STORED_MESSAGE, sender));
+		}
+	}
+	
+	private void handle1Arg(XpBPlayer sender, String arg) {
+		switch(arg) {
+		case "help":	// /xpbank help
+			sender.sendPlaceholderMessage(HELP_MESSAGE);
+			break;
+		case "adminhelp":	// /xpbank adminhelp
+			if (!sender.hasPermission("xpbank.admin")) {
+				sender.sendPlaceholderMessage(Main.NO_PERM_MESSAGE);
+			} else {
+				sender.sendMessage(ADMIN_HELP_MESSAGE);
 			}
 			break;
+		case "xpheld":	// /xpbank xpheld
+			sender.sendPlaceholderMessage(Main.XP_HELD_MESSAGE);
+			break;
+		case "xpstored":	// /xpbank xpstored
+			sender.sendPlaceholderMessage(Main.XP_STORED_MESSAGE);
+			break;
+		case "totalxp":		// /xpbank totalxp
+			sender.sendPlaceholderMessage(Main.TOTAL_XP_MESSAGE);
+			break;
+		case "reload":		// /xpbank reload
+			if (!sender.hasPermission("xpbank.admin")) {
+				sender.sendPlaceholderMessage(Main.NO_PERM_MESSAGE);
+			} else {
+				Main.reloadPlugin();
+				sender.sendMessage(ChatColor.GREEN + "Reloaded successfully.");
+			}
+			break;
+		case "info":		// /xpbank info
+			if (!sender.hasPermission("xpbank.admin")) {
+				sender.sendPlaceholderMessage(Main.NO_PERM_MESSAGE);
+			} else {
+				sender.sendPlaceholderMessage(ChatColor.GRAY + "------------ " + ChatColor.YELLOW +  "/xpbank info" + ChatColor.GRAY +  " ------------\n"
+						+ ChatColor.GRAY + "Plugin version: " + ChatColor.AQUA + Main.instance.getDescription().getVersion() + ChatColor.GRAY + " (Newest version: " + ChatColor.AQUA + Main.newestVersion + ChatColor.GRAY + ")\n"
+						+ "Spigot page: " + ChatColor.AQUA + "https://www.spigotmc.org/resources/xpbank.101132/ \n"
+						+ ChatColor.GRAY + "Wiki page: " + ChatColor.AQUA + "https://github.com/ACM02/XpBank/wiki");
+			}
+			break;
+		default:
+			sender.sendPlaceholderMessage(Main.IMPROPER_USE_MESSAGE + "/xpbank help for help");
+			break;
+		}
+	}
+	
+	@SuppressWarnings("deprecation")
+	private void handle2Args(XpBPlayer sender, String[] args) {
+		switch(args[0]) {
+		case "deposit":		// /xpbank deposit <amount>/max
+			int amount = 1;
+			if (!args[1].equals("max")) {
+				amount = getAmount(args[1], sender);
+				if (amount == -1) break;
+			}
+			//checkBalInstance(sender);
 			
-			
-		case 2:		// ---------------------- 2 Arguments ----------------------
-			switch(args[0]) {
-			case "deposit":		// /xpbank deposit <amount>/max
-				int amount = 1;
-				if (!args[1].equals("max")) {
-					amount = getAmount(args[1], sender);
-					if (amount == -1) break;
-				}
-				//checkBalInstance(sender);
-				
-				int playerTotalXp = sender.totalXp(); //Utils.totalXp(sender);
-				if (playerTotalXp == 0) {
-					//sender.sendMessage(Utils.replacePlaceholders(Main.NO_XP_DEPOSIT_MESSAGE, sender));
-					sender.sendPlaceholderMessage(Main.NO_XP_DEPOSIT_MESSAGE);
+			int playerTotalXp = sender.totalXp(); //Utils.totalXp(sender);
+			if (playerTotalXp == 0) {
+				//sender.sendMessage(Utils.replacePlaceholders(Main.NO_XP_DEPOSIT_MESSAGE, sender));
+				sender.sendPlaceholderMessage(Main.NO_XP_DEPOSIT_MESSAGE);
+				break;
+			}
+			if (args[1].equals("max")) {
+				if (sender.getStoredXp() >= Main.MAX_XP_STORED) { // Main.xps.get(sender.getUniqueId().toString())
+					//sender.sendMessage(Utils.replacePlaceholders(Main.EXCEEDS_STORE_LIMIT));
+					sender.sendPlaceholderMessage(Main.EXCEEDS_STORE_LIMIT);
 					break;
 				}
-				if (args[1].equals("max")) {
-					if (sender.getStoredXp() >= Main.MAX_XP_STORED) { // Main.xps.get(sender.getUniqueId().toString())
-						//sender.sendMessage(Utils.replacePlaceholders(Main.EXCEEDS_STORE_LIMIT));
-						sender.sendPlaceholderMessage(Main.EXCEEDS_STORE_LIMIT);
-						break;
-					}
-					amount = playerTotalXp;
-					if (sender.getStoredXp() + amount >= Main.MAX_XP_STORED) {
-						amount = Main.MAX_XP_STORED - sender.getStoredXp(); // Main.xps.get(sender.getUniqueId().toString());
-					}
+				amount = playerTotalXp;
+				if (sender.getStoredXp() + amount >= Main.MAX_XP_STORED) {
+					amount = Main.MAX_XP_STORED - sender.getStoredXp(); // Main.xps.get(sender.getUniqueId().toString());
 				}
+			}
+			if ((long) sender.getStoredXp() + (long) amount > Main.MAX_XP_STORED) {
+				//sender.sendMessage(Utils.replacePlaceholders(Main.EXCEEDS_STORE_LIMIT));
+				sender.sendPlaceholderMessage(Main.EXCEEDS_STORE_LIMIT);
+				break;
+			}
+			if (amount > playerTotalXp) {
+				sender.sendMessage(ChatColor.RED + "You only have " + playerTotalXp + " xp");
+				break;
+			}
+			sender.removeXp(amount); // removeXp(amount, sender, playerTotalXp);
+			int oldBal = sender.getStoredXp();
+			sender.setStoredXp(oldBal + amount);	//Main.xps.put(sender.getUniqueId().toString(), oldBal + amount);
+			sender.sendPlaceholderMessage(Main.DEPOSIT_MESSAGE);
+			//sender.sendMessage(Utils.replacePlaceholders(Main.DEPOSIT_MESSAGE, sender));
+			break;
+			
+		case "withdraw": 		// /xpbank withdraw <amount>/max
+			amount = 0;
+			//checkBalInstance(sender);
+			if (sender.getStoredXp() == 0) {
+				//sender.sendMessage(Utils.replacePlaceholders(Main.NO_XP_WITHDRAW_MESSAGE, sender));
+				sender.sendPlaceholderMessage(Main.NO_XP_WITHDRAW_MESSAGE);
+				break;
+			}
+			playerTotalXp = sender.totalXp(); // Utils.totalXp(sender);
+			if (args[1].equalsIgnoreCase("max")) {
+				if (playerTotalXp >= Main.MAX_XP_HELD) {
+					//sender.sendMessage(Utils.replacePlaceholders(Main.EXCEEDS_HOLD_LIMIT));
+					sender.sendPlaceholderMessage(Main.EXCEEDS_HOLD_LIMIT);
+					break;
+				}
+				amount = sender.getStoredXp(); // Main.xps.get(sender.getUniqueId().toString());
+				if (playerTotalXp + amount >= Main.MAX_XP_HELD) {
+					amount = Main.MAX_XP_HELD - playerTotalXp;
+				}
+			} else {
+				amount = getAmount(args[1], sender);
+				if (amount == -1) break;
+			}
+			if ((long) playerTotalXp + (long) amount > Main.MAX_XP_HELD) {
+				//sender.sendMessage(Utils.replacePlaceholders(Main.EXCEEDS_HOLD_LIMIT));
+				sender.sendPlaceholderMessage(Main.EXCEEDS_HOLD_LIMIT);
+				break;
+			}
+			if (amount > sender.getStoredXp()) {
+				//sender.sendMessage(Utils.replacePlaceholders(ChatColor.RED + "You only have " + "%XP_HELD%" + " xp in the bank", sender));
+				sender.sendPlaceholderMessage(ChatColor.RED + "You only have " + "%XP_HELD%" + " xp in the bank");
+				break;
+			}
+			sender.addXp(amount);
+			//addXp(amount, sender);
+			oldBal = sender.getStoredXp(); // Main.xps.get(sender.getUniqueId().toString());
+			sender.setStoredXp(oldBal - amount); // Main.xps.put(sender.getUniqueId().toString(), oldBal - amount);
+			sender.sendPlaceholderMessage(Main.WITHDRAW_MESSAGE);
+			//sender.sendMessage(Utils.replacePlaceholders(Main.WITHDRAW_MESSAGE, sender));
+			break;
+		case "get":		// /xpbank get <player>
+			if (!sender.hasPermission("xpbank.admin")) {
+				//sender.sendMessage(Utils.replacePlaceholders(Main.NO_PERM_MESSAGE));
+				sender.sendPlaceholderMessage(Main.NO_PERM_MESSAGE);
+				break;
+			}
+			OfflinePlayer offline = Bukkit.getOfflinePlayer(args[1]);
+			if (offline == null) {
+				sender.sendPlaceholderMessage(Main.PLAYER_NOT_FOUND_MESSAGE);
+				//sender.sendMessage(Utils.replacePlaceholders(Main.PLAYER_NOT_FOUND_MESSAGE));
+			} else if (!Main.xps.containsKey(offline.getUniqueId().toString())) {
+				sender.sendMessage(ChatColor.RED + "Player has no balance");
+			} else if (Main.xps.containsKey(offline.getUniqueId().toString())) {
+				sender.sendPlaceholderMessage(ChatColor.YELLOW + offline.getName() + "'s stored xp is: " + "%XP_STORED%");
+				//sender.sendMessage(Utils.replacePlaceholders(ChatColor.YELLOW + offline.getName() + "'s stored xp is: " + "%XP_STORED%", offline));
+			}
+			break;
+		default:
+			sender.sendPlaceholderMessage(Main.IMPROPER_USE_MESSAGE + "/xpbank <deposit/withdraw> <amount>");
+			//sender.sendMessage(Utils.replacePlaceholders(Main.IMPROPER_USE_MESSAGE + "/xpbank <deposit/withdraw> <amount>"));
+			break;
+		}		
+	}
+	
+	@SuppressWarnings("deprecation")
+	private void handle3Args(XpBPlayer sender, String[] args) {
+		switch(args[0]) {
+		case "deposit":		// /xpbank deposit <amount> levels/points
+			int amount = getAmount(args[1], sender);
+			if (amount == -1) break;
+			//checkBalInstance(sender);
+			int playerTotalXp = sender.totalXp(); // Utils.totalXp(sender);
+			if (playerTotalXp == 0) {
+				sender.sendPlaceholderMessage(Main.NO_XP_DEPOSIT_MESSAGE);
+				//sender.sendMessage(Utils.replacePlaceholders(Main.NO_XP_DEPOSIT_MESSAGE, sender));
+				break;
+			}
+			switch (args[2]) {
+			case "levels":		// /xpbank deposit <amount> levels
+				if ((long) sender.getStoredXp() + (long) Utils.totalXp(amount) > Main.MAX_XP_STORED) {
+					//sender.sendMessage(Utils.replacePlaceholders(Main.EXCEEDS_STORE_LIMIT));
+					sender.sendPlaceholderMessage(Main.EXCEEDS_STORE_LIMIT);
+					break;
+				}
+				if (sender.getLevel() < amount) {
+					sender.sendMessage(ChatColor.RED + "You don't have that many levels");
+					break;
+				}
+				int xpToLose = Utils.totalXp(sender.getLevel()) - Utils.totalXp(sender.getLevel() - amount);
+				sender.removeXp(xpToLose);
+				//removeXp(xpToLose, sender, playerTotalXp);
+				int oldBal = sender.getStoredXp(); // Main.xps.get(sender.getUniqueId().toString());
+				sender.setStoredXp(oldBal + xpToLose);
+				//Main.xps.put(sender.getUniqueId().toString(), oldBal + xpToLose);
+				sender.sendPlaceholderMessage(Main.DEPOSIT_MESSAGE);
+				//sender.sendMessage(Utils.replacePlaceholders(Main.DEPOSIT_MESSAGE, sender));
+				break;
+				
+			case "points":		// /xpbank deposit <amount> points
 				if ((long) sender.getStoredXp() + (long) amount > Main.MAX_XP_STORED) {
 					//sender.sendMessage(Utils.replacePlaceholders(Main.EXCEEDS_STORE_LIMIT));
 					sender.sendPlaceholderMessage(Main.EXCEEDS_STORE_LIMIT);
@@ -159,371 +283,249 @@ public class Xp implements CommandExecutor {
 					sender.sendMessage(ChatColor.RED + "You only have " + playerTotalXp + " xp");
 					break;
 				}
-				sender.removeXp(amount); // removeXp(amount, sender, playerTotalXp);
-				int oldBal = sender.getStoredXp();
-				sender.setStoredXp(oldBal + amount);	//Main.xps.put(sender.getUniqueId().toString(), oldBal + amount);
+				sender.removeXp(amount);
+				//removeXp(amount, sender, playerTotalXp);
+				oldBal = sender.getStoredXp(); // Main.xps.get(sender.getUniqueId().toString());
+				sender.setStoredXp(oldBal + amount);
+				//Main.xps.put(sender.getUniqueId().toString(), oldBal + amount);
 				sender.sendPlaceholderMessage(Main.DEPOSIT_MESSAGE);
 				//sender.sendMessage(Utils.replacePlaceholders(Main.DEPOSIT_MESSAGE, sender));
 				break;
-				
-			case "withdraw": 		// /xpbank withdraw <amount>/max
-				amount = 0;
-				//checkBalInstance(sender);
-				if (sender.getStoredXp() == 0) {
-					//sender.sendMessage(Utils.replacePlaceholders(Main.NO_XP_WITHDRAW_MESSAGE, sender));
-					sender.sendPlaceholderMessage(Main.NO_XP_WITHDRAW_MESSAGE);
-					break;
-				}
-				playerTotalXp = sender.totalXp(); // Utils.totalXp(sender);
-				if (args[1].equalsIgnoreCase("max")) {
-					if (playerTotalXp >= Main.MAX_XP_HELD) {
-						//sender.sendMessage(Utils.replacePlaceholders(Main.EXCEEDS_HOLD_LIMIT));
-						sender.sendPlaceholderMessage(Main.EXCEEDS_HOLD_LIMIT);
-						break;
-					}
-					amount = sender.getStoredXp(); // Main.xps.get(sender.getUniqueId().toString());
-					if (playerTotalXp + amount >= Main.MAX_XP_HELD) {
-						amount = Main.MAX_XP_HELD - playerTotalXp;
-					}
-				} else {
-					amount = getAmount(args[1], sender);
-					if (amount == -1) break;
-				}
-				if ((long) playerTotalXp + (long) amount > Main.MAX_XP_HELD) {
+			default:
+				//sender.sendMessage(Utils.replacePlaceholders(Main.IMPROPER_USE_MESSAGE + "/xpbank <deposit/withdraw> <amount> <levels/points>"));
+				sender.sendPlaceholderMessage(Main.IMPROPER_USE_MESSAGE + "/xpbank <deposit/withdraw> <amount> <levels/points>");
+				break;
+			}
+			break;
+		case "withdraw": 		// /xpbank withdraw <amount> levels/points
+			amount = getAmount(args[1], sender);
+			if (amount == -1) break;
+			//checkBalInstance(sender);
+			if (sender.getStoredXp() == 0) {
+				//sender.sendMessage(Utils.replacePlaceholders(Main.NO_XP_WITHDRAW_MESSAGE, sender));
+				sender.sendPlaceholderMessage(Main.NO_XP_WITHDRAW_MESSAGE);
+				break;
+			}
+			playerTotalXp = sender.totalXp(); // Utils.totalXp(sender);
+			switch(args[2]) {
+			case "levels": 		// /xpbank withdraw <amount> levels
+				int xpToAdd = Utils.totalXp(sender.getLevel() + amount) - Utils.totalXp(sender.getLevel());
+				if ((long) playerTotalXp + (long) xpToAdd > Main.MAX_XP_HELD) {
 					//sender.sendMessage(Utils.replacePlaceholders(Main.EXCEEDS_HOLD_LIMIT));
 					sender.sendPlaceholderMessage(Main.EXCEEDS_HOLD_LIMIT);
 					break;
 				}
-				if (amount > sender.getStoredXp()) {
-					//sender.sendMessage(Utils.replacePlaceholders(ChatColor.RED + "You only have " + "%XP_HELD%" + " xp in the bank", sender));
-					sender.sendPlaceholderMessage(ChatColor.RED + "You only have " + "%XP_HELD%" + " xp in the bank");
+				if (xpToAdd > sender.getStoredXp()) {
+					sender.sendMessage(ChatColor.RED + "You only have enough xp for " + Utils.getMaxLevel(sender, Main.xps.get(sender.getUniqueId().toString())) + " levels");
+					break;
+				}
+				sender.addXp(xpToAdd);
+				//addXp(xpToAdd, sender);
+				int oldBal = sender.getStoredXp(); // Main.xps.get(sender.getUniqueId().toString());
+				sender.setStoredXp(oldBal - xpToAdd);
+				//Main.xps.put(sender.getUniqueId().toString(), oldBal - xpToAdd);
+				sender.sendMessage(Main.WITHDRAW_MESSAGE);
+				//sender.sendMessage(Utils.replacePlaceholders(Main.WITHDRAW_MESSAGE, sender));
+				break;
+			case "points": 		// /xpbank withdraw <amount> points
+				if ((long) playerTotalXp + (long) amount > Main.MAX_XP_HELD) {
+					sender.sendPlaceholderMessage(Main.EXCEEDS_HOLD_LIMIT);
+					break;
+				}
+				if (amount > Main.xps.get(sender.getUniqueId().toString())) {
+					//sender.sendMessage(Utils.replacePlaceholders(ChatColor.RED + "You only have " + "%XP_STORED%" + " xp in the bank", sender));
+					sender.sendPlaceholderMessage(ChatColor.RED + "You only have " + "%XP_STORED%" + " xp in the bank");
 					break;
 				}
 				sender.addXp(amount);
 				//addXp(amount, sender);
 				oldBal = sender.getStoredXp(); // Main.xps.get(sender.getUniqueId().toString());
-				sender.setStoredXp(oldBal - amount); // Main.xps.put(sender.getUniqueId().toString(), oldBal - amount);
+				//Main.xps.put(sender.getUniqueId().toString(), oldBal - amount);
+				sender.setStoredXp(oldBal - amount);
 				sender.sendPlaceholderMessage(Main.WITHDRAW_MESSAGE);
 				//sender.sendMessage(Utils.replacePlaceholders(Main.WITHDRAW_MESSAGE, sender));
 				break;
-			case "get":		// /xpbank get <player>
-				if (!sender.hasPermission("xpbank.admin")) {
-					//sender.sendMessage(Utils.replacePlaceholders(Main.NO_PERM_MESSAGE));
-					sender.sendPlaceholderMessage(Main.NO_PERM_MESSAGE);
-					break;
-				}
-				OfflinePlayer offline = Bukkit.getOfflinePlayer(args[1]);
-				if (offline == null) {
-					sender.sendPlaceholderMessage(Main.PLAYER_NOT_FOUND_MESSAGE);
-					//sender.sendMessage(Utils.replacePlaceholders(Main.PLAYER_NOT_FOUND_MESSAGE));
-				} else if (!Main.xps.containsKey(offline.getUniqueId().toString())) {
-					sender.sendMessage(ChatColor.RED + "Player has no balance");
-				} else if (Main.xps.containsKey(offline.getUniqueId().toString())) {
-					sender.sendPlaceholderMessage(ChatColor.YELLOW + offline.getName() + "'s stored xp is: " + "%XP_STORED%");
-					//sender.sendMessage(Utils.replacePlaceholders(ChatColor.YELLOW + offline.getName() + "'s stored xp is: " + "%XP_STORED%", offline));
-				}
-				break;
 			default:
-				sender.sendPlaceholderMessage(Main.IMPROPER_USE_MESSAGE + "/xpbank <deposit/withdraw> <amount>");
-				//sender.sendMessage(Utils.replacePlaceholders(Main.IMPROPER_USE_MESSAGE + "/xpbank <deposit/withdraw> <amount>"));
+				//sender.sendMessage(Utils.replacePlaceholders(Main.IMPROPER_USE_MESSAGE + "/xpbank <deposit/withdraw> <amount> <levels/points>"));
+				sender.sendPlaceholderMessage(Main.IMPROPER_USE_MESSAGE + "/xpbank <deposit/withdraw> <amount> <levels/points>");
 				break;
 			}
 			break;
-			
-		case 3:		// ---------------------- 3 Arguments ----------------------
-			switch(args[0]) {
-			case "deposit":		// /xpbank deposit <amount> levels/points
-				int amount = getAmount(args[1], sender);
-				if (amount == -1) break;
-				//checkBalInstance(sender);
-				int playerTotalXp = sender.totalXp(); // Utils.totalXp(sender);
-				if (playerTotalXp == 0) {
-					sender.sendPlaceholderMessage(Main.NO_XP_DEPOSIT_MESSAGE);
-					//sender.sendMessage(Utils.replacePlaceholders(Main.NO_XP_DEPOSIT_MESSAGE, sender));
-					break;
-				}
-				switch (args[2]) {
-				case "levels":		// /xpbank deposit <amount> levels
-					if ((long) sender.getStoredXp() + (long) Utils.totalXp(amount) > Main.MAX_XP_STORED) {
-						//sender.sendMessage(Utils.replacePlaceholders(Main.EXCEEDS_STORE_LIMIT));
-						sender.sendPlaceholderMessage(Main.EXCEEDS_STORE_LIMIT);
-						break;
-					}
-					if (sender.getLevel() < amount) {
-						sender.sendMessage(ChatColor.RED + "You don't have that many levels");
-						break;
-					}
-					int xpToLose = Utils.totalXp(sender.getLevel()) - Utils.totalXp(sender.getLevel() - amount);
-					sender.removeXp(xpToLose);
-					//removeXp(xpToLose, sender, playerTotalXp);
-					int oldBal = sender.getStoredXp(); // Main.xps.get(sender.getUniqueId().toString());
-					sender.setStoredXp(oldBal + xpToLose);
-					//Main.xps.put(sender.getUniqueId().toString(), oldBal + xpToLose);
-					sender.sendPlaceholderMessage(Main.DEPOSIT_MESSAGE);
-					//sender.sendMessage(Utils.replacePlaceholders(Main.DEPOSIT_MESSAGE, sender));
-					break;
-					
-				case "points":		// /xpbank deposit <amount> points
-					if ((long) sender.getStoredXp() + (long) amount > Main.MAX_XP_STORED) {
-						//sender.sendMessage(Utils.replacePlaceholders(Main.EXCEEDS_STORE_LIMIT));
-						sender.sendPlaceholderMessage(Main.EXCEEDS_STORE_LIMIT);
-						break;
-					}
-					if (amount > playerTotalXp) {
-						sender.sendMessage(ChatColor.RED + "You only have " + playerTotalXp + " xp");
-						break;
-					}
-					sender.removeXp(amount);
-					//removeXp(amount, sender, playerTotalXp);
-					oldBal = sender.getStoredXp(); // Main.xps.get(sender.getUniqueId().toString());
-					sender.setStoredXp(oldBal + amount);
-					//Main.xps.put(sender.getUniqueId().toString(), oldBal + amount);
-					sender.sendPlaceholderMessage(Main.DEPOSIT_MESSAGE);
-					//sender.sendMessage(Utils.replacePlaceholders(Main.DEPOSIT_MESSAGE, sender));
-					break;
-				default:
-					//sender.sendMessage(Utils.replacePlaceholders(Main.IMPROPER_USE_MESSAGE + "/xpbank <deposit/withdraw> <amount> <levels/points>"));
-					sender.sendPlaceholderMessage(Main.IMPROPER_USE_MESSAGE + "/xpbank <deposit/withdraw> <amount> <levels/points>");
-					break;
-				}
+		case "pay":		// /xpbank pay <player> <amount>
+			amount = getAmount(args[2], sender);
+			if (amount == -1) break;
+			//checkBalInstance(sender);
+			if (amount > sender.getStoredXp()) {
+				sender.sendPlaceholderMessage(ChatColor.RED + "You don't have enough xp to do that! (Balance: " + "%XP_STORED" + ")");
+				//sender.sendMessage(Utils.replacePlaceholders(ChatColor.RED + "You don't have enough xp to do that! (Balance: " + "%XP_STORED" + ")", sender));
 				break;
-			case "withdraw": 		// /xpbank withdraw <amount> levels/points
-				amount = getAmount(args[1], sender);
-				if (amount == -1) break;
-				//checkBalInstance(sender);
-				if (sender.getStoredXp() == 0) {
-					//sender.sendMessage(Utils.replacePlaceholders(Main.NO_XP_WITHDRAW_MESSAGE, sender));
-					sender.sendPlaceholderMessage(Main.NO_XP_WITHDRAW_MESSAGE);
-					break;
+			}
+			OfflinePlayer offline = Bukkit.getOfflinePlayer(args[1]);
+			if (offline != null) {
+				if (Main.xps.containsKey(offline.getUniqueId().toString())) {
+					if ((long) Main.xps.get(offline.getUniqueId().toString()) + (long) amount > Main.MAX_XP_STORED) {
+						//sender.sendMessage(Utils.replacePlaceholders(Main.EXCEEDS_STORE_LIMIT_TARGET));
+						sender.sendPlaceholderMessage(Main.EXCEEDS_STORE_LIMIT_TARGET);
+						break;
+					}
 				}
-				playerTotalXp = sender.totalXp(); // Utils.totalXp(sender);
-				switch(args[2]) {
-				case "levels": 		// /xpbank withdraw <amount> levels
-					int xpToAdd = Utils.totalXp(sender.getLevel() + amount) - Utils.totalXp(sender.getLevel());
-					if ((long) playerTotalXp + (long) xpToAdd > Main.MAX_XP_HELD) {
-						//sender.sendMessage(Utils.replacePlaceholders(Main.EXCEEDS_HOLD_LIMIT));
-						sender.sendPlaceholderMessage(Main.EXCEEDS_HOLD_LIMIT);
-						break;
+				if (Main.xps.containsKey(offline.getUniqueId().toString())) {
+					Main.xps.put(offline.getUniqueId().toString(), Main.xps.get(offline.getUniqueId().toString()) + amount);
+					sender.setStoredXp(sender.getStoredXp() - amount);
+					//Main.xps.put(sender.getUniqueId().toString(), Main.xps.get(sender.getUniqueId().toString()) - amount);
+					if (offline.isOnline()) {
+						Player online = offline.getPlayer();
+						online.sendMessage(Utils.replacePlaceholders(ChatColor.YELLOW + sender.getName() + " has sent you " + amount + " xp. New balance: " + "%XP_STORED%", online));
 					}
-					if (xpToAdd > sender.getStoredXp()) {
-						sender.sendMessage(ChatColor.RED + "You only have enough xp for " + Utils.getMaxLevel(sender, Main.xps.get(sender.getUniqueId().toString())) + " levels");
-						break;
-					}
-					sender.addXp(xpToAdd);
-					//addXp(xpToAdd, sender);
-					int oldBal = sender.getStoredXp(); // Main.xps.get(sender.getUniqueId().toString());
-					sender.setStoredXp(oldBal - xpToAdd);
-					//Main.xps.put(sender.getUniqueId().toString(), oldBal - xpToAdd);
-					sender.sendMessage(Main.WITHDRAW_MESSAGE);
-					//sender.sendMessage(Utils.replacePlaceholders(Main.WITHDRAW_MESSAGE, sender));
-					break;
-				case "points": 		// /xpbank withdraw <amount> points
-					if ((long) playerTotalXp + (long) amount > Main.MAX_XP_HELD) {
-						sender.sendPlaceholderMessage(Main.EXCEEDS_HOLD_LIMIT);
-						break;
-					}
-					if (amount > Main.xps.get(sender.getUniqueId().toString())) {
-						//sender.sendMessage(Utils.replacePlaceholders(ChatColor.RED + "You only have " + "%XP_STORED%" + " xp in the bank", sender));
-						sender.sendPlaceholderMessage(ChatColor.RED + "You only have " + "%XP_STORED%" + " xp in the bank");
-						break;
-					}
-					sender.addXp(amount);
-					//addXp(amount, sender);
-					oldBal = sender.getStoredXp(); // Main.xps.get(sender.getUniqueId().toString());
-					//Main.xps.put(sender.getUniqueId().toString(), oldBal - amount);
-					sender.setStoredXp(oldBal - amount);
-					sender.sendPlaceholderMessage(Main.WITHDRAW_MESSAGE);
-					//sender.sendMessage(Utils.replacePlaceholders(Main.WITHDRAW_MESSAGE, sender));
-					break;
-				default:
-					//sender.sendMessage(Utils.replacePlaceholders(Main.IMPROPER_USE_MESSAGE + "/xpbank <deposit/withdraw> <amount> <levels/points>"));
-					sender.sendPlaceholderMessage(Main.IMPROPER_USE_MESSAGE + "/xpbank <deposit/withdraw> <amount> <levels/points>");
-					break;
-				}
-				break;
-			case "pay":		// /xpbank pay <player> <amount>
-				amount = getAmount(args[2], sender);
-				if (amount == -1) break;
-				//checkBalInstance(sender);
-				if (amount > sender.getStoredXp()) {
-					sender.sendPlaceholderMessage(ChatColor.RED + "You don't have enough xp to do that! (Balance: " + "%XP_STORED" + ")");
-					//sender.sendMessage(Utils.replacePlaceholders(ChatColor.RED + "You don't have enough xp to do that! (Balance: " + "%XP_STORED" + ")", sender));
-					break;
-				}
-				OfflinePlayer offline = Bukkit.getOfflinePlayer(args[1]);
-				if (offline != null) {
-					if (Main.xps.containsKey(offline.getUniqueId().toString())) {
-						if ((long) Main.xps.get(offline.getUniqueId().toString()) + (long) amount > Main.MAX_XP_STORED) {
-							//sender.sendMessage(Utils.replacePlaceholders(Main.EXCEEDS_STORE_LIMIT_TARGET));
-							sender.sendPlaceholderMessage(Main.EXCEEDS_STORE_LIMIT_TARGET);
-							break;
-						}
-					}
-					if (Main.xps.containsKey(offline.getUniqueId().toString())) {
-						Main.xps.put(offline.getUniqueId().toString(), Main.xps.get(offline.getUniqueId().toString()) + amount);
+					sender.sendPlaceholderMessage(ChatColor.YELLOW + "Transfer complete. New balance: " + "%XP_STORED%");
+					//sender.sendMessage(Utils.replacePlaceholders(ChatColor.YELLOW + "Transfer complete. New balance: " + "%XP_STORED%", sender));
+				} else {
+					if (offline.isOnline()) {
+						Main.xps.put(offline.getUniqueId().toString(), amount);
 						sender.setStoredXp(sender.getStoredXp() - amount);
 						//Main.xps.put(sender.getUniqueId().toString(), Main.xps.get(sender.getUniqueId().toString()) - amount);
-						if (offline.isOnline()) {
-							Player online = offline.getPlayer();
-							online.sendMessage(Utils.replacePlaceholders(ChatColor.YELLOW + sender.getName() + " has sent you " + amount + " xp. New balance: " + "%XP_STORED%", online));
-						}
+						Player online = offline.getPlayer();
+						online.sendMessage(Utils.replacePlaceholders(ChatColor.YELLOW + sender.getName() + " has sent you " + amount + " xp. New balance: " + "%XP_STORED%", online));
 						sender.sendPlaceholderMessage(ChatColor.YELLOW + "Transfer complete. New balance: " + "%XP_STORED%");
 						//sender.sendMessage(Utils.replacePlaceholders(ChatColor.YELLOW + "Transfer complete. New balance: " + "%XP_STORED%", sender));
 					} else {
-						if (offline.isOnline()) {
-							Main.xps.put(offline.getUniqueId().toString(), amount);
-							sender.setStoredXp(sender.getStoredXp() - amount);
-							//Main.xps.put(sender.getUniqueId().toString(), Main.xps.get(sender.getUniqueId().toString()) - amount);
-							Player online = offline.getPlayer();
-							online.sendMessage(Utils.replacePlaceholders(ChatColor.YELLOW + sender.getName() + " has sent you " + amount + " xp. New balance: " + "%XP_STORED%", online));
-							sender.sendPlaceholderMessage(ChatColor.YELLOW + "Transfer complete. New balance: " + "%XP_STORED%");
-							//sender.sendMessage(Utils.replacePlaceholders(ChatColor.YELLOW + "Transfer complete. New balance: " + "%XP_STORED%", sender));
-						} else {
-							//sender.sendMessage(Utils.replacePlaceholders(Main.PLAYER_NOT_FOUND_MESSAGE));
-							sender.sendPlaceholderMessage(Main.PLAYER_NOT_FOUND_MESSAGE);
-							break;
-						}
-					}
-				} else {
-					//sender.sendMessage(Utils.replacePlaceholders(Main.PLAYER_NOT_FOUND_MESSAGE));
-					sender.sendPlaceholderMessage(Main.PLAYER_NOT_FOUND_MESSAGE);
-					break;
-				}
-				break;
-			case "set":		// /xpbank set <player> <amount>
-				if (!sender.hasPermission("xpbank.admin")) {
-					//sender.sendMessage(Utils.replacePlaceholders(Main.NO_PERM_MESSAGE));
-					sender.sendPlaceholderMessage(Main.NO_PERM_MESSAGE);
-					break;
-				}
-				amount = getAmount(args[2], sender);
-				if (amount == -1) break;
-				if (amount > Main.MAX_XP_STORED) {
-					//sender.sendMessage(Utils.replacePlaceholders(Main.EXCEEDS_STORE_LIMIT_TARGET));
-					sender.sendPlaceholderMessage(Main.EXCEEDS_STORE_LIMIT_TARGET);
-					break;
-				}
-				offline = Bukkit.getOfflinePlayer(args[1]);
-				if (offline == null) {
-					sender.sendPlaceholderMessage(Main.PLAYER_NOT_FOUND_MESSAGE);
-					//sender.sendMessage(Utils.replacePlaceholders(Main.PLAYER_NOT_FOUND_MESSAGE));
-				}
-				if (Main.xps.containsKey(offline.getUniqueId().toString())) {
-					Main.xps.put(offline.getUniqueId().toString(), amount);
-					if (Main.instance.getConfig().getBoolean("notify-on-admin-balance-change") && offline.isOnline()) {
-						Player online = offline.getPlayer();
-						online.sendMessage(ChatColor.YELLOW + "Your balance has been set to " + amount + " by an admin");
-					}
-					sender.sendMessage(Utils.replacePlaceholders(ChatColor.YELLOW + offline.getName() + "'s balance is now " + "%XP_STORED%", offline));
-					//sender.sendPlaceholderMessage(ChatColor.YELLOW + offline.getName() + "'s balance is now " + "%XP_STORED%");
-					break;
-				} else {
-					if (offline.isOnline()) {
-						Main.xps.put(offline.getUniqueId().toString(), amount);
-						Player online = offline.getPlayer();
-						if (Main.instance.getConfig().getBoolean("notify-on-admin-balance-change"))
-							online.sendMessage(ChatColor.YELLOW + "Your balance has been set to " + amount + " by an admin");
-						//sender.sendPlaceholderMessage(ChatColor.YELLOW + offline.getName() + "'s balance is now " + "%XP_STORED%");
-						sender.sendMessage(Utils.replacePlaceholders(ChatColor.YELLOW + offline.getName() + "'s balance is now " + "%XP_STORED%", offline));
-						break;
-					} else {
 						//sender.sendMessage(Utils.replacePlaceholders(Main.PLAYER_NOT_FOUND_MESSAGE));
 						sender.sendPlaceholderMessage(Main.PLAYER_NOT_FOUND_MESSAGE);
 						break;
 					}
 				}
-			case "add":		// /xpbank add <player> <amount>
-				if (!sender.hasPermission("xpbank.admin")) {
-					//sender.sendMessage(Utils.replacePlaceholders(Main.NO_PERM_MESSAGE));
-					sender.sendPlaceholderMessage(Main.NO_PERM_MESSAGE);
-					break;
-				}
-				amount = getAmount(args[2], sender);
-				if (amount == -1) break;
-				if (amount > Main.MAX_XP_STORED) {
-					sender.sendPlaceholderMessage(Main.EXCEEDS_STORE_LIMIT_TARGET);
-					//sender.sendMessage(Utils.replacePlaceholders(Main.EXCEEDS_STORE_LIMIT_TARGET));
-					break;
-				}
-				offline = Bukkit.getOfflinePlayer(args[1]);
-				if (offline == null) {
-					sender.sendPlaceholderMessage(Main.PLAYER_NOT_FOUND_MESSAGE);
-					//sender.sendMessage(Utils.replacePlaceholders(Main.PLAYER_NOT_FOUND_MESSAGE));
-				}
-				if (Main.xps.containsKey(offline.getUniqueId().toString())) {
-					Main.xps.put(offline.getUniqueId().toString(), amount + Main.xps.get(offline.getUniqueId().toString()));
-					if (Main.instance.getConfig().getBoolean("notify-on-admin-balance-change") && offline.isOnline()) {
-						Player online = offline.getPlayer();
-						online.sendMessage(Utils.replacePlaceholders(ChatColor.YELLOW + "Your xp balance has been set to " + "%XP_STORED%" + " by an admin", online));
-					}
-					sender.sendMessage(Utils.replacePlaceholders(ChatColor.YELLOW + offline.getName() + "'s balance is now " + "%XP_STORED%", offline));
-					//sender.sendPlaceholderMessage(ChatColor.YELLOW + offline.getName() + "'s balance is now " + "%XP_STORED%");
-					break;
-				} else {
-					if (offline.isOnline()) {
-						Main.xps.put(offline.getUniqueId().toString(), amount);
-						Player online = offline.getPlayer();
-						if (Main.instance.getConfig().getBoolean("notify-on-admin-balance-change"))
-							online.sendMessage(Utils.replacePlaceholders(ChatColor.YELLOW + "Your balance has been set to " + "%XP_STORED%" + " by an admin", online));
-						//sender.sendPlaceholderMessage(ChatColor.YELLOW + offline.getName() + "'s balance is now " + "%XP_STORED%");
-						sender.sendMessage(Utils.replacePlaceholders(ChatColor.YELLOW + offline.getName() + "'s balance is now " + "%XP_STORED%", offline));
-						break;
-					} else {
-						//sender.sendMessage(Utils.replacePlaceholders(Main.PLAYER_NOT_FOUND_MESSAGE));
-						sender.sendPlaceholderMessage(Main.PLAYER_NOT_FOUND_MESSAGE);
-						break;
-					}
-				}
-			case "remove":		// /xpbank remove <player> <amount>
-				if (!sender.hasPermission("xpbank.admin")) {
-					//sender.sendMessage(Utils.replacePlaceholders(Main.NO_PERM_MESSAGE));
-					sender.sendPlaceholderMessage(Main.NO_PERM_MESSAGE);
-					break;
-				}
-				amount = getAmount(args[2], sender);
-				if (amount == -1) break;
-				offline = Bukkit.getOfflinePlayer(args[1]);
-				if (offline == null) {
-					sender.sendPlaceholderMessage(Main.PLAYER_NOT_FOUND_MESSAGE);
-					//sender.sendMessage(Utils.replacePlaceholders(Main.PLAYER_NOT_FOUND_MESSAGE));
-				}
-				if (!Main.xps.containsKey(offline.getUniqueId().toString())) {
-					if (offline.isOnline()) {
-						Main.xps.put(offline.getUniqueId().toString(), 0);
-						Player online = offline.getPlayer();
-						if (Main.instance.getConfig().getBoolean("notify-on-admin-balance-change"))
-							online.sendMessage(Utils.replacePlaceholders(ChatColor.YELLOW + "Your balance has been set to " + "%XP_STORED%" + " by an admin", online));
-						sender.sendMessage(Utils.replacePlaceholders(ChatColor.YELLOW + offline.getName() + "'s balance is now " + "%XP_STORED%", offline));
-						break;
-					} else {
-						sender.sendMessage(Utils.replacePlaceholders(Main.PLAYER_NOT_FOUND_MESSAGE));
-						break;
-					}
-				} else { 
-					if (Main.xps.get(offline.getUniqueId().toString()) - amount < 0) {
-						amount = Main.xps.get(offline.getUniqueId().toString());
-					}
-					Main.xps.put(offline.getUniqueId().toString(), Main.xps.get(offline.getUniqueId().toString()) - amount);
-					if (Main.instance.getConfig().getBoolean("notify-on-admin-balance-change") && offline.isOnline()) {
-						Player online = offline.getPlayer();
-						online.sendMessage(Utils.replacePlaceholders(ChatColor.YELLOW + "Your balance has been set to " + "%XP_STORED%" + " by an admin", online));
-					}
-					sender.sendMessage(Utils.replacePlaceholders(ChatColor.YELLOW + offline.getName() + "'s balance is now " + "%XP_STORED%", offline));
-					break;
-				}
-			default:
-				sender.sendPlaceholderMessage(Main.IMPROPER_USE_MESSAGE + "/xpbank <deposit/withdraw> <amount>");
-				//sender.sendMessage(Utils.replacePlaceholders(Main.IMPROPER_USE_MESSAGE + "/xpbank <deposit/withdraw> <amount>"));
+			} else {
+				//sender.sendMessage(Utils.replacePlaceholders(Main.PLAYER_NOT_FOUND_MESSAGE));
+				sender.sendPlaceholderMessage(Main.PLAYER_NOT_FOUND_MESSAGE);
 				break;
 			}
 			break;
-			
-			
+		case "set":		// /xpbank set <player> <amount>
+			if (!sender.hasPermission("xpbank.admin")) {
+				//sender.sendMessage(Utils.replacePlaceholders(Main.NO_PERM_MESSAGE));
+				sender.sendPlaceholderMessage(Main.NO_PERM_MESSAGE);
+				break;
+			}
+			amount = getAmount(args[2], sender);
+			if (amount == -1) break;
+			if (amount > Main.MAX_XP_STORED) {
+				//sender.sendMessage(Utils.replacePlaceholders(Main.EXCEEDS_STORE_LIMIT_TARGET));
+				sender.sendPlaceholderMessage(Main.EXCEEDS_STORE_LIMIT_TARGET);
+				break;
+			}
+			offline = Bukkit.getOfflinePlayer(args[1]);
+			if (offline == null) {
+				sender.sendPlaceholderMessage(Main.PLAYER_NOT_FOUND_MESSAGE);
+				//sender.sendMessage(Utils.replacePlaceholders(Main.PLAYER_NOT_FOUND_MESSAGE));
+			}
+			if (Main.xps.containsKey(offline.getUniqueId().toString())) {
+				Main.xps.put(offline.getUniqueId().toString(), amount);
+				if (Main.instance.getConfig().getBoolean("notify-on-admin-balance-change") && offline.isOnline()) {
+					Player online = offline.getPlayer();
+					online.sendMessage(ChatColor.YELLOW + "Your balance has been set to " + amount + " by an admin");
+				}
+				sender.sendMessage(Utils.replacePlaceholders(ChatColor.YELLOW + offline.getName() + "'s balance is now " + "%XP_STORED%", offline));
+				//sender.sendPlaceholderMessage(ChatColor.YELLOW + offline.getName() + "'s balance is now " + "%XP_STORED%");
+				break;
+			} else {
+				if (offline.isOnline()) {
+					Main.xps.put(offline.getUniqueId().toString(), amount);
+					Player online = offline.getPlayer();
+					if (Main.instance.getConfig().getBoolean("notify-on-admin-balance-change"))
+						online.sendMessage(ChatColor.YELLOW + "Your balance has been set to " + amount + " by an admin");
+					//sender.sendPlaceholderMessage(ChatColor.YELLOW + offline.getName() + "'s balance is now " + "%XP_STORED%");
+					sender.sendMessage(Utils.replacePlaceholders(ChatColor.YELLOW + offline.getName() + "'s balance is now " + "%XP_STORED%", offline));
+					break;
+				} else {
+					//sender.sendMessage(Utils.replacePlaceholders(Main.PLAYER_NOT_FOUND_MESSAGE));
+					sender.sendPlaceholderMessage(Main.PLAYER_NOT_FOUND_MESSAGE);
+					break;
+				}
+			}
+		case "add":		// /xpbank add <player> <amount>
+			if (!sender.hasPermission("xpbank.admin")) {
+				//sender.sendMessage(Utils.replacePlaceholders(Main.NO_PERM_MESSAGE));
+				sender.sendPlaceholderMessage(Main.NO_PERM_MESSAGE);
+				break;
+			}
+			amount = getAmount(args[2], sender);
+			if (amount == -1) break;
+			if (amount > Main.MAX_XP_STORED) {
+				sender.sendPlaceholderMessage(Main.EXCEEDS_STORE_LIMIT_TARGET);
+				//sender.sendMessage(Utils.replacePlaceholders(Main.EXCEEDS_STORE_LIMIT_TARGET));
+				break;
+			}
+			offline = Bukkit.getOfflinePlayer(args[1]);
+			if (offline == null) {
+				sender.sendPlaceholderMessage(Main.PLAYER_NOT_FOUND_MESSAGE);
+				//sender.sendMessage(Utils.replacePlaceholders(Main.PLAYER_NOT_FOUND_MESSAGE));
+			}
+			if (Main.xps.containsKey(offline.getUniqueId().toString())) {
+				Main.xps.put(offline.getUniqueId().toString(), amount + Main.xps.get(offline.getUniqueId().toString()));
+				if (Main.instance.getConfig().getBoolean("notify-on-admin-balance-change") && offline.isOnline()) {
+					Player online = offline.getPlayer();
+					online.sendMessage(Utils.replacePlaceholders(ChatColor.YELLOW + "Your xp balance has been set to " + "%XP_STORED%" + " by an admin", online));
+				}
+				sender.sendMessage(Utils.replacePlaceholders(ChatColor.YELLOW + offline.getName() + "'s balance is now " + "%XP_STORED%", offline));
+				//sender.sendPlaceholderMessage(ChatColor.YELLOW + offline.getName() + "'s balance is now " + "%XP_STORED%");
+				break;
+			} else {
+				if (offline.isOnline()) {
+					Main.xps.put(offline.getUniqueId().toString(), amount);
+					Player online = offline.getPlayer();
+					if (Main.instance.getConfig().getBoolean("notify-on-admin-balance-change"))
+						online.sendMessage(Utils.replacePlaceholders(ChatColor.YELLOW + "Your balance has been set to " + "%XP_STORED%" + " by an admin", online));
+					//sender.sendPlaceholderMessage(ChatColor.YELLOW + offline.getName() + "'s balance is now " + "%XP_STORED%");
+					sender.sendMessage(Utils.replacePlaceholders(ChatColor.YELLOW + offline.getName() + "'s balance is now " + "%XP_STORED%", offline));
+					break;
+				} else {
+					//sender.sendMessage(Utils.replacePlaceholders(Main.PLAYER_NOT_FOUND_MESSAGE));
+					sender.sendPlaceholderMessage(Main.PLAYER_NOT_FOUND_MESSAGE);
+					break;
+				}
+			}
+		case "remove":		// /xpbank remove <player> <amount>
+			if (!sender.hasPermission("xpbank.admin")) {
+				//sender.sendMessage(Utils.replacePlaceholders(Main.NO_PERM_MESSAGE));
+				sender.sendPlaceholderMessage(Main.NO_PERM_MESSAGE);
+				break;
+			}
+			amount = getAmount(args[2], sender);
+			if (amount == -1) break;
+			offline = Bukkit.getOfflinePlayer(args[1]);
+			if (offline == null) {
+				sender.sendPlaceholderMessage(Main.PLAYER_NOT_FOUND_MESSAGE);
+				//sender.sendMessage(Utils.replacePlaceholders(Main.PLAYER_NOT_FOUND_MESSAGE));
+			}
+			if (!Main.xps.containsKey(offline.getUniqueId().toString())) {
+				if (offline.isOnline()) {
+					Main.xps.put(offline.getUniqueId().toString(), 0);
+					Player online = offline.getPlayer();
+					if (Main.instance.getConfig().getBoolean("notify-on-admin-balance-change"))
+						online.sendMessage(Utils.replacePlaceholders(ChatColor.YELLOW + "Your balance has been set to " + "%XP_STORED%" + " by an admin", online));
+					sender.sendMessage(Utils.replacePlaceholders(ChatColor.YELLOW + offline.getName() + "'s balance is now " + "%XP_STORED%", offline));
+					break;
+				} else {
+					sender.sendMessage(Utils.replacePlaceholders(Main.PLAYER_NOT_FOUND_MESSAGE));
+					break;
+				}
+			} else { 
+				if (Main.xps.get(offline.getUniqueId().toString()) - amount < 0) {
+					amount = Main.xps.get(offline.getUniqueId().toString());
+				}
+				Main.xps.put(offline.getUniqueId().toString(), Main.xps.get(offline.getUniqueId().toString()) - amount);
+				if (Main.instance.getConfig().getBoolean("notify-on-admin-balance-change") && offline.isOnline()) {
+					Player online = offline.getPlayer();
+					online.sendMessage(Utils.replacePlaceholders(ChatColor.YELLOW + "Your balance has been set to " + "%XP_STORED%" + " by an admin", online));
+				}
+				sender.sendMessage(Utils.replacePlaceholders(ChatColor.YELLOW + offline.getName() + "'s balance is now " + "%XP_STORED%", offline));
+				break;
+			}
 		default:
-			sender.sendPlaceholderMessage(Main.IMPROPER_USE_MESSAGE + "/xpbank help for help");
-			//sender.sendMessage(Utils.replacePlaceholders(Main.IMPROPER_USE_MESSAGE + "/xpbank help for help"));	
+			sender.sendPlaceholderMessage(Main.IMPROPER_USE_MESSAGE + "/xpbank <deposit/withdraw> <amount>");
+			//sender.sendMessage(Utils.replacePlaceholders(Main.IMPROPER_USE_MESSAGE + "/xpbank <deposit/withdraw> <amount>"));
 			break;
-		}
+		}		
 	}
 	
 	private int getAmount(String string, Player p) {
@@ -549,6 +551,8 @@ public class Xp implements CommandExecutor {
 //			Main.xps.put(p.getUniqueId().toString(), 0);
 //		}
 //	}
+	
+	
 
 	private void asConsole(CommandSender sender, String[] args) {
 		
