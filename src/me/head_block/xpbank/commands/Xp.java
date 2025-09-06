@@ -316,7 +316,7 @@ public class Xp implements CommandExecutor {
 					break;
 				}
 				if (xpToAdd > sender.getStoredXp()) {
-					sender.sendMessage(ChatColor.RED + "You only have enough xp for " + Utils.getMaxLevel(sender, Main.xps.get(sender.getUniqueId().toString())) + " levels");
+					sender.sendPlaceholderMessage(ChatColor.RED + "You only have enough xp for " + Utils.getMaxLevel(sender, Main.xps.get(sender.getUniqueId().toString())) + " levels");
 					break;
 				}
 				sender.addXp(xpToAdd);
@@ -324,7 +324,7 @@ public class Xp implements CommandExecutor {
 				int oldBal = sender.getStoredXp(); // Main.xps.get(sender.getUniqueId().toString());
 				sender.setStoredXp(oldBal - xpToAdd);
 				//Main.xps.put(sender.getUniqueId().toString(), oldBal - xpToAdd);
-				sender.sendMessage(Main.WITHDRAW_MESSAGE);
+				sender.sendPlaceholderMessage(Main.WITHDRAW_MESSAGE);
 				//sender.sendMessage(Utils.replacePlaceholders(Main.WITHDRAW_MESSAGE, sender));
 				break;
 			case "points": 		// /xpbank withdraw <amount> points
