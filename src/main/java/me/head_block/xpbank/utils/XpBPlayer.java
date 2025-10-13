@@ -31,7 +31,6 @@ import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeInstance;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
-import org.bukkit.block.BlockState;
 import org.bukkit.block.PistonMoveReaction;
 import org.bukkit.block.Sign;
 import org.bukkit.block.data.BlockData;
@@ -40,7 +39,6 @@ import org.bukkit.conversations.ConversationAbandonedEvent;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityCategory;
 import org.bukkit.entity.EntityType;
-import org.bukkit.entity.Firework;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Pose;
@@ -85,6 +83,7 @@ public class XpBPlayer implements Player {
 		this.checkBalInstance();
 	}
 	
+	@Override
 	public void sendMessage(String message) {
 		if (player != null) player.sendMessage(message);
 	}
@@ -208,11 +207,6 @@ public class XpBPlayer implements Player {
 	}
 
 	@Override
-	public Firework fireworkBoost(ItemStack arg0) {
-		return player.fireworkBoost(arg0);
-	}
-
-	@Override
 	public float getAttackCooldown() {
 		return player.getAttackCooldown();
 	}
@@ -230,11 +224,6 @@ public class XpBPlayer implements Player {
 	@Override
 	public Set<NamespacedKey> getDiscoveredRecipes() {
 		return player.getDiscoveredRecipes();
-	}
-
-	@Override
-	public int getEnchantmentSeed() {
-		return player.getEnchantmentSeed();
 	}
 
 	@Override
@@ -281,11 +270,6 @@ public class XpBPlayer implements Player {
 	@Override
 	public ItemStack getItemOnCursor() {
 		return player.getItemOnCursor();
-	}
-
-	@Override
-	public Location getLastDeathLocation() {
-		return player.getLastDeathLocation();
 	}
 
 	@Override
@@ -391,11 +375,6 @@ public class XpBPlayer implements Player {
 	}
 
 	@Override
-	public void setEnchantmentSeed(int arg0) {
-		player.setEnchantmentSeed(arg0);
-	}
-
-	@Override
 	public void setExhaustion(float arg0) {
 		player.setExhaustion(arg0);
 	}
@@ -419,11 +398,6 @@ public class XpBPlayer implements Player {
 	@Override
 	public void setItemOnCursor(ItemStack arg0) {
 		player.setItemOnCursor(arg0);
-	}
-
-	@Override
-	public void setLastDeathLocation(Location arg0) {
-		player.setLastDeathLocation(arg0);
 	}
 
 	@Override
@@ -505,11 +479,6 @@ public class XpBPlayer implements Player {
 	}
 
 	@Override
-	public boolean canBreatheUnderwater() {
-		return player.canBreatheUnderwater();
-	}
-
-	@Override
 	public Collection<PotionEffect> getActivePotionEffects() {
 		return player.getActivePotionEffects();
 	}
@@ -540,21 +509,6 @@ public class XpBPlayer implements Player {
 	}
 
 	@Override
-	public Sound getDeathSound() {
-		return player.getDeathSound();
-	}
-
-	@Override
-	public Sound getDrinkingSound(ItemStack arg0) {
-		return player.getDrinkingSound(arg0);
-	}
-
-	@Override
-	public Sound getEatingSound(ItemStack arg0) {
-		return player.getEatingSound(arg0);
-	}
-
-	@Override
 	public EntityEquipment getEquipment() {
 		return player.getEquipment();
 	}
@@ -572,26 +526,6 @@ public class XpBPlayer implements Player {
 	@Override
 	public Location getEyeLocation() {
 		return player.getEyeLocation();
-	}
-
-	@Override
-	public Sound getFallDamageSound(int arg0) {
-		return player.getFallDamageSound(arg0);
-	}
-
-	@Override
-	public Sound getFallDamageSoundBig() {
-		return player.getFallDamageSoundBig();
-	}
-
-	@Override
-	public Sound getFallDamageSoundSmall() {
-		return player.getFallDamageSoundSmall();
-	}
-
-	@Override
-	public Sound getHurtSound() {
-		return player.getHurtSound();
 	}
 
 	@Override
@@ -1005,21 +939,6 @@ public class XpBPlayer implements Player {
 	}
 
 	@Override
-	public Sound getSwimHighSpeedSplashSound() {
-		return player.getSwimHighSpeedSplashSound();
-	}
-
-	@Override
-	public Sound getSwimSound() {
-		return player.getSwimSound();
-	}
-
-	@Override
-	public Sound getSwimSplashSound() {
-		return player.getSwimSplashSound();
-	}
-
-	@Override
 	public int getTicksLived() {
 		return player.getTicksLived();
 	}
@@ -1107,12 +1026,6 @@ public class XpBPlayer implements Player {
 	@Override
 	public boolean isValid() {
 		return player.isValid();
-	}
-
-	@Override
-	@Deprecated
-	public boolean isVisibleByDefault() {
-		return player.isVisibleByDefault();
 	}
 
 	@Override
@@ -1219,12 +1132,6 @@ public class XpBPlayer implements Player {
 	@Override
 	public void setVelocity(Vector arg0) {
 		player.setVelocity(arg0);		
-	}
-
-	@Override
-	@Deprecated
-	public void setVisibleByDefault(boolean arg0) {
-		player.setVisibleByDefault(arg0);		
 	}
 
 	@Override
@@ -1557,12 +1464,6 @@ public class XpBPlayer implements Player {
 	}
 
 	@Override
-	public void addCustomChatCompletions(Collection<String> arg0) {
-		player.addCustomChatCompletions(arg0);
-		
-	}
-
-	@Override
 	public boolean breakBlock(Block arg0) {
 		return player.breakBlock(arg0);
 	}
@@ -1847,11 +1748,6 @@ public class XpBPlayer implements Player {
 	}
 
 	@Override
-	public void playSound(Entity arg0, String arg1, float arg2, float arg3) {
-		player.playSound(arg0, arg1, arg2, arg3);		
-	}
-
-	@Override
 	public void playSound(Location arg0, Sound arg1, SoundCategory arg2, float arg3, float arg4) {
 		player.playSound(arg0, arg1, arg2, arg3, arg4);		
 	}
@@ -1864,16 +1760,6 @@ public class XpBPlayer implements Player {
 	@Override
 	public void playSound(Entity arg0, Sound arg1, SoundCategory arg2, float arg3, float arg4) {
 		player.playSound(arg0, arg1, arg2, arg3, arg4);		
-	}
-
-	@Override
-	public void playSound(Entity arg0, String arg1, SoundCategory arg2, float arg3, float arg4) {
-		player.playSound(arg0, arg1, arg2, arg3, arg4);		
-	}
-
-	@Override
-	public void removeCustomChatCompletions(Collection<String> arg0) {
-		player.removeCustomChatCompletions(arg0);		
 	}
 
 	@Override
@@ -1908,18 +1794,8 @@ public class XpBPlayer implements Player {
 	}
 
 	@Override
-	public void sendBlockChanges(Collection<BlockState> arg0, boolean arg1) {
-		player.sendBlockChanges(arg0, arg1);		
-	}
-
-	@Override
 	public void sendBlockDamage(Location arg0, float arg1) {
 		player.sendBlockDamage(arg0, arg1);		
-	}
-
-	@Override
-	public void sendEquipmentChange(LivingEntity arg0, Map<EquipmentSlot, ItemStack> arg1) {
-		player.sendEquipmentChange(arg0, arg1);		
 	}
 
 	@Override
@@ -1992,11 +1868,6 @@ public class XpBPlayer implements Player {
 	@Override
 	public void setCompassTarget(Location arg0) {
 		player.setCompassTarget(arg0);		
-	}
-
-	@Override
-	public void setCustomChatCompletions(Collection<String> arg0) {
-		player.setCustomChatCompletions(arg0);		
 	}
 
 	@Override
@@ -2243,11 +2114,6 @@ public class XpBPlayer implements Player {
 
 	@Override
 	public void stopSound(String arg0) {
-		player.stopSound(arg0);		
-	}
-
-	@Override
-	public void stopSound(SoundCategory arg0) {
 		player.stopSound(arg0);		
 	}
 
