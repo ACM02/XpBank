@@ -41,38 +41,38 @@ public class Config_1_13 extends ConfigManager {
 		//config.addDefault("gui.main-menu.xp-stored", Utils.createItem(Material.EXPERIENCE_BOTTLE, 1, "&aXp stored", "&e%XP_STORED%" + "/" + "%MAX_XP_STORED%"));
 		//config.addDefault("gui.main-menu.xp-held", Utils.createItem(Material.BRICK, 1, "&aXP held", "&e%XP_HELD%" + "/" + "%MAX_XP_HELD%"));
 		
-		config.addDefault("gui.main-menu.held-full", Utils.createItem(Material.GREEN_STAINED_GLASS_PANE, 1, "&eXp held:", "&a%XP_HELD%/%MAX_XP_HELD%"));
-		config.addDefault("gui.main-menu.held-empty", Utils.createItem(Material.GRAY_STAINED_GLASS_PANE, 1, "&eXp held:", "&a%XP_HELD%/%MAX_XP_HELD%"));
+		config.addDefault("gui.main-menu.held-full", Utils.createItem(Material.valueOf("GREEN_STAINED_GLASS_PANE"), 1, "&eXp held:", "&a%XP_HELD%/%MAX_XP_HELD%"));
+		config.addDefault("gui.main-menu.held-empty", Utils.createItem(Material.valueOf("GREEN_STAINED_GLASS_PANE"), 1, "&eXp held:", "&a%XP_HELD%/%MAX_XP_HELD%"));
 		
-		config.addDefault("gui.main-menu.stored-full", Utils.createItem(Material.GREEN_STAINED_GLASS_PANE, 1, "&eXp Stored:", "&a%XP_STORED%/%MAX_XP_STORED%"));
-		config.addDefault("gui.main-menu.stored-empty", Utils.createItem(Material.GRAY_STAINED_GLASS_PANE, 1, "&eXp Stored:", "&a%XP_STORED%/%MAX_XP_STORED%"));
+		config.addDefault("gui.main-menu.stored-full", Utils.createItem(Material.valueOf("GREEN_STAINED_GLASS_PANE"), 1, "&eXp Stored:", "&a%XP_STORED%/%MAX_XP_STORED%"));
+		config.addDefault("gui.main-menu.stored-empty", Utils.createItem(Material.valueOf("GREEN_STAINED_GLASS_PANE"), 1, "&eXp Stored:", "&a%XP_STORED%/%MAX_XP_STORED%"));
 		
 		config.addDefault("gui.deposit-menu.name", "Deposit");
-		config.addDefault("gui.deposit-menu.25-percent", Utils.createItem(Material.GREEN_CONCRETE, 1, "&aDeposit 25%"));
-		config.addDefault("gui.deposit-menu.50-percent", Utils.createItem(Material.GREEN_CONCRETE, 1, "&aDeposit 50%"));
-		config.addDefault("gui.deposit-menu.75-percent", Utils.createItem(Material.GREEN_CONCRETE, 1, "&aDeposit 75%"));
-		config.addDefault("gui.deposit-menu.100-percent", Utils.createItem(Material.GREEN_CONCRETE, 1, "&aDeposit 100%"));
+		config.addDefault("gui.deposit-menu.25-percent", Utils.createItem(Material.valueOf("GREEN_CONCRETE"), 1, "&aDeposit 25%"));
+		config.addDefault("gui.deposit-menu.50-percent", Utils.createItem(Material.valueOf("GREEN_CONCRETE"), 1, "&aDeposit 50%"));
+		config.addDefault("gui.deposit-menu.75-percent", Utils.createItem(Material.valueOf("GREEN_CONCRETE"), 1, "&aDeposit 75%"));
+		config.addDefault("gui.deposit-menu.100-percent", Utils.createItem(Material.valueOf("GREEN_CONCRETE"), 1, "&aDeposit 100%"));
 		
 		config.addDefault("gui.deposit-menu.max", Utils.createItem(Material.EMERALD_BLOCK, 1, "&aDeposit max"));
 		
-		config.addDefault("gui.deposit-menu.1-level", Utils.createItem(Material.GREEN_WOOL, 1, "&aDeposit 1 level"));
-		config.addDefault("gui.deposit-menu.5-levels", Utils.createItem(Material.GREEN_WOOL, 1, "&aDeposit 5 levels"));
-		config.addDefault("gui.deposit-menu.10-levels", Utils.createItem(Material.GREEN_WOOL, 1, "&aDeposit 10 levels"));
-		config.addDefault("gui.deposit-menu.15-levels", Utils.createItem(Material.GREEN_WOOL, 1, "&aDeposit 15 levels"));
+		config.addDefault("gui.deposit-menu.1-level", Utils.createItem(Material.valueOf("GREEN_WOOL"), 1, "&aDeposit 1 level"));
+		config.addDefault("gui.deposit-menu.5-levels", Utils.createItem(Material.valueOf("GREEN_WOOL"), 1, "&aDeposit 5 levels"));
+		config.addDefault("gui.deposit-menu.10-levels", Utils.createItem(Material.valueOf("GREEN_WOOL"), 1, "&aDeposit 10 levels"));
+		config.addDefault("gui.deposit-menu.15-levels", Utils.createItem(Material.valueOf("GREEN_WOOL"), 1, "&aDeposit 15 levels"));
 		
 		
 		config.addDefault("gui.withdraw-menu.name", "Withdraw");
-		config.addDefault("gui.withdraw-menu.25-percent", Utils.createItem(Material.GREEN_CONCRETE, 1, "&aWithdraw 25%"));
-		config.addDefault("gui.withdraw-menu.50-percent", Utils.createItem(Material.GREEN_CONCRETE, 1, "&aWithdraw 50%"));
-		config.addDefault("gui.withdraw-menu.75-percent", Utils.createItem(Material.GREEN_CONCRETE, 1, "&aWithdraw 75%"));
-		config.addDefault("gui.withdraw-menu.100-percent", Utils.createItem(Material.GREEN_CONCRETE, 1, "&aWithdraw 100%"));
+		config.addDefault("gui.withdraw-menu.25-percent", Utils.createItem(Material.valueOf("GREEN_CONCRETE"), 1, "&aWithdraw 25%"));
+		config.addDefault("gui.withdraw-menu.50-percent", Utils.createItem(Material.valueOf("GREEN_CONCRETE"), 1, "&aWithdraw 50%"));
+		config.addDefault("gui.withdraw-menu.75-percent", Utils.createItem(Material.valueOf("GREEN_CONCRETE"), 1, "&aWithdraw 75%"));
+		config.addDefault("gui.withdraw-menu.100-percent", Utils.createItem(Material.valueOf("GREEN_CONCRETE"), 1, "&aWithdraw 100%"));
 		
 		config.addDefault("gui.withdraw-menu.max", Utils.createItem(Material.EMERALD_BLOCK, 1, "&aWithdraw max"));
 		
-		config.addDefault("gui.withdraw-menu.1-level", Utils.createItem(Material.GREEN_WOOL, 1, "&aWithdraw 1 level"));
-		config.addDefault("gui.withdraw-menu.5-levels", Utils.createItem(Material.GREEN_WOOL, 1, "&aWithdraw 5 levels"));
-		config.addDefault("gui.withdraw-menu.10-levels", Utils.createItem(Material.GREEN_WOOL, 1, "&aWithdraw 10 levels"));
-		config.addDefault("gui.withdraw-menu.15-levels", Utils.createItem(Material.GREEN_WOOL, 1, "&aWithdraw 15 levels"));
+		config.addDefault("gui.withdraw-menu.1-level", Utils.createItem(Material.valueOf("GREEN_WOOL"), 1, "&aWithdraw 1 level"));
+		config.addDefault("gui.withdraw-menu.5-levels", Utils.createItem(Material.valueOf("GREEN_WOOL"), 1, "&aWithdraw 5 levels"));
+		config.addDefault("gui.withdraw-menu.10-levels", Utils.createItem(Material.valueOf("GREEN_WOOL"), 1, "&aWithdraw 10 levels"));
+		config.addDefault("gui.withdraw-menu.15-levels", Utils.createItem(Material.valueOf("GREEN_WOOL"), 1, "&aWithdraw 15 levels"));
 		
 		
 		config.options().header(Main.getConfigHeader());

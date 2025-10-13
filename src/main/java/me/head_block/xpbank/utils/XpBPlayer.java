@@ -2,74 +2,52 @@ package me.head_block.xpbank.utils;
 
 import java.net.InetSocketAddress;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
-import org.bukkit.DyeColor;
+import org.bukkit.Achievement;
 import org.bukkit.Effect;
 import org.bukkit.EntityEffect;
-import org.bukkit.FluidCollisionMode;
 import org.bukkit.GameMode;
 import org.bukkit.Instrument;
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.NamespacedKey;
 import org.bukkit.Note;
-import org.bukkit.Particle;
 import org.bukkit.Server;
 import org.bukkit.Sound;
-import org.bukkit.SoundCategory;
 import org.bukkit.Statistic;
 import org.bukkit.WeatherType;
 import org.bukkit.World;
-import org.bukkit.WorldBorder;
-import org.bukkit.advancement.Advancement;
-import org.bukkit.advancement.AdvancementProgress;
-import org.bukkit.attribute.Attribute;
-import org.bukkit.attribute.AttributeInstance;
 import org.bukkit.block.Block;
-import org.bukkit.block.BlockFace;
-import org.bukkit.block.PistonMoveReaction;
-import org.bukkit.block.Sign;
-import org.bukkit.block.data.BlockData;
 import org.bukkit.conversations.Conversation;
 import org.bukkit.conversations.ConversationAbandonedEvent;
+import org.bukkit.entity.Arrow;
+import org.bukkit.entity.Egg;
 import org.bukkit.entity.Entity;
-import org.bukkit.entity.EntityCategory;
 import org.bukkit.entity.EntityType;
-import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
-import org.bukkit.entity.Pose;
 import org.bukkit.entity.Projectile;
-import org.bukkit.entity.SpawnCategory;
-import org.bukkit.entity.Villager;
-import org.bukkit.entity.memory.MemoryKey;
+import org.bukkit.entity.Snowball;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
 import org.bukkit.inventory.EntityEquipment;
-import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryView;
 import org.bukkit.inventory.InventoryView.Property;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.MainHand;
-import org.bukkit.inventory.Merchant;
 import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.map.MapView;
 import org.bukkit.metadata.MetadataValue;
 import org.bukkit.permissions.Permission;
 import org.bukkit.permissions.PermissionAttachment;
 import org.bukkit.permissions.PermissionAttachmentInfo;
-import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
-import org.bukkit.profile.PlayerProfile;
 import org.bukkit.scoreboard.Scoreboard;
-import org.bukkit.util.BoundingBox;
-import org.bukkit.util.RayTraceResult;
 import org.bukkit.util.Vector;
 
 import me.head_block.xpbank.Main;
@@ -192,41 +170,6 @@ public class XpBPlayer implements Player {
 	}
 
 	@Override
-	public boolean discoverRecipe(NamespacedKey arg0) {
-		return player.discoverRecipe(arg0);
-	}
-
-	@Override
-	public int discoverRecipes(Collection<NamespacedKey> arg0) {
-		return player.discoverRecipes(arg0);
-	}
-
-	@Override
-	public boolean dropItem(boolean arg0) {
-		return player.dropItem(arg0);
-	}
-
-	@Override
-	public float getAttackCooldown() {
-		return player.getAttackCooldown();
-	}
-
-	@Override
-	public Location getBedLocation() {
-		return player.getBedLocation();
-	}
-
-	@Override
-	public int getCooldown(Material arg0) {
-		return player.getCooldown(arg0);
-	}
-
-	@Override
-	public Set<NamespacedKey> getDiscoveredRecipes() {
-		return player.getDiscoveredRecipes();
-	}
-
-	@Override
 	public Inventory getEnderChest() {
 		return player.getEnderChest();
 	}
@@ -263,18 +206,8 @@ public class XpBPlayer implements Player {
 	}
 
 	@Override
-	public ItemStack getItemInUse() {
-		return player.getItemInUse();
-	}
-
-	@Override
 	public ItemStack getItemOnCursor() {
 		return player.getItemOnCursor();
-	}
-
-	@Override
-	public MainHand getMainHand() {
-		return player.getMainHand();
 	}
 
 	@Override
@@ -283,25 +216,8 @@ public class XpBPlayer implements Player {
 	}
 
 	@Override
-	public int getSaturatedRegenRate() {
-		return player.getSaturatedRegenRate();
-	}
-
-	@Override
 	public float getSaturation() {
 		return player.getSaturation();
-	}
-
-	@Override
-	@Deprecated
-	public Entity getShoulderEntityLeft() {
-		return player.getShoulderEntityLeft();
-	}
-
-	@Override
-	@Deprecated
-	public Entity getShoulderEntityRight() {
-		return player.getShoulderEntityRight();
 	}
 
 	@Override
@@ -310,33 +226,8 @@ public class XpBPlayer implements Player {
 	}
 
 	@Override
-	public int getStarvationRate() {
-		return player.getStarvationRate();
-	}
-
-	@Override
-	public int getUnsaturatedRegenRate() {
-		return player.getUnsaturatedRegenRate();
-	}
-
-	@Override
-	public boolean hasCooldown(Material arg0) {
-		return player.hasCooldown(arg0);
-	}
-
-	@Override
-	public boolean hasDiscoveredRecipe(NamespacedKey arg0) {
-		return player.hasDiscoveredRecipe(arg0);
-	}
-
-	@Override
 	public boolean isBlocking() {
 		return player.isBlocking();
-	}
-
-	@Override
-	public boolean isHandRaised() {
-		return player.isHandRaised();
 	}
 
 	@Override
@@ -355,23 +246,8 @@ public class XpBPlayer implements Player {
 	}
 
 	@Override
-	public InventoryView openMerchant(Villager arg0, boolean arg1) {
-		return player.openMerchant(arg0, arg1);
-	}
-
-	@Override
-	public InventoryView openMerchant(Merchant arg0, boolean arg1) {
-		return player.openMerchant(arg0, arg1);
-	}
-
-	@Override
 	public InventoryView openWorkbench(Location arg0, boolean arg1) {
 		return player.openWorkbench(arg0, arg1);
-	}
-
-	@Override
-	public void setCooldown(Material arg0, int arg1) {
-		player.setCooldown(arg0, arg1);
 	}
 
 	@Override
@@ -401,60 +277,13 @@ public class XpBPlayer implements Player {
 	}
 
 	@Override
-	public void setSaturatedRegenRate(int arg0) {
-		player.setSaturatedRegenRate(arg0);
-	}
-
-	@Override
 	public void setSaturation(float arg0) {
 		player.setSaturation(arg0);
 	}
 
 	@Override
-	@Deprecated
-	public void setShoulderEntityLeft(Entity arg0) {
-		player.setShoulderEntityLeft(arg0);
-	}
-
-	@Override
-	@Deprecated
-	public void setShoulderEntityRight(Entity arg0) {
-		player.setShoulderEntityRight(arg0);
-	}
-
-	@Override
-	public void setStarvationRate(int arg0) {
-		player.setStarvationRate(arg0);
-	}
-
-	@Override
-	public void setUnsaturatedRegenRate(int arg0) {
-		player.setUnsaturatedRegenRate(arg0);
-	}
-
-	@Override
 	public boolean setWindowProperty(Property arg0, int arg1) {
 		return player.setWindowProperty(arg0, arg1);
-	}
-
-	@Override
-	public boolean sleep(Location arg0, boolean arg1) {
-		return player.sleep(arg0, arg1);
-	}
-
-	@Override
-	public boolean undiscoverRecipe(NamespacedKey arg0) {
-		return player.undiscoverRecipe(arg0);
-	}
-
-	@Override
-	public int undiscoverRecipes(Collection<NamespacedKey> arg0) {
-		return player.undiscoverRecipes(arg0);
-	}
-
-	@Override
-	public void wakeup(boolean arg0) {
-		player.wakeup(arg0);
 	}
 
 	@Override
@@ -474,38 +303,13 @@ public class XpBPlayer implements Player {
 	}
 
 	@Override
-	public void attack(Entity arg0) {
-		player.attack(arg0);
-	}
-
-	@Override
 	public Collection<PotionEffect> getActivePotionEffects() {
 		return player.getActivePotionEffects();
 	}
 
 	@Override
-	public int getArrowCooldown() {
-		return player.getArrowCooldown();
-	}
-
-	@Override
-	public int getArrowsInBody() {
-		return player.getArrowsInBody();
-	}
-
-	@Override
 	public boolean getCanPickupItems() {
 		return player.getCanPickupItems();
-	}
-
-	@Override
-	public EntityCategory getCategory() {
-		return player.getCategory();
-	}
-
-	@Override
-	public Set<UUID> getCollidableExemptions() {
-		return player.getCollidableExemptions();
 	}
 
 	@Override
@@ -564,18 +368,8 @@ public class XpBPlayer implements Player {
 	}
 
 	@Override
-	public <T> T getMemory(MemoryKey<T> arg0) {
-		return player.getMemory(arg0);
-	}
-
-	@Override
 	public int getNoDamageTicks() {
 		return player.getNoDamageTicks();
-	}
-
-	@Override
-	public PotionEffect getPotionEffect(PotionEffectType arg0) {
-		return player.getPotionEffect(arg0);
 	}
 
 	@Override
@@ -593,20 +387,6 @@ public class XpBPlayer implements Player {
 		return player.getTargetBlock(arg0, arg1);
 	}
 
-	@Override
-	public Block getTargetBlockExact(int arg0) {
-		return player.getTargetBlockExact(arg0);
-	}
-
-	@Override
-	public Block getTargetBlockExact(int arg0, FluidCollisionMode arg1) {
-		return player.getTargetBlockExact(arg0, arg1);
-	}
-
-	@Override
-	public boolean hasAI() {
-		return player.hasAI();
-	}
 
 	@Override
 	public boolean hasLineOfSight(Entity arg0) {
@@ -619,53 +399,13 @@ public class XpBPlayer implements Player {
 	}
 
 	@Override
-	public boolean isClimbing() {
-		return player.isClimbing();
-	}
-
-	@Override
-	public boolean isCollidable() {
-		return player.isCollidable();
-	}
-
-	@Override
-	public boolean isGliding() {
-		return player.isGliding();
-	}
-
-	@Override
-	public boolean isInvisible() {
-		return player.isInvisible();
-	}
-
-	@Override
 	public boolean isLeashed() {
 		return player.isLeashed();
 	}
 
 	@Override
-	public boolean isRiptiding() {
-		return player.isRiptiding();
-	}
-
-	@Override
 	public boolean isSleeping() {
 		return player.isSleeping();
-	}
-
-	@Override
-	public boolean isSwimming() {
-		return player.isSwimming();
-	}
-
-	@Override
-	public RayTraceResult rayTraceBlocks(double arg0) {
-		return player.rayTraceBlocks(arg0);
-	}
-
-	@Override
-	public RayTraceResult rayTraceBlocks(double arg0, FluidCollisionMode arg1) {
-		return player.rayTraceBlocks(arg0, arg1);
 	}
 
 	@Override
@@ -675,38 +415,8 @@ public class XpBPlayer implements Player {
 	}
 
 	@Override
-	public void setAI(boolean arg0) {
-		player.setAI(arg0);
-	}
-
-	@Override
-	public void setArrowCooldown(int arg0) {
-		player.setArrowCooldown(arg0);
-	}
-
-	@Override
-	public void setArrowsInBody(int arg0) {
-		player.setArrowsInBody(arg0);
-	}
-
-	@Override
 	public void setCanPickupItems(boolean arg0) {
 		player.setCanPickupItems(arg0);
-	}
-
-	@Override
-	public void setCollidable(boolean arg0) {
-		player.setCollidable(arg0);
-	}
-
-	@Override
-	public void setGliding(boolean arg0) {
-		player.setGliding(arg0);
-	}
-
-	@Override
-	public void setInvisible(boolean arg0) {
-		player.setInvisible(arg0);
 	}
 
 	@Override
@@ -730,11 +440,6 @@ public class XpBPlayer implements Player {
 	}
 
 	@Override
-	public <T> void setMemory(MemoryKey<T> arg0, T arg1) {
-		player.setMemory(arg0, arg1);
-	}
-
-	@Override
 	public void setNoDamageTicks(int arg0) {
 		player.setNoDamageTicks(arg0);
 	}
@@ -750,26 +455,6 @@ public class XpBPlayer implements Player {
 	}
 
 	@Override
-	public void setSwimming(boolean arg0) {
-		player.setSwimming(arg0);
-	}
-
-	@Override
-	public void swingMainHand() {
-		player.swingMainHand();
-	}
-
-	@Override
-	public void swingOffHand() {
-		player.swingOffHand();
-	}
-
-	@Override
-	public AttributeInstance getAttribute(Attribute arg0) {
-		return player.getAttribute(arg0);
-	}
-
-	@Override
 	public void damage(double arg0) {
 		player.damage(arg0);
 	}
@@ -777,11 +462,6 @@ public class XpBPlayer implements Player {
 	@Override
 	public void damage(double arg0, Entity arg1) {
 		player.damage(arg0, arg1);
-	}
-
-	@Override
-	public double getAbsorptionAmount() {
-		return player.getAbsorptionAmount();
 	}
 
 	@Override
@@ -802,11 +482,6 @@ public class XpBPlayer implements Player {
 	}
 
 	@Override
-	public void setAbsorptionAmount(double arg0) {
-		player.setAbsorptionAmount(arg0);
-	}
-
-	@Override
 	public void setHealth(double arg0) {
 		player.setHealth(arg0);
 	}
@@ -818,33 +493,13 @@ public class XpBPlayer implements Player {
 	}
 
 	@Override
-	public boolean addPassenger(Entity arg0) {
-		return player.addPassenger(arg0);
-	}
-
-	@Override
-	public boolean addScoreboardTag(String arg0) {
-		return player.addScoreboardTag(arg0);
-	}
-
-	@Override
 	public boolean eject() {
 		return player.eject();
 	}
 
 	@Override
-	public BoundingBox getBoundingBox() {
-		return player.getBoundingBox();
-	}
-
-	@Override
 	public int getEntityId() {
 		return player.getEntityId();
-	}
-
-	@Override
-	public BlockFace getFacing() {
-		return player.getFacing();
 	}
 
 	@Override
@@ -855,16 +510,6 @@ public class XpBPlayer implements Player {
 	@Override
 	public int getFireTicks() {
 		return player.getFireTicks();
-	}
-
-	@Override
-	public int getFreezeTicks() {
-		return player.getFreezeTicks();
-	}
-
-	@Override
-	public double getHeight() {
-		return player.getHeight();
 	}
 
 	@Override
@@ -888,11 +533,6 @@ public class XpBPlayer implements Player {
 	}
 
 	@Override
-	public int getMaxFreezeTicks() {
-		return player.getMaxFreezeTicks();
-	}
-
-	@Override
 	public List<Entity> getNearbyEntities(double arg0, double arg1, double arg2) {
 		return player.getNearbyEntities(arg0, arg1, arg2);
 	}
@@ -904,38 +544,8 @@ public class XpBPlayer implements Player {
 	}
 
 	@Override
-	public List<Entity> getPassengers() {
-		return player.getPassengers();
-	}
-
-	@Override
-	public PistonMoveReaction getPistonMoveReaction() {
-		return player.getPistonMoveReaction();
-	}
-
-	@Override
-	public int getPortalCooldown() {
-		return player.getPortalCooldown();
-	}
-
-	@Override
-	public Pose getPose() {
-		return player.getPose();
-	}
-
-	@Override
-	public Set<String> getScoreboardTags() {
-		return player.getScoreboardTags();
-	}
-
-	@Override
 	public Server getServer() {
 		return player.getServer();
-	}
-
-	@Override
-	public SpawnCategory getSpawnCategory() {
-		return player.getSpawnCategory();
 	}
 
 	@Override
@@ -959,18 +569,8 @@ public class XpBPlayer implements Player {
 	}
 
 	@Override
-	public double getWidth() {
-		return player.getWidth();
-	}
-
-	@Override
 	public World getWorld() {
 		return player.getWorld();
-	}
-
-	@Override
-	public boolean hasGravity() {
-		return player.hasGravity();
 	}
 
 	@Override
@@ -989,48 +589,13 @@ public class XpBPlayer implements Player {
 	}
 
 	@Override
-	public boolean isFrozen() {
-		return player.isFrozen();
-	}
-
-	@Override
-	public boolean isGlowing() {
-		return player.isGlowing();
-	}
-
-	@Override
-	public boolean isInWater() {
-		return player.isInWater();
-	}
-
-	@Override
 	public boolean isInsideVehicle() {
 		return player.isInsideVehicle();
 	}
 
 	@Override
-	public boolean isInvulnerable() {
-		return player.isInvulnerable();
-	}
-
-	@Override
-	public boolean isPersistent() {
-		return player.isPersistent();
-	}
-
-	@Override
-	public boolean isSilent() {
-		return player.isSilent();
-	}
-
-	@Override
 	public boolean isValid() {
 		return player.isValid();
-	}
-
-	@Override
-	public boolean isVisualFire() {
-		return player.isVisualFire();
 	}
 
 	@Override
@@ -1049,16 +614,6 @@ public class XpBPlayer implements Player {
 	}
 
 	@Override
-	public boolean removePassenger(Entity arg0) {
-		return player.removePassenger(arg0);
-	}
-
-	@Override
-	public boolean removeScoreboardTag(String arg0) {
-		return player.removeScoreboardTag(arg0);
-	}
-
-	@Override
 	public void setCustomNameVisible(boolean arg0) {
 		player.setCustomNameVisible(arg0);
 	}
@@ -1074,26 +629,6 @@ public class XpBPlayer implements Player {
 	}
 
 	@Override
-	public void setFreezeTicks(int arg0) {
-		player.setFreezeTicks(arg0);
-	}
-
-	@Override
-	public void setGlowing(boolean arg0) {
-		player.setGlowing(arg0);
-	}
-
-	@Override
-	public void setGravity(boolean arg0) {
-		player.setGravity(arg0);
-	}
-
-	@Override
-	public void setInvulnerable(boolean arg0) {
-		player.setInvulnerable(arg0);		
-	}
-
-	@Override
 	public void setLastDamageCause(EntityDamageEvent arg0) {
 		player.setLastDamageCause(arg0);		
 	}
@@ -1105,26 +640,6 @@ public class XpBPlayer implements Player {
 	}
 
 	@Override
-	public void setPersistent(boolean arg0) {
-		player.setPersistent(arg0);	
-	}
-
-	@Override
-	public void setPortalCooldown(int arg0) {
-		player.setPortalCooldown(arg0);		
-	}
-
-	@Override
-	public void setRotation(float arg0, float arg1) {
-		player.setRotation(arg0, arg1);		
-	}
-
-	@Override
-	public void setSilent(boolean arg0) {
-		player.setSilent(arg0);		
-	}
-
-	@Override
 	public void setTicksLived(int arg0) {
 		player.setTicksLived(arg0);		
 	}
@@ -1132,11 +647,6 @@ public class XpBPlayer implements Player {
 	@Override
 	public void setVelocity(Vector arg0) {
 		player.setVelocity(arg0);		
-	}
-
-	@Override
-	public void setVisualFire(boolean arg0) {
-		player.setVisualFire(arg0);	
 	}
 
 	@Override
@@ -1182,16 +692,6 @@ public class XpBPlayer implements Player {
 	@Override
 	public void sendMessage(String... arg0) {
 		player.sendMessage(arg0);		
-	}
-
-	@Override
-	public void sendMessage(UUID arg0, String arg1) {
-		player.sendMessage(arg0, arg1);		
-	}
-
-	@Override
-	public void sendMessage(UUID arg0, String... arg1) {
-		player.sendMessage(arg0, arg1);		
 	}
 
 	@Override
@@ -1265,11 +765,6 @@ public class XpBPlayer implements Player {
 	}
 
 	@Override
-	public PersistentDataContainer getPersistentDataContainer() {
-		return player.getPersistentDataContainer();
-	}
-
-	@Override
 	public <T extends Projectile> T launchProjectile(Class<? extends T> arg0) {
 		return player.launchProjectile(arg0);
 	}
@@ -1302,11 +797,6 @@ public class XpBPlayer implements Player {
 	@Override
 	public boolean isConversing() {
 		return player.isConversing();
-	}
-
-	@Override
-	public void sendRawMessage(UUID arg0, String arg1) {
-		player.sendRawMessage(arg0, arg1);		
 	}
 
 	@Override
@@ -1352,11 +842,6 @@ public class XpBPlayer implements Player {
 	@Override
 	public Player getPlayer() {
 		return player.getPlayer();
-	}
-
-	@Override
-	public PlayerProfile getPlayerProfile() {
-		return player.getPlayerProfile();
 	}
 
 	@Override
@@ -1464,18 +949,7 @@ public class XpBPlayer implements Player {
 	}
 
 	@Override
-	public boolean breakBlock(Block arg0) {
-		return player.breakBlock(arg0);
-	}
-
-	@Override
 	public boolean canSee(Player arg0) {
-		return player.canSee(arg0);
-	}
-
-	@Override
-	@Deprecated
-	public boolean canSee(Entity arg0) {
 		return player.canSee(arg0);
 	}
 
@@ -1490,11 +964,6 @@ public class XpBPlayer implements Player {
 	}
 
 	@Override
-	public AdvancementProgress getAdvancementProgress(Advancement arg0) {
-		return player.getAdvancementProgress(arg0);
-	}
-
-	@Override
 	public boolean getAllowFlight() {
 		return player.getAllowFlight();
 	}
@@ -1502,11 +971,6 @@ public class XpBPlayer implements Player {
 	@Override
 	public Location getBedSpawnLocation() {
 		return player.getBedSpawnLocation();
-	}
-
-	@Override
-	public int getClientViewDistance() {
-		return player.getClientViewDistance();
 	}
 
 	@Override
@@ -1540,28 +1004,8 @@ public class XpBPlayer implements Player {
 	}
 
 	@Override
-	public String getLocale() {
-		return player.getLocale();
-	}
-
-	@Override
 	public String getName() {
 		return player.getName();
-	}
-
-	@Override
-	public int getPing() {
-		return player.getPing();
-	}
-
-	@Override
-	public String getPlayerListFooter() {
-		return player.getPlayerListFooter();
-	}
-
-	@Override
-	public String getPlayerListHeader() {
-		return player.getPlayerListHeader();
 	}
 
 	@Override
@@ -1585,11 +1029,6 @@ public class XpBPlayer implements Player {
 	}
 
 	@Override
-	public GameMode getPreviousGameMode() {
-		return player.getPreviousGameMode();
-	}
-
-	@Override
 	public Scoreboard getScoreboard() {
 		return player.getScoreboard();
 	}
@@ -1610,11 +1049,6 @@ public class XpBPlayer implements Player {
 	}
 
 	@Override
-	public WorldBorder getWorldBorder() {
-		return player.getWorldBorder();
-	}
-
-	@Override
 	public void giveExp(int arg0) {
 		player.giveExp(arg0);
 		
@@ -1628,24 +1062,8 @@ public class XpBPlayer implements Player {
 
 	@Override
 	@Deprecated
-	public void hideEntity(Plugin arg0, Entity arg1) {
-		player.hideEntity(arg0, arg1);		
-	}
-
-	@Override
-	@Deprecated
 	public void hidePlayer(Player arg0) {
 		player.hidePlayer(arg0);		
-	}
-
-	@Override
-	public void hidePlayer(Plugin arg0, Player arg1) {
-		player.hidePlayer(arg0, arg1);		
-	}
-
-	@Override
-	public boolean isAllowingServerListings() {
-		return player.isAllowingServerListings();
 	}
 
 	@Override
@@ -1696,16 +1114,6 @@ public class XpBPlayer implements Player {
 	}
 
 	@Override
-	public void openBook(ItemStack arg0) {
-		player.openBook(arg0);		
-	}
-
-	@Override
-	public void openSign(Sign arg0) {
-		player.openSign(arg0);		
-	}
-
-	@Override
 	public boolean performCommand(String arg0) {
 		return player.performCommand(arg0);
 	}
@@ -1743,26 +1151,6 @@ public class XpBPlayer implements Player {
 	}
 
 	@Override
-	public void playSound(Entity arg0, Sound arg1, float arg2, float arg3) {
-		player.playSound(arg0, arg1, arg2, arg3);		
-	}
-
-	@Override
-	public void playSound(Location arg0, Sound arg1, SoundCategory arg2, float arg3, float arg4) {
-		player.playSound(arg0, arg1, arg2, arg3, arg4);		
-	}
-
-	@Override
-	public void playSound(Location arg0, String arg1, SoundCategory arg2, float arg3, float arg4) {
-		player.playSound(arg0, arg1, arg2, arg3, arg4);		
-	}
-
-	@Override
-	public void playSound(Entity arg0, Sound arg1, SoundCategory arg2, float arg3, float arg4) {
-		player.playSound(arg0, arg1, arg2, arg3, arg4);		
-	}
-
-	@Override
 	public void resetPlayerTime() {
 		player.resetPlayerTime();		
 	}
@@ -1783,34 +1171,9 @@ public class XpBPlayer implements Player {
 	}
 
 	@Override
-	public void sendBlockChange(Location arg0, BlockData arg1) {
-		player.sendBlockChange(arg0, arg1);		
-	}
-
-	@Override
 	@Deprecated
 	public void sendBlockChange(Location arg0, Material arg1, byte arg2) {
 		player.sendBlockChange(arg0, arg1, arg2);		
-	}
-
-	@Override
-	public void sendBlockDamage(Location arg0, float arg1) {
-		player.sendBlockDamage(arg0, arg1);		
-	}
-
-	@Override
-	public void sendEquipmentChange(LivingEntity arg0, EquipmentSlot arg1, ItemStack arg2) {
-		player.sendEquipmentChange(arg0, arg1, arg2);		
-	}
-
-	@Override
-	public void sendExperienceChange(float arg0) {
-		player.sendExperienceChange(arg0);		
-	}
-
-	@Override
-	public void sendExperienceChange(float arg0, int arg1) {
-		player.sendExperienceChange(arg0, arg1);		
 	}
 
 	@Override
@@ -1829,25 +1192,9 @@ public class XpBPlayer implements Player {
 	}
 
 	@Override
-	public void sendSignChange(Location arg0, String[] arg1, DyeColor arg2) throws IllegalArgumentException {
-		player.sendSignChange(arg0, arg1, arg2);		
-	}
-
-	@Override
-	public void sendSignChange(Location arg0, String[] arg1, DyeColor arg2, boolean arg3)
-			throws IllegalArgumentException {
-		player.sendSignChange(arg0, arg1, arg2, arg3);		
-	}
-
-	@Override
 	@Deprecated
 	public void sendTitle(String arg0, String arg1) {
 		player.sendTitle(arg0, arg1);		
-	}
-
-	@Override
-	public void sendTitle(String arg0, String arg1, int arg2, int arg3, int arg4) {
-		player.sendTitle(arg0, arg1, arg2, arg3, arg4);		
 	}
 
 	@Override
@@ -1906,21 +1253,6 @@ public class XpBPlayer implements Player {
 	}
 
 	@Override
-	public void setPlayerListFooter(String arg0) {
-		player.setPlayerListFooter(arg0);		
-	}
-
-	@Override
-	public void setPlayerListHeader(String arg0) {
-		player.setPlayerListHeader(arg0);		
-	}
-
-	@Override
-	public void setPlayerListHeaderFooter(String arg0, String arg1) {
-		player.setPlayerListHeaderFooter(arg0, arg1);		
-	}
-
-	@Override
 	public void setPlayerListName(String arg0) {
 		player.setPlayerListName(arg0);		
 	}
@@ -1938,27 +1270,6 @@ public class XpBPlayer implements Player {
 	@Override
 	public void setResourcePack(String arg0) {
 		player.setResourcePack(arg0);		
-	}
-
-	@Override
-	public void setResourcePack(String arg0, byte[] arg1) {
-		player.setResourcePack(arg0, arg1);		
-	}
-
-	@Override
-	public void setResourcePack(String arg0, byte[] arg1, String arg2) {
-		player.setResourcePack(arg0, arg1, arg2);		
-	}
-
-	@Override
-	public void setResourcePack(String arg0, byte[] arg1, boolean arg2) {
-		player.setResourcePack(arg0, arg1, arg2);		
-	}
-
-	@Override
-	public void setResourcePack(String arg0, byte[] arg1, String arg2, boolean arg3) {
-		player.setResourcePack(arg0, arg1, arg2, arg3);
-		
 	}
 
 	@Override
@@ -2003,98 +1314,9 @@ public class XpBPlayer implements Player {
 	}
 
 	@Override
-	public void setWorldBorder(WorldBorder arg0) {
-		player.setWorldBorder(arg0);		
-	}
-
-	@Override
-	public void showDemoScreen() {
-		player.showDemoScreen();		
-	}
-
-	@Override
-	@Deprecated
-	public void showEntity(Plugin arg0, Entity arg1) {
-		player.showEntity(arg0, arg1);		
-	}
-
-	@Override
 	@Deprecated
 	public void showPlayer(Player arg0) {
 		player.showPlayer(arg0);		
-	}
-
-	@Override
-	public void showPlayer(Plugin arg0, Player arg1) {
-		player.showPlayer(arg0, arg1);		
-	}
-
-	@Override
-	public void spawnParticle(Particle arg0, Location arg1, int arg2) {
-		player.spawnParticle(arg0, arg1, arg2);
-		
-	}
-
-	@Override
-	public <T> void spawnParticle(Particle arg0, Location arg1, int arg2, T arg3) {
-		player.spawnParticle(arg0, arg1, arg2, arg3);
-	}
-
-	@Override
-	public void spawnParticle(Particle arg0, double arg1, double arg2, double arg3, int arg4) {
-		player.spawnParticle(arg0, arg1, arg2, arg3, arg4);		
-	}
-
-	@Override
-	public <T> void spawnParticle(Particle arg0, double arg1, double arg2, double arg3, int arg4, T arg5) {
-		player.spawnParticle(arg0, arg1, arg2, arg3, arg4, arg5);		
-	}
-
-	@Override
-	public void spawnParticle(Particle arg0, Location arg1, int arg2, double arg3, double arg4, double arg5) {
-		player.spawnParticle(arg0, arg1, arg2, arg3, arg4, arg5);
-	}
-
-	@Override
-	public <T> void spawnParticle(Particle arg0, Location arg1, int arg2, double arg3, double arg4, double arg5,
-			T arg6) {
-		player.spawnParticle(arg0, arg1, arg2, arg3, arg4, arg5, arg6);		
-	}
-
-	@Override
-	public void spawnParticle(Particle arg0, Location arg1, int arg2, double arg3, double arg4, double arg5,
-			double arg6) {
-		player.spawnParticle(arg0, arg1, arg2, arg3, arg4, arg5, arg6);		
-	}
-
-	@Override
-	public void spawnParticle(Particle arg0, double arg1, double arg2, double arg3, int arg4, double arg5, double arg6,
-			double arg7) {
-		player.spawnParticle(arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7);		
-	}
-
-	@Override
-	public <T> void spawnParticle(Particle arg0, Location arg1, int arg2, double arg3, double arg4, double arg5,
-			double arg6, T arg7) {
-		player.spawnParticle(arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7);		
-	}
-
-	@Override
-	public <T> void spawnParticle(Particle arg0, double arg1, double arg2, double arg3, int arg4, double arg5,
-			double arg6, double arg7, T arg8) {
-		player.spawnParticle(arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8);		
-	}
-
-	@Override
-	public void spawnParticle(Particle arg0, double arg1, double arg2, double arg3, int arg4, double arg5, double arg6,
-			double arg7, double arg8) {
-		player.spawnParticle(arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8);		
-	}
-
-	@Override
-	public <T> void spawnParticle(Particle arg0, double arg1, double arg2, double arg3, int arg4, double arg5,
-			double arg6, double arg7, double arg8, T arg9) {
-		player.spawnParticle(arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9);		
 	}
 
 	@Override
@@ -2103,39 +1325,108 @@ public class XpBPlayer implements Player {
 	}
 
 	@Override
-	public void stopAllSounds() {
-		player.stopAllSounds();		
-	}
-
-	@Override
-	public void stopSound(Sound arg0) {
-		player.stopSound(arg0);		
-	}
-
-	@Override
-	public void stopSound(String arg0) {
-		player.stopSound(arg0);		
-	}
-
-	@Override
-	public void stopSound(Sound arg0, SoundCategory arg1) {
-		player.stopSound(arg0, arg1);		
-	}
-
-	@Override
-	public void stopSound(String arg0, SoundCategory arg1) {
-		player.stopSound(arg0, arg1);		
-	}
-
-	@Override
-	public void updateCommands() {
-		player.updateCommands();
-		
-	}
-
-	@Override
 	public void updateInventory() {
 		player.updateInventory();		
+	}
+
+	@Override
+	public List<Block> getLineOfSight(HashSet<Byte> transparent, int maxDistance) {
+		return player.getLineOfSight(transparent, maxDistance);
+	}
+
+	@Override
+	public Block getTargetBlock(HashSet<Byte> transparent, int maxDistance) {
+		return player.getTargetBlock(transparent, maxDistance);
+	}
+
+	@Override
+	public List<Block> getLastTwoTargetBlocks(HashSet<Byte> transparent, int maxDistance) {
+		return player.getLastTwoTargetBlocks(transparent, maxDistance);
+	}
+
+	@Override
+	public Egg throwEgg() {
+		return player.throwEgg();
+	}
+
+	@Override
+	public Snowball throwSnowball() {
+		return player.throwSnowball();
+	}
+
+	@Override
+	public Arrow shootArrow() {
+		return player.shootArrow();
+	}
+
+	@Override
+	public int _INVALID_getLastDamage() {
+		return player._INVALID_getLastDamage();
+	}
+
+	@Override
+	public void _INVALID_setLastDamage(int damage) {
+		player._INVALID_setLastDamage(damage);
+	}
+
+	@Override
+	public void _INVALID_damage(int amount) {
+		player._INVALID_damage(amount);
+	}
+
+	@Override
+	public void _INVALID_damage(int amount, Entity source) {
+		player._INVALID_damage(amount, source);
+	}
+
+	@Override
+	public int _INVALID_getHealth() {
+		return player._INVALID_getHealth();
+	}
+
+	@Override
+	public void _INVALID_setHealth(int health) {
+		player._INVALID_setHealth(health);
+	}
+
+	@Override
+	public int _INVALID_getMaxHealth() {
+		return player._INVALID_getMaxHealth();
+	}
+
+	@Override
+	public void _INVALID_setMaxHealth(int health) {
+		player._INVALID_setMaxHealth(health);
+	}
+
+	@Override
+	public void setBanned(boolean banned) {
+		player.setBanned(banned);
+	}
+
+	@Override
+	public boolean sendChunkChange(Location loc, int sx, int sy, int sz, byte[] data) {
+		return player.sendChunkChange(loc, sx, sy, sz, data);
+	}
+
+	@Override
+	public void sendBlockChange(Location loc, int material, byte data) {
+		player.sendBlockChange(loc, material, data);
+	}
+
+	@Override
+	public void awardAchievement(Achievement achievement) {
+		player.awardAchievement(achievement);
+	}
+
+	@Override
+	public void removeAchievement(Achievement achievement) {
+		player.removeAchievement(achievement);
+	}
+
+	@Override
+	public boolean hasAchievement(Achievement achievement) {
+		return player.hasAchievement(achievement);
 	}
 	
 	
