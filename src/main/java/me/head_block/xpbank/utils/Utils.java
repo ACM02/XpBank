@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.bukkit.Bukkit;
@@ -101,18 +102,12 @@ public class Utils {
 	public static void save(Object o, File f) {
         try {
             FileOutputStream   stream = new FileOutputStream(f.getAbsoluteFile());
-            ObjectOutputStream output = new ObjectOutputStream(stream);
-            output.writeObject(o);
-            output.close();
-            return;
+            try (ObjectOutputStream output = new ObjectOutputStream(stream)) {
+                output.writeObject(o);
+            }
         }
-        catch(NullPointerException e) {
+        catch(NullPointerException | IOException e) {
             e.printStackTrace();
-            return;
-        }
-        catch (IOException e) {
-            e.printStackTrace();
-            return;
         }
 	}
 	
@@ -124,51 +119,24 @@ public class Utils {
 	public static Object load(File f) {
         try {
             FileInputStream   stream = new FileInputStream(f.getAbsolutePath());
-            ObjectInputStream input  = new ObjectInputStream(stream);
-            Object object = input.readObject();
-            input.close();
+            Object object;
+            try (ObjectInputStream input = new ObjectInputStream(stream)) {
+                object = input.readObject();
+            }
             return object;            
         }
-        catch (IOException e) {
+        catch (IOException | ClassNotFoundException e) {
         	Bukkit.broadcastMessage("Error loading" + e.getMessage());
             return null;
-        } catch (ClassNotFoundException e) {
-        	Bukkit.broadcastMessage("Error loading" + e.getMessage());
-        	return null;
-		}
-	}
-	
-	
-    /**
-     * An efficient implementation of a bubble sort algorithm, it will sort the list into ascending order. No longer used.
-     * 
-     * @param list the List to sort
-     */
-    public static void bubbleSort(ArrayList<String> list) {
-        if (list == null) return;                   // error check
-        boolean sorted = true;                      // flag to stop or not
-        for (int i = list.size()-1; i >= 0; i--) {  // traverse list
-            sorted = true;                          // assume sorted
-            for (int j = 0; j < i; j++) {           // traverse again
-                String item1 = list.get(j);  
-                String item2 = list.get(j+1);
-                if (Main.xps.get(list.get(j)) < Main.xps.get(list.get(j+1))) {   // out of order
-                    sorted = false;                 // flag no sorted
-                    list.set(j, item2);             // swap positions
-                    list.set(j+1, item1);
-                } 
-            }
-            if (sorted) return;                     // return early
         }
-    }
-    
+	} 
     
     /**
      * A public diver method for the merge sort, takes in an "int[]" and sorts it using the merge method
      * @param toSort toSort The "int[]" to be passed into the merge sort. toSort will be modified as it will be sorted in place.
      */
     public static void mergeSort(ArrayList<String> toSort) {
-        mergeSort(toSort, new ArrayList<String>(), 0, toSort.size()-1);
+        mergeSort(toSort, new ArrayList<>(), 0, toSort.size()-1);
     }
 
     /**
@@ -272,17 +240,14 @@ public class Utils {
 			meta.setDisplayName(displayName);
 		}
 		if (!(lore.length == 1 && lore[0] == "")) {
-			ArrayList<String> loreList = new ArrayList<String>();
-			for (String s : lore) {
-				loreList.add(s);
-			}
+			ArrayList<String> loreList = new ArrayList<>();
+			loreList.addAll(Arrays.asList(lore));
 			meta.setLore(loreList);
 		}
 		toReturn.setItemMeta(meta);
 		return toReturn;
 	}
 	
-	@SuppressWarnings("deprecation")
 	public static ItemStack createItem(Material type, short damage, int count, String displayName, String...lore) {
 		ItemStack toReturn = new ItemStack(type, count, damage);
 		ItemMeta meta = toReturn.getItemMeta();
@@ -290,10 +255,8 @@ public class Utils {
 			meta.setDisplayName(displayName);
 		}
 		if (!(lore.length == 1 && lore[0] == "")) {
-			ArrayList<String> loreList = new ArrayList<String>();
-			for (String s : lore) {
-				loreList.add(s);
-			}
+			ArrayList<String> loreList = new ArrayList<>();
+			loreList.addAll(Arrays.asList(lore));
 			meta.setLore(loreList);
 		}
 		toReturn.setItemMeta(meta);
@@ -303,10 +266,8 @@ public class Utils {
 	public static ItemStack setLore(ItemStack i, String...lore) {
 		ItemMeta meta = i.getItemMeta();
 		if (!(lore.length == 1 && lore[0] == "")) {
-			ArrayList<String> loreList = new ArrayList<String>();
-			for (String s : lore) {
-				loreList.add(s);
-			}
+			ArrayList<String> loreList = new ArrayList<>();
+			loreList.addAll(Arrays.asList(lore));
 			meta.setLore(loreList);
 		}
 		i.setItemMeta(meta);
@@ -316,7 +277,7 @@ public class Utils {
 	public static ItemStack setLore(ItemStack item, List<String> lore) {
 		ItemMeta meta = item.getItemMeta();
 		if (lore == null || lore.isEmpty()) return item;
-		ArrayList<String> loreList = new ArrayList<String>();
+		ArrayList<String> loreList = new ArrayList<>();
 		for (String s : lore) {
 			loreList.add(s);
 		}
@@ -332,7 +293,7 @@ public class Utils {
 		if (meta.hasLore()) {
 			loreList = meta.getLore();
 		} else {
-			loreList = new ArrayList<String>();
+			loreList = new ArrayList<>();
 		}
 		loreList.set(line, lore);
 		meta.setLore(loreList);
@@ -354,12 +315,10 @@ public class Utils {
 			if (meta.hasLore()) {
 				loreList = meta.getLore();
 			} else {
-				loreList = new ArrayList<String>();
+				loreList = new ArrayList<>();
 			}
 
-			for (String s : lore) {
-				loreList.add(s);
-			}
+			loreList.addAll(Arrays.asList(lore));
 			meta.setLore(loreList);
 		}
 		i.setItemMeta(meta);

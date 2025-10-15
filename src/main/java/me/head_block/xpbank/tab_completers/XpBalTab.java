@@ -16,15 +16,15 @@ public class XpBalTab implements TabCompleter {
 	public XpBalTab(Main plugin) {
 		plugin.getCommand("xpbal").setTabCompleter(this);
 	}
-	
+
 	@Override
 	public List<String> onTabComplete(CommandSender sender, Command cmd, String label, String[] args) {
 		if (!sender.hasPermission("xpbank.use")) {
-			return new ArrayList<String>();
+			return new ArrayList<>();
 		}
-		List<String> toReturn = new ArrayList<String>();
+		List<String> toReturn = new ArrayList<>();
 		if (args.length == 1) {
-			List<String> args1 = new ArrayList<String>();
+			List<String> args1 = new ArrayList<>();
 			for (Player p : Bukkit.getOnlinePlayers()) {
 				args1.add(p.getName());
 			}
@@ -33,7 +33,7 @@ public class XpBalTab implements TabCompleter {
 					toReturn.add(a);
 				}
 			}
-			return toReturn;	
+			return toReturn;
 		}
 		return toReturn;
 	}

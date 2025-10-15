@@ -56,11 +56,10 @@ public class TopXp implements CommandExecutor {
 	 * @return the sorted list
 	 */
 	public static ArrayList<String> getTopBals(int numBals) {
-		ArrayList<String> toReturn = new ArrayList<String>();
+		ArrayList<String> toReturn = new ArrayList<>();
 		for (String s : Main.xps.keySet()) {
 			toReturn.add(s);
 		}
-		//Utils.bubbleSort(toReturn);
 		Utils.mergeSort(toReturn);
 		while (toReturn.size() > numBals) {
 			toReturn.remove(toReturn.size()-1);

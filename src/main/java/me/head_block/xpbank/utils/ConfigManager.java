@@ -5,7 +5,7 @@ import me.head_block.xpbank.Main;
 public abstract class ConfigManager {
 
 	public abstract void initConfig();
-	
+
 	public static final String CONFIG_HEADER = "XpBank version " + Main.instance.getDescription().getVersion() + "\n"
 			+ "Spigot page: https://www.spigotmc.org/resources/xpbank.101132/\n"
 			+ "\n"
@@ -46,5 +46,5 @@ public abstract class ConfigManager {
 			+ "gui.<menu>.<value>: All other entries of this format are the respective items held in that menu\n"
 			+ "----- More info -----\n"
 			+ "For more information visit the XpBank wiki at https://github.com/ACM02/XpBank/wiki";
-	
+
 }

@@ -84,11 +84,13 @@ public class XpBPlayer implements Player {
 		else return -1;
 	}
 	
+	@Override
 	public boolean hasPermission(String perm) {
 		if (player != null) return player.hasPermission(perm);
 		else return false;
 	}
 	
+	@Override
 	public UUID getUniqueId() {
 		if (player != null) return player.getUniqueId();
 		else return null;

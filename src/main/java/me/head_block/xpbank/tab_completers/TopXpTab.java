@@ -14,10 +14,10 @@ public class TopXpTab implements TabCompleter {
 	public TopXpTab(Main plugin) {
 		plugin.getCommand("topxp").setTabCompleter(this);
 	}
-	
+
 	@Override
 	public List<String> onTabComplete(CommandSender sender, Command cmd, String label, String[] args) {
-		return new ArrayList<String>();
+		return new ArrayList<>();
 	}
 
 }

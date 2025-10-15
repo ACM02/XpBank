@@ -4,9 +4,9 @@ import java.util.Set;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
+import org.bukkit.event.Event.Result;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.Event.Result;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryDragEvent;
 
@@ -16,19 +16,20 @@ import me.head_block.xpbank.ui.DepositMenu;
 public class DepositMenuClick implements Listener {
 
 	@SuppressWarnings("unused")
-	private Main plugin;
-	
+	private final Main plugin;
+
 	public DepositMenuClick(Main plugin) {
 		this.plugin = plugin;
-		
+
 		Bukkit.getPluginManager().registerEvents(this, plugin);
 	}
-	
+
 	@EventHandler
 	public void onClick(InventoryClickEvent e) {
-		if (e.getInventory() == null || e.getClickedInventory() == null) return;
+		if (e.getInventory() == null || e.getClickedInventory() == null)
+			return;
 		if (e.getAction().name().equals("MOVE_TO_OTHER_INVENTORY") &&
-			e.getView().getTitle().equals(DepositMenu.INV_NAME)) {
+				e.getView().getTitle().equals(DepositMenu.INV_NAME)) {
 			e.setResult(Result.DENY);
 		}
 		if (e.getRawSlot() < DepositMenu.INV_SIZE && e.getView().getTitle().equals(DepositMenu.INV_NAME)) {
@@ -41,7 +42,7 @@ public class DepositMenuClick implements Listener {
 			}
 		}
 	}
-	
+
 	@EventHandler
 	public void onInventoryDrag(InventoryDragEvent e) {
 		if (e.getView().getTitle().equals(DepositMenu.INV_NAME)) {
@@ -57,10 +58,10 @@ public class DepositMenuClick implements Listener {
 				}
 			}
 			if (highestSlot < DepositMenu.INV_SIZE ||
-				lowestSlot < DepositMenu.INV_SIZE) {
+					lowestSlot < DepositMenu.INV_SIZE) {
 				e.setResult(Result.DENY);
 			}
 		}
 	}
-	
+
 }
