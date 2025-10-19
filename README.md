@@ -9,4 +9,3 @@ If you wish to contribute or just build the code for yourself here is the releva
 - This plugin is built using [maven](https://maven.apache.org/)
   - To build you can do `mvn package`
   - To clean your environment do `mvn clean`
-- Due to the way the soft dependency on [PlaceholderAPI](https://www.spigotmc.org/resources/placeholderapi.6245/) you may have to run the following command to have maven recognize the jar file: `mvn install:install-file -Dfile=lib/PlaceholderAPI-2.11.2.jar -DgroupId=com.example -DartifactId=placeholderAPI -Dversion=2.11.2 -Dpackaging=jar`
