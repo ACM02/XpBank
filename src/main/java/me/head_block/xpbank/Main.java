@@ -79,8 +79,7 @@ public class Main extends JavaPlugin {
 	 * like only some cases, and hard to debug...)
 	 * xpbank info message (New version not being set right because update checker
 	 * is Async)
-	 * 1.8-1.12 version support (Material.GRAY_GLASS_PANE) throws errors because not
-	 * legacy items
+	 * Config validation (if missing values plugin doesn't load due to null errors, such as DepositMenu:41)
 	 * 
 	 * Future plans:
 	 * More in-depth permissions
