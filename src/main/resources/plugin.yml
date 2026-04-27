@@ -1,7 +1,7 @@
 name: XpBank
 main: me.head_block.xpbank.Main
 description: Xp Banking System
-version: 1.13
+version: 1.13.1
 author: McCloud
 softdepend: [PlaceholderAPI]
 
