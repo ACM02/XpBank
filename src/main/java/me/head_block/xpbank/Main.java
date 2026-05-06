@@ -3,6 +3,7 @@ package me.head_block.xpbank;
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.Set;
 import java.util.logging.Level;
 
@@ -79,7 +80,8 @@ public class Main extends JavaPlugin {
 	 * like only some cases, and hard to debug...)
 	 * xpbank info message (New version not being set right because update checker
 	 * is Async)
-	 * Config validation (if missing values plugin doesn't load due to null errors, such as DepositMenu:41)
+	 * Config validation (if missing values plugin doesn't load due to null errors,
+	 * such as DepositMenu:41)
 	 * 
 	 * Future plans:
 	 * More in-depth permissions
@@ -102,7 +104,6 @@ public class Main extends JavaPlugin {
 	 * 
 	 */
 
-	@SuppressWarnings("unchecked")
 	@Override
 	public void onEnable() {
 		instance = this;
@@ -110,12 +111,20 @@ public class Main extends JavaPlugin {
 		File xps_old = new File(dir, "xps.dat");
 		File xps_new = new File(dir, "xps.yml");
 
+		xps = null;
 		if (xps_new.exists()) { // Backwards compatibility with old file storage format
 			xps = loadXpsFile();
 		} else if (xps_old.exists()) {
-			xps = (HashMap<String, Integer>) Utils.load(new File(dir, "xps.dat"));
-		} else {
-			xps = null;
+			// Type safe conversion of Object into HashMap<String, Integer>
+			Object loaded = Utils.load(new File(dir, "xps.dat"));
+			if (loaded instanceof HashMap<?, ?> map) {
+				xps = new HashMap<>();
+				for (Map.Entry<?, ?> entry : map.entrySet()) {
+					if (entry.getKey() instanceof String key && entry.getValue() instanceof Integer value) {
+						xps.put(key, value);
+					}
+				}
+			}
 		}
 
 		if (!dir.exists())
@@ -126,7 +135,8 @@ public class Main extends JavaPlugin {
 		}
 
 		String serverVersion = getServerVersion();
-		if (serverVersion.contains("1.20") || serverVersion.contains("1.19") || serverVersion.contains("1.18")
+		if (serverVersion.contains("1.21") || serverVersion.contains("1.20") || serverVersion.contains("1.19")
+				|| serverVersion.contains("1.18")
 				|| serverVersion.contains("1.17") || serverVersion.contains("1.16") || serverVersion.contains("1.15")
 				|| serverVersion.contains("1.14") || serverVersion.contains("1.13")) {
 			configManager = new Config_1_13();
@@ -148,39 +158,21 @@ public class Main extends JavaPlugin {
 			new XpBankDebug(this);
 		}
 
-		MAX_XP_STORED = getConfig().getInt("maxXpStored");
-		if (MAX_XP_STORED >= 2000000000) {
-			MAX_LEVEL_STORED = 21099; // Default max, just saving computation, same value as Utils.level(2000000000)
-			MAX_XP_STORED = 2000000000;
-		} else if (MAX_XP_STORED < 1) {
-			MAX_LEVEL_STORED = 21099; // Default max, just saving computation, same value as Utils.level(2000000000)
-			MAX_XP_STORED = 2000000000;
-		} else {
-			MAX_LEVEL_STORED = Utils.level(MAX_XP_STORED);
-		}
+		FileConfiguration config = getConfig();
+		this.load_max_stored(config);
+		this.load_max_held(config);
 
-		MAX_XP_HELD = getConfig().getInt("maxXpHeld");
-		if (MAX_XP_HELD >= 2000000000) {
-			MAX_LEVEL_HELD = 21099; // Default max, just saving computation, same value as Utils.level(2000000000)
-			MAX_XP_HELD = 2000000000;
-		} else if (MAX_XP_HELD < 1) {
-			MAX_LEVEL_HELD = 21099; // Default max, just saving computation, same value as Utils.level(2000000000)
-			MAX_XP_HELD = 2000000000;
-		} else {
-			MAX_LEVEL_HELD = Utils.level(MAX_XP_HELD);
-		}
-
-		NO_PERM_MESSAGE = ChatColor.translateAlternateColorCodes('&', getConfig().getString("messages.noPermission"));
+		NO_PERM_MESSAGE = ChatColor.translateAlternateColorCodes('&', config.getString("messages.noPermission"));
 		IMPROPER_USE_MESSAGE = ChatColor.translateAlternateColorCodes('&',
-				getConfig().getString("messages.improperUse"));
+				config.getString("messages.improperUse"));
 		EXCEEDS_HOLD_LIMIT = ChatColor.translateAlternateColorCodes('&',
-				getConfig().getString("messages.exeeds-hold-limit"));
+				config.getString("messages.exeeds-hold-limit"));
 		EXCEEDS_STORE_LIMIT_TARGET = ChatColor.translateAlternateColorCodes('&',
-				getConfig().getString("messages.exeeds-store-limit-target"));
+				config.getString("messages.exeeds-store-limit-target"));
 		EXCEEDS_STORE_LIMIT = ChatColor.translateAlternateColorCodes('&',
-				getConfig().getString("messages.exceeds-store-limit"));
+				config.getString("messages.exceeds-store-limit"));
 
-		GUI_ENABLED = getConfig().getBoolean("guiMenu");
+		GUI_ENABLED = config.getBoolean("guiMenu");
 
 		newestVersion = getDescription().getVersion();
 		new UpdateChecker(this, 101132).getVersion(version -> {
@@ -194,7 +186,6 @@ public class Main extends JavaPlugin {
 
 		new Xp(this);
 		new XpTab(this);
-		FileConfiguration config = this.getConfig();
 		if (config.getBoolean("seePlayerBalances")) {
 			new XpBal(this);
 			new XpBalTab(this);
@@ -218,23 +209,6 @@ public class Main extends JavaPlugin {
 		WithdrawMenu.init();
 		new WithdrawMenuClick(this);
 		new UpdateAvailableMessage(this);
-	}
-
-	private HashMap<String, Integer> loadXpsFile() {
-		HashMap<String, Integer> toReturn = null;
-
-		File xp_file = new File(getDataFolder(), "xps.yml");
-		if (!xp_file.exists())
-			return toReturn;
-
-		FileConfiguration xp_config = YamlConfiguration.loadConfiguration(xp_file);
-		toReturn = new HashMap<>();
-
-		Set<String> keys = xp_config.getKeys(false);
-		for (String key : keys) {
-			toReturn.put(key, xp_config.getInt(key));
-		}
-		return toReturn;
 	}
 
 	@Override
@@ -266,10 +240,24 @@ public class Main extends JavaPlugin {
 
 	}
 
-	public void reloadValues() {
-		configManager.initConfig();
+	private HashMap<String, Integer> loadXpsFile() {
+		HashMap<String, Integer> toReturn = null;
 
-		FileConfiguration config = this.getConfig();
+		File xp_file = new File(getDataFolder(), "xps.yml");
+		if (!xp_file.exists())
+			return toReturn;
+
+		FileConfiguration xp_config = YamlConfiguration.loadConfiguration(xp_file);
+		toReturn = new HashMap<>();
+
+		Set<String> keys = xp_config.getKeys(false);
+		for (String key : keys) {
+			toReturn.put(key, xp_config.getInt(key));
+		}
+		return toReturn;
+	}
+
+	private void load_max_stored(FileConfiguration config) {
 		MAX_XP_STORED = config.getInt("maxXpStored");
 		if (MAX_XP_STORED >= 2000000000) {
 			MAX_LEVEL_STORED = 21099; // Default max, just saving computation, same value as Utils.level(2000000000)
@@ -280,7 +268,9 @@ public class Main extends JavaPlugin {
 		} else {
 			MAX_LEVEL_STORED = Utils.level(MAX_XP_STORED);
 		}
+	}
 
+	private void load_max_held(FileConfiguration config) {
 		MAX_XP_HELD = config.getInt("maxXpHeld");
 		if (MAX_XP_HELD >= 2000000000) {
 			MAX_LEVEL_HELD = 21099; // Default max, just saving computation, same value as Utils.level(2000000000)
@@ -291,6 +281,14 @@ public class Main extends JavaPlugin {
 		} else {
 			MAX_LEVEL_HELD = Utils.level(MAX_XP_HELD);
 		}
+	}
+
+	private void reloadValues() {
+		configManager.initConfig();
+
+		FileConfiguration config = this.getConfig();
+		this.load_max_stored(config);
+		this.load_max_held(config);
 
 		NO_PERM_MESSAGE = ChatColor.translateAlternateColorCodes('&', config.getString("messages.noPermission"));
 		IMPROPER_USE_MESSAGE = ChatColor.translateAlternateColorCodes('&', config.getString("messages.improperUse"));

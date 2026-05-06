@@ -14,7 +14,7 @@ public class XpBal implements CommandExecutor {
 	public XpBal(Main plugin) {
 		plugin.getCommand("xpbal").setExecutor(this);
 	}
-	
+
 	@SuppressWarnings("deprecation")
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
@@ -28,7 +28,8 @@ public class XpBal implements CommandExecutor {
 			} else if (!Main.xps.containsKey(offline.getUniqueId().toString())) {
 				sender.sendMessage(ChatColor.RED + "Player has no balance");
 			} else if (Main.xps.containsKey(offline.getUniqueId().toString())) {
-				sender.sendMessage(ChatColor.YELLOW + offline.getName() + "'s stored xp is: " + Main.xps.get(offline.getUniqueId().toString()));
+				sender.sendMessage(ChatColor.YELLOW + offline.getName() + "'s stored xp is: "
+						+ Main.xps.get(offline.getUniqueId().toString()));
 			}
 		} else {
 			sender.sendMessage(Main.IMPROPER_USE_MESSAGE + " /xpbal <player>");

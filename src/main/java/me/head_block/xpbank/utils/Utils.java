@@ -133,13 +133,14 @@ public class Utils {
 		}
 	}
 
+	// TODO: Test lore generation since changing lore[0] == "" to lore[0].equals("")
 	public static ItemStack createItem(Material type, int count, String displayName, String... lore) {
 		ItemStack toReturn = new ItemStack(type, count);
 		ItemMeta meta = toReturn.getItemMeta();
 		if (displayName != null) {
 			meta.setDisplayName(displayName);
 		}
-		if (!(lore.length == 1 && lore[0] == "")) {
+		if (!(lore.length == 1 && lore[0].equals(""))) {
 			ArrayList<String> loreList = new ArrayList<>();
 			loreList.addAll(Arrays.asList(lore));
 			meta.setLore(loreList);
@@ -154,7 +155,7 @@ public class Utils {
 		if (displayName != null) {
 			meta.setDisplayName(displayName);
 		}
-		if (!(lore.length == 1 && lore[0] == "")) {
+		if (!(lore.length == 1 && lore[0].equals(""))) {
 			ArrayList<String> loreList = new ArrayList<>();
 			loreList.addAll(Arrays.asList(lore));
 			meta.setLore(loreList);
@@ -165,7 +166,7 @@ public class Utils {
 
 	public static ItemStack setLore(ItemStack i, String... lore) {
 		ItemMeta meta = i.getItemMeta();
-		if (!(lore.length == 1 && lore[0] == "")) {
+		if (!(lore.length == 1 && lore[0].equals(""))) {
 			ArrayList<String> loreList = new ArrayList<>();
 			loreList.addAll(Arrays.asList(lore));
 			meta.setLore(loreList);
@@ -211,7 +212,7 @@ public class Utils {
 
 	public static ItemStack addLore(ItemStack i, String... lore) {
 		ItemMeta meta = i.getItemMeta();
-		if (!(lore.length == 1 && lore[0] == "")) {
+		if (!(lore.length == 1 && lore[0].equals(""))) {
 			List<String> loreList;
 			if (meta.hasLore()) {
 				loreList = meta.getLore();

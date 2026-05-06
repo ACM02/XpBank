@@ -8,6 +8,10 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import me.head_block.xpbank.Main;
+import me.head_block.xpbank.controllers.XpController;
+import me.head_block.xpbank.exceptions.ExceedsXpStoreLimitException;
+import me.head_block.xpbank.exceptions.NoXpException;
+import me.head_block.xpbank.exceptions.NotEnoughXpException;
 import me.head_block.xpbank.ui.MainMenu;
 import me.head_block.xpbank.utils.Utils;
 import me.head_block.xpbank.utils.XpBPlayer;
@@ -144,41 +148,27 @@ public class Xp implements CommandExecutor {
 	private void handle2Args(XpBPlayer sender, String[] args) {
 		switch (args[0]) {
 			case "deposit" -> {
+				// TODO: This implementation needs testing, but it's a lot cleaner than before
 				// /xpbank deposit <amount>/max
-				int amount = 1;
-				if (!args[1].equals("max")) {
-					amount = getAmount(args[1], sender);
-					if (amount == -1)
-						break;
-				}
-				// checkBalInstance(sender);
-				int playerTotalXp = sender.totalXp(); // Utils.totalXp(sender);
-				if (playerTotalXp == 0) {
-					sender.sendPlaceholderMessage(Main.NO_XP_DEPOSIT_MESSAGE);
-					break;
-				}
+				int playerTotalXp = sender.totalXp();
+				int amount;
 				if (args[1].equals("max")) {
-					if (sender.getStoredXp() >= Main.MAX_XP_STORED) { // Main.xps.get(sender.getUniqueId().toString())
+					amount = Math.min(playerTotalXp, Main.MAX_XP_STORED - sender.getStoredXp());
+				} else {
+					amount = getAmount(args[1], sender);
+				}
+				if (amount != -1) {
+					try {
+						XpController.deposit_xp(sender, amount);
+						sender.sendPlaceholderMessage(Main.DEPOSIT_MESSAGE);
+					} catch (ExceedsXpStoreLimitException e) {
 						sender.sendPlaceholderMessage(Main.EXCEEDS_STORE_LIMIT);
-						break;
+					} catch (NotEnoughXpException e) {
+						sender.sendMessage(ChatColor.RED + "You only have " + playerTotalXp + " xp");
+					} catch (NoXpException e) {
+						sender.sendPlaceholderMessage(Main.NO_XP_DEPOSIT_MESSAGE);
 					}
-					amount = playerTotalXp;
-					if (sender.getStoredXp() + amount >= Main.MAX_XP_STORED) {
-						amount = Main.MAX_XP_STORED - sender.getStoredXp(); // Main.xps.get(sender.getUniqueId().toString());
-					}
 				}
-				if ((long) sender.getStoredXp() + (long) amount > Main.MAX_XP_STORED) {
-					sender.sendPlaceholderMessage(Main.EXCEEDS_STORE_LIMIT);
-					break;
-				}
-				if (amount > playerTotalXp) {
-					sender.sendMessage(ChatColor.RED + "You only have " + playerTotalXp + " xp");
-					break;
-				}
-				sender.removeXp(amount); // removeXp(amount, sender, playerTotalXp);
-				int oldBal = sender.getStoredXp();
-				sender.setStoredXp(oldBal + amount); // Main.xps.put(sender.getUniqueId().toString(), oldBal + amount);
-				sender.sendPlaceholderMessage(Main.DEPOSIT_MESSAGE);
 			}
 
 			case "withdraw" -> {

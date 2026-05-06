@@ -6,9 +6,10 @@ import me.head_block.xpbank.Main;
 import me.head_block.xpbank.utils.Utils;
 
 public class XpBankAPI {
-	
+
 	/**
 	 * Gets the raw number of experience points a user has in the XpBank
+	 * 
 	 * @param p Player's balance to retrieve
 	 * @return Player p's balance
 	 */
@@ -19,9 +20,11 @@ public class XpBankAPI {
 			return 0;
 		}
 	}
-	
+
 	/**
-	 * Gets the number of experience points a user has in the XpBank as a number of experience levels
+	 * Gets the number of experience points a user has in the XpBank as a number of
+	 * experience levels
+	 * 
 	 * @param p Player's balance to retrieve
 	 * @return Player p's balance in levels
 	 */
@@ -32,10 +35,11 @@ public class XpBankAPI {
 			return 0;
 		}
 	}
-	
+
 	/**
 	 * Sets the XpBank balance of a player
-	 * @param p Player's balance to set
+	 * 
+	 * @param p      Player's balance to set
 	 * @param amount Amount to set the balance to
 	 * @return Success status of balance modification
 	 */
@@ -43,10 +47,11 @@ public class XpBankAPI {
 		Main.xps.put(p.getUniqueId().toString(), amount);
 		return true;
 	}
-	
+
 	/**
 	 * Sets the XpBank balance of a player to a given number of levels
-	 * @param p Player's balance to set
+	 * 
+	 * @param p      Player's balance to set
 	 * @param amount Amount of levels to set the balance to
 	 * @return Success status of balance modification
 	 */
@@ -54,21 +59,4 @@ public class XpBankAPI {
 		Main.xps.put(p.getUniqueId().toString(), Utils.totalXp(amount));
 		return true;
 	}
-	
-//	public static int getHeldXp(Player p) {
-//		
-//	}
-//	
-//	public static int getHeldXpLevels(Player p) {
-//		
-//	}
-//	
-//	public static boolean setHeldXp(Player p) {
-//		
-//	}
-//	
-//	public static boolean setHeldXpLevels(Player p) {
-//		
-//	}
-
 }
