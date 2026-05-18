@@ -4,6 +4,7 @@ description: Xp Banking System
 version: 1.13.1
 author: McCloud
 softdepend: [PlaceholderAPI]
+api-version: 1.13
 
 commands: 
   xpbank: 

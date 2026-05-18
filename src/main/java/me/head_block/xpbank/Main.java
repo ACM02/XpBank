@@ -79,7 +79,8 @@ public class Main extends JavaPlugin {
 	 * like only some cases, and hard to debug...)
 	 * xpbank info message (New version not being set right because update checker
 	 * is Async)
-	 * Config validation (if missing values plugin doesn't load due to null errors, such as DepositMenu:41)
+	 * Config validation (if missing values plugin doesn't load due to null errors,
+	 * such as DepositMenu:41)
 	 * 
 	 * Future plans:
 	 * More in-depth permissions
@@ -126,7 +127,10 @@ public class Main extends JavaPlugin {
 		}
 
 		String serverVersion = getServerVersion();
-		if (serverVersion.contains("1.20") || serverVersion.contains("1.19") || serverVersion.contains("1.18")
+		Bukkit.getLogger().log(Level.INFO, "Loading server version: {0}", serverVersion);
+		if (serverVersion.contains("26.1") || serverVersion.contains("1.21") || serverVersion.contains("1.20")
+				|| serverVersion.contains("1.19")
+				|| serverVersion.contains("1.18")
 				|| serverVersion.contains("1.17") || serverVersion.contains("1.16") || serverVersion.contains("1.15")
 				|| serverVersion.contains("1.14") || serverVersion.contains("1.13")) {
 			configManager = new Config_1_13();
@@ -136,7 +140,7 @@ public class Main extends JavaPlugin {
 		} else {
 			configManager = new Config_1_13(); // For future untested versions
 			Bukkit.getLogger().warning(
-					"Loading XpBank with an untested Minecraft version, this plugin has only been tested for up to 1.20");
+					"Loading XpBank with an untested Minecraft version, this plugin has only been tested for up to 26.1");
 		}
 		configManager.initConfig();
 
