@@ -127,7 +127,6 @@ public class Main extends JavaPlugin {
 		}
 
 		String serverVersion = getServerVersion();
-		Bukkit.getLogger().log(Level.INFO, "Loading server version: {0}", serverVersion);
 		if (serverVersion.contains("26.1") || serverVersion.contains("1.21") || serverVersion.contains("1.20")
 				|| serverVersion.contains("1.19")
 				|| serverVersion.contains("1.18")
