@@ -55,59 +55,70 @@ import me.head_block.xpbank.Main;
 public class XpBPlayer implements Player {
 
 	private Player player;
-	
+
 	public XpBPlayer(Player p) {
 		this.player = p;
 		this.checkBalInstance();
 	}
-	
+
 	@Override
 	public void sendMessage(String message) {
-		if (player != null) player.sendMessage(message);
+		if (player != null)
+			player.sendMessage(message);
 	}
-	
+
 	public void sendPlaceholderMessage(String message) {
-		if (player != null) sendMessage(Utils.replacePlaceholders(message, player));
+		if (player != null)
+			sendMessage(Utils.replacePlaceholders(message, player));
 	}
-	
+
 	public int getStoredXp() {
-		if (player != null) return Main.xps.get(player.getUniqueId().toString());
-		else return -1;
+		if (player != null)
+			return Main.xps.get(player.getUniqueId().toString());
+		else
+			return -1;
 	}
-	
+
 	public void setStoredXp(int xp) {
-		if (player != null) Main.xps.put(player.getUniqueId().toString(), xp);
+		if (player != null)
+			Main.xps.put(player.getUniqueId().toString(), xp);
 	}
-	
+
 	public int totalXp() {
-		if (player != null) return Utils.totalXp(player);
-		else return -1;
+		if (player != null)
+			return Utils.totalXp(player);
+		else
+			return -1;
 	}
-	
+
 	@Override
 	public boolean hasPermission(String perm) {
-		if (player != null) return player.hasPermission(perm);
-		else return false;
+		if (player != null)
+			return player.hasPermission(perm);
+		else
+			return false;
 	}
-	
+
 	@Override
 	public UUID getUniqueId() {
-		if (player != null) return player.getUniqueId();
-		else return null;
+		if (player != null)
+			return player.getUniqueId();
+		else
+			return null;
 	}
-	
+
 	public void checkBalInstance() {
 		if (!Main.xps.containsKey(player.getUniqueId().toString())) {
 			Main.xps.put(player.getUniqueId().toString(), 0);
 		}
 	}
-	
+
 	public void addXp(int xp) {
 		if (player != null) {
 			int newTotal = Utils.totalXp(player) + xp;
 			int newLevel = Utils.level(newTotal);
 			float newXp = Utils.xp(newTotal, newLevel);
-			
+
 			if (newXp == 1) {
 				newLevel++;
 				newXp = 0;
@@ -116,7 +127,7 @@ public class XpBPlayer implements Player {
 			player.setExp(newXp);
 		}
 	}
-	
+
 	public void removeXp(int xp) {
 		if (player != null) {
 			int newTotal = Utils.totalXp(player) - xp;
@@ -130,7 +141,7 @@ public class XpBPlayer implements Player {
 			player.setExp(newXp);
 		}
 	}
-	
+
 	public void addLevels(int numLevels) {
 		if (player != null) {
 			int xpToAdd = Utils.totalXp(player.getLevel() + numLevels) - Utils.totalXp(player.getLevel());
@@ -145,7 +156,7 @@ public class XpBPlayer implements Player {
 			player.setExp(newXp);
 		}
 	}
-	
+
 	public void removeLevels(int numLevels) {
 		if (player != null) {
 			int xpToLose = Utils.totalXp(player.getLevel()) - Utils.totalXp(player.getLevel() - numLevels);
@@ -161,11 +172,10 @@ public class XpBPlayer implements Player {
 		}
 	}
 
-	
 	/*
 	 * Implemented Player methods
 	 */
-	
+
 	@Override
 	public void closeInventory() {
 		player.closeInventory();
@@ -389,12 +399,11 @@ public class XpBPlayer implements Player {
 		return player.getTargetBlock(arg0, arg1);
 	}
 
-
 	@Override
 	public boolean hasLineOfSight(Entity arg0) {
 		return player.hasLineOfSight(arg0);
 	}
-		
+
 	@Override
 	public boolean hasPotionEffect(PotionEffectType arg0) {
 		return player.hasPotionEffect(arg0);
@@ -413,7 +422,7 @@ public class XpBPlayer implements Player {
 	@Override
 	public void removePotionEffect(PotionEffectType arg0) {
 		player.removePotionEffect(arg0);
-		
+
 	}
 
 	@Override
@@ -612,7 +621,7 @@ public class XpBPlayer implements Player {
 
 	@Override
 	public void remove() {
-		player.remove();		
+		player.remove();
 	}
 
 	@Override
@@ -632,7 +641,7 @@ public class XpBPlayer implements Player {
 
 	@Override
 	public void setLastDamageCause(EntityDamageEvent arg0) {
-		player.setLastDamageCause(arg0);		
+		player.setLastDamageCause(arg0);
 	}
 
 	@Override
@@ -643,12 +652,12 @@ public class XpBPlayer implements Player {
 
 	@Override
 	public void setTicksLived(int arg0) {
-		player.setTicksLived(arg0);		
+		player.setTicksLived(arg0);
 	}
 
 	@Override
 	public void setVelocity(Vector arg0) {
-		player.setVelocity(arg0);		
+		player.setVelocity(arg0);
 	}
 
 	@Override
@@ -683,17 +692,17 @@ public class XpBPlayer implements Player {
 
 	@Override
 	public void removeMetadata(String arg0, Plugin arg1) {
-		player.removeMetadata(arg0, arg1);		
+		player.removeMetadata(arg0, arg1);
 	}
 
 	@Override
 	public void setMetadata(String arg0, MetadataValue arg1) {
-		player.setMetadata(arg0, arg1);		
+		player.setMetadata(arg0, arg1);
 	}
 
 	@Override
 	public void sendMessage(String... arg0) {
-		player.sendMessage(arg0);		
+		player.sendMessage(arg0);
 	}
 
 	@Override
@@ -738,7 +747,7 @@ public class XpBPlayer implements Player {
 
 	@Override
 	public void recalculatePermissions() {
-		player.recalculatePermissions();		
+		player.recalculatePermissions();
 	}
 
 	@Override
@@ -753,7 +762,7 @@ public class XpBPlayer implements Player {
 
 	@Override
 	public void setOp(boolean arg0) {
-		player.setOp(arg0);		
+		player.setOp(arg0);
 	}
 
 	@Override
@@ -763,7 +772,7 @@ public class XpBPlayer implements Player {
 
 	@Override
 	public void setCustomName(String arg0) {
-		player.setCustomName(arg0);		
+		player.setCustomName(arg0);
 	}
 
 	@Override
@@ -778,17 +787,17 @@ public class XpBPlayer implements Player {
 
 	@Override
 	public void abandonConversation(Conversation arg0) {
-		player.abandonConversation(arg0);		
+		player.abandonConversation(arg0);
 	}
 
 	@Override
 	public void abandonConversation(Conversation arg0, ConversationAbandonedEvent arg1) {
-		player.abandonConversation(arg0, arg1);		
+		player.abandonConversation(arg0, arg1);
 	}
 
 	@Override
 	public void acceptConversationInput(String arg0) {
-		player.acceptConversationInput(arg0);		
+		player.acceptConversationInput(arg0);
 	}
 
 	@Override
@@ -803,27 +812,27 @@ public class XpBPlayer implements Player {
 
 	@Override
 	public void decrementStatistic(Statistic arg0) throws IllegalArgumentException {
-		player.decrementStatistic(arg0);		
+		player.decrementStatistic(arg0);
 	}
 
 	@Override
 	public void decrementStatistic(Statistic arg0, int arg1) throws IllegalArgumentException {
-		player.decrementStatistic(arg0, arg1);		
+		player.decrementStatistic(arg0, arg1);
 	}
 
 	@Override
 	public void decrementStatistic(Statistic arg0, Material arg1) throws IllegalArgumentException {
-		player.decrementStatistic(arg0, arg1);		
+		player.decrementStatistic(arg0, arg1);
 	}
 
 	@Override
 	public void decrementStatistic(Statistic arg0, EntityType arg1) throws IllegalArgumentException {
-		player.decrementStatistic(arg0, arg1);		
+		player.decrementStatistic(arg0, arg1);
 	}
 
 	@Override
 	public void decrementStatistic(Statistic arg0, Material arg1, int arg2) throws IllegalArgumentException {
-		player.decrementStatistic(arg0, arg1, arg2);		
+		player.decrementStatistic(arg0, arg1, arg2);
 	}
 
 	@Override
@@ -868,30 +877,30 @@ public class XpBPlayer implements Player {
 
 	@Override
 	public void incrementStatistic(Statistic arg0) throws IllegalArgumentException {
-		player.incrementStatistic(arg0);		
+		player.incrementStatistic(arg0);
 	}
 
 	@Override
 	public void incrementStatistic(Statistic arg0, int arg1) throws IllegalArgumentException {
-		player.incrementStatistic(arg0, arg1);	
+		player.incrementStatistic(arg0, arg1);
 	}
 
 	@Override
 	public void incrementStatistic(Statistic arg0, Material arg1) throws IllegalArgumentException {
 		player.incrementStatistic(arg0, arg1);
-		
+
 	}
 
 	@Override
 	public void incrementStatistic(Statistic arg0, EntityType arg1) throws IllegalArgumentException {
 		player.incrementStatistic(arg0, arg1);
-		
+
 	}
 
 	@Override
 	public void incrementStatistic(Statistic arg0, Material arg1, int arg2) throws IllegalArgumentException {
 		player.incrementStatistic(arg0, arg1, arg2);
-		
+
 	}
 
 	@Override
@@ -916,12 +925,12 @@ public class XpBPlayer implements Player {
 
 	@Override
 	public void setStatistic(Statistic arg0, int arg1) throws IllegalArgumentException {
-		player.setStatistic(arg0, arg1);		
+		player.setStatistic(arg0, arg1);
 	}
 
 	@Override
 	public void setStatistic(Statistic arg0, Material arg1, int arg2) throws IllegalArgumentException {
-		player.setStatistic(arg0, arg1, arg2);		
+		player.setStatistic(arg0, arg1, arg2);
 	}
 
 	@Override
@@ -931,7 +940,7 @@ public class XpBPlayer implements Player {
 
 	@Override
 	public void setWhitelisted(boolean arg0) {
-		player.setWhitelisted(arg0);		
+		player.setWhitelisted(arg0);
 	}
 
 	@Override
@@ -947,7 +956,7 @@ public class XpBPlayer implements Player {
 	@Override
 	public void sendPluginMessage(Plugin arg0, String arg1, byte[] arg2) {
 		player.sendPluginMessage(arg0, arg1, arg2);
-		
+
 	}
 
 	@Override
@@ -957,7 +966,7 @@ public class XpBPlayer implements Player {
 
 	@Override
 	public void chat(String arg0) {
-		player.chat(arg0);		
+		player.chat(arg0);
 	}
 
 	@Override
@@ -1053,23 +1062,23 @@ public class XpBPlayer implements Player {
 	@Override
 	public void giveExp(int arg0) {
 		player.giveExp(arg0);
-		
+
 	}
 
 	@Override
 	public void giveExpLevels(int arg0) {
 		player.giveExpLevels(arg0);
-		
+
 	}
 
 	@Override
 	@Deprecated
 	public void hidePlayer(Player arg0) {
-		player.hidePlayer(arg0);		
+		player.hidePlayer(arg0);
 	}
 
 	@Override
-	public boolean isFlying() {		
+	public boolean isFlying() {
 		return player.isFlying();
 	}
 
@@ -1107,12 +1116,12 @@ public class XpBPlayer implements Player {
 	@Override
 	public void kickPlayer(String arg0) {
 		player.kickPlayer(arg0);
-		
+
 	}
 
 	@Override
 	public void loadData() {
-		player.loadData();		
+		player.loadData();
 	}
 
 	@Override
@@ -1123,7 +1132,7 @@ public class XpBPlayer implements Player {
 	@Override
 	@Deprecated
 	public void playEffect(Location arg0, Effect arg1, int arg2) {
-		player.playEffect(arg0, arg1, arg2);		
+		player.playEffect(arg0, arg1, arg2);
 	}
 
 	@Override
@@ -1134,191 +1143,191 @@ public class XpBPlayer implements Player {
 	@Override
 	@Deprecated
 	public void playNote(Location arg0, byte arg1, byte arg2) {
-		player.playNote(arg0, arg1, arg2);		
+		player.playNote(arg0, arg1, arg2);
 	}
 
 	@Override
 	public void playNote(Location arg0, Instrument arg1, Note arg2) {
-		player.playNote(arg0, arg1, arg2);		
+		player.playNote(arg0, arg1, arg2);
 	}
 
 	@Override
 	public void playSound(Location arg0, Sound arg1, float arg2, float arg3) {
-		player.playSound(arg0, arg1, arg2, arg3);		
+		player.playSound(arg0, arg1, arg2, arg3);
 	}
 
 	@Override
 	public void playSound(Location arg0, String arg1, float arg2, float arg3) {
-		player.playSound(arg0, arg1, arg2, arg3);		
+		player.playSound(arg0, arg1, arg2, arg3);
 	}
 
 	@Override
 	public void resetPlayerTime() {
-		player.resetPlayerTime();		
+		player.resetPlayerTime();
 	}
 
 	@Override
 	public void resetPlayerWeather() {
-		player.resetPlayerWeather();		
+		player.resetPlayerWeather();
 	}
 
 	@Override
 	public void resetTitle() {
-		player.resetTitle();		
+		player.resetTitle();
 	}
 
 	@Override
 	public void saveData() {
-		player.saveData();		
+		player.saveData();
 	}
 
 	@Override
 	@Deprecated
 	public void sendBlockChange(Location arg0, Material arg1, byte arg2) {
-		player.sendBlockChange(arg0, arg1, arg2);		
+		player.sendBlockChange(arg0, arg1, arg2);
 	}
 
 	@Override
 	public void sendMap(MapView arg0) {
-		player.sendMap(arg0);		
+		player.sendMap(arg0);
 	}
 
 	@Override
 	public void sendRawMessage(String arg0) {
-		player.sendRawMessage(arg0);		
+		player.sendRawMessage(arg0);
 	}
 
 	@Override
 	public void sendSignChange(Location arg0, String[] arg1) throws IllegalArgumentException {
-		player.sendSignChange(arg0, arg1);		
+		player.sendSignChange(arg0, arg1);
 	}
 
 	@Override
 	@Deprecated
 	public void sendTitle(String arg0, String arg1) {
-		player.sendTitle(arg0, arg1);		
+		player.sendTitle(arg0, arg1);
 	}
 
 	@Override
 	public void setAllowFlight(boolean arg0) {
-		player.setAllowFlight(arg0);		
+		player.setAllowFlight(arg0);
 	}
 
 	@Override
 	public void setBedSpawnLocation(Location arg0) {
-		player.setBedSpawnLocation(arg0);		
+		player.setBedSpawnLocation(arg0);
 	}
 
 	@Override
 	public void setBedSpawnLocation(Location arg0, boolean arg1) {
-		player.setBedSpawnLocation(arg0, arg1);		
+		player.setBedSpawnLocation(arg0, arg1);
 	}
 
 	@Override
 	public void setCompassTarget(Location arg0) {
-		player.setCompassTarget(arg0);		
+		player.setCompassTarget(arg0);
 	}
 
 	@Override
 	public void setDisplayName(String arg0) {
-		player.setDisplayName(arg0);		
+		player.setDisplayName(arg0);
 	}
 
 	@Override
 	public void setExp(float arg0) {
-		player.setExp(arg0);		
+		player.setExp(arg0);
 	}
 
 	@Override
 	public void setFlySpeed(float arg0) throws IllegalArgumentException {
-		player.setFlySpeed(arg0);		
+		player.setFlySpeed(arg0);
 	}
 
 	@Override
 	public void setFlying(boolean arg0) {
-		player.setFlying(arg0);		
+		player.setFlying(arg0);
 	}
 
 	@Override
 	public void setHealthScale(double arg0) throws IllegalArgumentException {
-		player.setHealthScale(arg0);		
+		player.setHealthScale(arg0);
 	}
 
 	@Override
 	public void setHealthScaled(boolean arg0) {
-		player.setHealthScaled(arg0);		
+		player.setHealthScaled(arg0);
 	}
 
 	@Override
 	public void setLevel(int arg0) {
-		player.setLevel(arg0);		
+		player.setLevel(arg0);
 	}
 
 	@Override
 	public void setPlayerListName(String arg0) {
-		player.setPlayerListName(arg0);		
+		player.setPlayerListName(arg0);
 	}
 
 	@Override
 	public void setPlayerTime(long arg0, boolean arg1) {
-		player.setPlayerTime(arg0, arg1);		
+		player.setPlayerTime(arg0, arg1);
 	}
 
 	@Override
 	public void setPlayerWeather(WeatherType arg0) {
-		player.setPlayerWeather(arg0);		
+		player.setPlayerWeather(arg0);
 	}
 
 	@Override
 	public void setResourcePack(String arg0) {
-		player.setResourcePack(arg0);		
+		player.setResourcePack(arg0);
 	}
 
 	@Override
 	public void setScoreboard(Scoreboard arg0) throws IllegalArgumentException, IllegalStateException {
-		player.setScoreboard(arg0);		
+		player.setScoreboard(arg0);
 	}
 
 	@Override
 	public void setSleepingIgnored(boolean arg0) {
-		player.setSleepingIgnored(arg0);		
+		player.setSleepingIgnored(arg0);
 	}
 
 	@Override
 	public void setSneaking(boolean arg0) {
-		player.setSneaking(arg0);		
+		player.setSneaking(arg0);
 	}
 
 	@Override
 	public void setSpectatorTarget(Entity arg0) {
-		player.setSpectatorTarget(arg0);		
+		player.setSpectatorTarget(arg0);
 	}
 
 	@Override
 	public void setSprinting(boolean arg0) {
-		player.setSprinting(arg0);		
+		player.setSprinting(arg0);
 	}
 
 	@Override
 	@Deprecated
 	public void setTexturePack(String arg0) {
-		player.setTexturePack(arg0);		
+		player.setTexturePack(arg0);
 	}
 
 	@Override
 	public void setTotalExperience(int arg0) {
-		player.setTotalExperience(arg0);		
+		player.setTotalExperience(arg0);
 	}
 
 	@Override
 	public void setWalkSpeed(float arg0) throws IllegalArgumentException {
-		player.setWalkSpeed(arg0);		
+		player.setWalkSpeed(arg0);
 	}
 
 	@Override
 	@Deprecated
 	public void showPlayer(Player arg0) {
-		player.showPlayer(arg0);		
+		player.showPlayer(arg0);
 	}
 
 	@Override
@@ -1328,7 +1337,7 @@ public class XpBPlayer implements Player {
 
 	@Override
 	public void updateInventory() {
-		player.updateInventory();		
+		player.updateInventory();
 	}
 
 	@Override
@@ -1430,6 +1439,5 @@ public class XpBPlayer implements Player {
 	public boolean hasAchievement(Achievement achievement) {
 		return player.hasAchievement(achievement);
 	}
-	
-	
+
 }

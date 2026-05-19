@@ -96,6 +96,8 @@ public class Main extends JavaPlugin {
 	 * Comments spaced out in the config for a better look
 	 * Better documentation/main page
 	 * Pay in xp (GUI)
+	 * Remove use of Bukkit.getOfflinePlayer trading for a search of players who
+	 * have logged in (but efficiently)
 	 * 
 	 * Requested features:
 	 * Generic back button in main menu that can be set to run a command specified

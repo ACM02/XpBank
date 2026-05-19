@@ -12,6 +12,7 @@ import me.head_block.xpbank.controllers.XpController;
 import me.head_block.xpbank.exceptions.ExceedsXpLimitException;
 import me.head_block.xpbank.exceptions.NoXpException;
 import me.head_block.xpbank.exceptions.NotEnoughXpException;
+import me.head_block.xpbank.exceptions.PlayerNotFoundException;
 import me.head_block.xpbank.ui.MainMenu;
 import me.head_block.xpbank.utils.Utils;
 import me.head_block.xpbank.utils.XpBPlayer;
@@ -154,6 +155,7 @@ public class Xp implements CommandExecutor {
 				deposit_points(sender, args[1]);
 			}
 			case "withdraw" -> {
+				// /xpbank withdraw <amount>/max
 				withdraw_points(sender, args[1]);
 			}
 			case "get" -> {
@@ -211,57 +213,7 @@ public class Xp implements CommandExecutor {
 
 			case "pay" -> {
 				// /xpbank pay <player> <amount>
-				int amount = getAmount(args[2], sender);
-				if (amount == -1)
-					break;
-				// checkBalInstance(sender);
-				if (amount > sender.getStoredXp()) {
-					sender.sendPlaceholderMessage(
-							ChatColor.RED + "You don't have enough xp to do that! (Balance: " + "%XP_STORED" + ")");
-					break;
-				}
-				OfflinePlayer offline = Bukkit.getOfflinePlayer(args[1]);
-				if (offline != null) {
-					if (Main.xps.containsKey(offline.getUniqueId().toString())) {
-						if ((long) Main.xps.get(offline.getUniqueId().toString())
-								+ (long) amount > Main.MAX_XP_STORED) {
-							sender.sendPlaceholderMessage(Main.EXCEEDS_STORE_LIMIT_TARGET);
-							break;
-						}
-					}
-					if (Main.xps.containsKey(offline.getUniqueId().toString())) {
-						Main.xps.put(offline.getUniqueId().toString(),
-								Main.xps.get(offline.getUniqueId().toString()) + amount);
-						sender.setStoredXp(sender.getStoredXp() - amount);
-						// Main.xps.put(sender.getUniqueId().toString(),
-						// Main.xps.get(sender.getUniqueId().toString()) - amount);
-						if (offline.isOnline()) {
-							Player online = offline.getPlayer();
-							online.sendMessage(Utils.replacePlaceholders(ChatColor.YELLOW + sender.getName()
-									+ " has sent you " + amount + " xp. New balance: " + "%XP_STORED%", online));
-						}
-						sender.sendPlaceholderMessage(
-								ChatColor.YELLOW + "Transfer complete. New balance: " + "%XP_STORED%");
-					} else {
-						if (offline.isOnline()) {
-							Main.xps.put(offline.getUniqueId().toString(), amount);
-							sender.setStoredXp(sender.getStoredXp() - amount);
-							// Main.xps.put(sender.getUniqueId().toString(),
-							// Main.xps.get(sender.getUniqueId().toString()) - amount);
-							Player online = offline.getPlayer();
-							online.sendMessage(Utils.replacePlaceholders(ChatColor.YELLOW + sender.getName()
-									+ " has sent you " + amount + " xp. New balance: " + "%XP_STORED%", online));
-							sender.sendPlaceholderMessage(
-									ChatColor.YELLOW + "Transfer complete. New balance: " + "%XP_STORED%");
-						} else {
-							sender.sendPlaceholderMessage(Main.PLAYER_NOT_FOUND_MESSAGE);
-							break;
-						}
-					}
-				} else {
-					sender.sendPlaceholderMessage(Main.PLAYER_NOT_FOUND_MESSAGE);
-					break;
-				}
+				pay_player(sender, args[1], args[2]);
 			}
 			case "set" -> {
 				// /xpbank set <player> <amount>
@@ -483,6 +435,38 @@ public class Xp implements CommandExecutor {
 			} catch (ExceedsXpLimitException e) {
 				player.sendPlaceholderMessage(Main.EXCEEDS_STORE_LIMIT);
 			}
+		}
+	}
+
+	@SuppressWarnings("deprecation")
+	private void pay_player(XpBPlayer payer, String payeeName, String amountStr) {
+		int amount = getAmount(amountStr, payer);
+		OfflinePlayer payee = Bukkit.getOfflinePlayer(payeeName);
+		if (amount != -1) {
+			if (payee != null) {
+				try {
+					XpController.pay_player(payer, payee, amount);
+					payer.sendPlaceholderMessage(
+							ChatColor.YELLOW + "Transfer complete. New balance: " + "%XP_STORED%");
+					if (payee.isOnline()) {
+						new XpBPlayer(payee.getPlayer()).sendPlaceholderMessage(ChatColor.YELLOW +
+								payer.getName()
+								+ " has sent you " + amount + " xp. New balance: " + "%XP_STORED%");
+					}
+				} catch (NotEnoughXpException e) {
+					payer.sendPlaceholderMessage(
+							ChatColor.RED + "You don't have enough xp to do that! (Balance: " +
+									"%XP_STORED" + ")");
+
+				} catch (ExceedsXpLimitException e) {
+					payer.sendPlaceholderMessage(Main.EXCEEDS_STORE_LIMIT_TARGET);
+				} catch (PlayerNotFoundException e) {
+					payer.sendPlaceholderMessage(Main.PLAYER_NOT_FOUND_MESSAGE);
+				}
+			} else {
+				payer.sendPlaceholderMessage(Main.PLAYER_NOT_FOUND_MESSAGE);
+			}
+
 		}
 	}
 

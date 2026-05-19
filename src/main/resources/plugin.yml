@@ -4,7 +4,6 @@ description: Xp Banking System
 version: 1.13.1
 author: McCloud
 softdepend: [PlaceholderAPI]
-# TODO: Does this break pre-1.13 compatibility? It was crashing without it on 1.21.11 with some legacy materials stuff
 api-version: '1.13'
 
 commands: 

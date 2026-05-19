@@ -1,15 +1,16 @@
 package me.head_block.xpbank.controllers;
 
+import org.bukkit.OfflinePlayer;
+
 import me.head_block.xpbank.Main;
 import me.head_block.xpbank.exceptions.ExceedsXpLimitException;
 import me.head_block.xpbank.exceptions.NoXpException;
 import me.head_block.xpbank.exceptions.NotEnoughXpException;
+import me.head_block.xpbank.exceptions.PlayerNotFoundException;
 import me.head_block.xpbank.utils.Utils;
 import me.head_block.xpbank.utils.XpBPlayer;
 
 public class XpController {
-
-    // TODO: Payment
 
     private static void validate_xp_deposit(XpBPlayer player, long amount) {
         int playerTotalXp = player.totalXp();
@@ -58,6 +59,21 @@ public class XpController {
         }
     }
 
+    private static void validate_pay_player(XpBPlayer payer, OfflinePlayer payee, int amount) {
+        int payerStoredXp = payer.getStoredXp();
+
+        if (Main.xps.containsKey(payee.getUniqueId().toString())) {
+            if ((long) Main.xps.get(payee.getUniqueId().toString())
+                    + (long) amount > Main.MAX_XP_STORED) {
+                throw new ExceedsXpLimitException();
+            }
+        } else if (!Main.xps.containsKey(payee.getUniqueId().toString()) && !payee.isOnline()) {
+            throw new PlayerNotFoundException();
+        } else if (amount > payerStoredXp) {
+            throw new NotEnoughXpException();
+        }
+    }
+
     public static void deposit_xp(XpBPlayer player, long amount) {
         validate_xp_deposit(player, amount);
         player.removeXp((int) amount);
@@ -89,5 +105,17 @@ public class XpController {
         int oldBal = player.getStoredXp();
         Main.xps.get(player.getUniqueId().toString());
         player.setStoredXp(oldBal + amount);
+    }
+
+    public static void pay_player(XpBPlayer payer, OfflinePlayer payee, int amount) {
+        validate_pay_player(payer, payee, amount);
+
+        String payeeUUID = payee.getUniqueId().toString();
+        payer.setStoredXp(payer.getStoredXp() - amount);
+        if (Main.xps.containsKey(payeeUUID)) {
+            Main.xps.put(payeeUUID, Main.xps.get(payeeUUID) + amount);
+        } else {
+            Main.xps.put(payeeUUID, amount);
+        }
     }
 }
